@@ -197,9 +197,14 @@ Route::controller(ExpensasController::class)->group(function(){
 Route::controller(MultasController::class)->group(function(){
     Route::post('/agregar-multita', [MultasController::class, 'guardoMulta']);
     Route::get('/obtener-multa', [MultasController::class, 'index']);
-    Route::get('/obtener-multa/{id}', [MultasController::class, 'show']);
+    Route::get('/PreAvisoMulta/{id}', [MultasController::class, 'show']);
     Route::put('/editar-multa/{id}', [MultasController::class, 'update']);
     Route::delete('/eliminar-multa/{id}', [MultasController::class, 'destroy']);
+    Route::put('/actualizar-monto-preaviso/{id}',[MultasController::class,'actualizarMonto']);
+    Route::get('/PreAvisoMulta', [MultasController::class, 'obtenerPreAvisosConMultas']);
+    Route::get('/PreAvisoSinMulta', [MultasController::class, 'obtenerPreAvisosSinMultas']);
+    Route::get('/obtener-multas-preaviso/{id}', [MultasController::class, 'obtenerMultasPorPreaviso']);
+
 });
 
 // Notificaciones

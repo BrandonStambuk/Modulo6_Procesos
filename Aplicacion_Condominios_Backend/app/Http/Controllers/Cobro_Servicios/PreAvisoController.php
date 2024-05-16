@@ -56,6 +56,8 @@ class PreAvisoController extends Controller
         ]);
     }*/
 
+
+
     public function obtenerTodosPreAvisos()
 {
     $preAvisos = PreAvisoModel::with('departamento:id,nombre_departamento')->get()->toArray();

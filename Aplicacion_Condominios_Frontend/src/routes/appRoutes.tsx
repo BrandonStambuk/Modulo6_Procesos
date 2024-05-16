@@ -55,7 +55,7 @@ import GestionEquipos from "../cobro_servicios/components/gestionEquipos.js";
 import EditarEquipo from "../cobro_servicios/components/editarEquipo";
 import GenerarPreAviso from "../cobro_servicios/components/Pre-aviso";
 import PreAvisoExpensas from "../cobro_servicios/components/Pre-avisoExpensas.js";
-import Multas from "../cobro_servicios/components/Multas.js";
+import Multas from "../cobro_servicios/components/Multas";
 
 const appRoutes: RouteType[] = [
   {
@@ -192,6 +192,12 @@ const appRoutes: RouteType[] = [
       {
         path: "/cobros/generar-preaviso/:departamento_id",
         element: <GenerarPreAviso />,
+        state: "cobros.generar-pre-aviso",
+        
+      },
+      {
+        path: "/cobros/multas/:idPreaviso",
+        element: <Multas/>,
         state: "cobros.generar-pre-aviso",
         
       },

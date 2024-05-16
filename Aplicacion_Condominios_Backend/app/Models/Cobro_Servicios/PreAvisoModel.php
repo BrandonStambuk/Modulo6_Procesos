@@ -28,6 +28,9 @@ class PreAvisoModel extends Model
     {
         return $this->belongsTo(Residente::class, 'id_propietarioPagar');
     }
-    
+    public function multas()
+    {
+        return $this->hasMany(MultasModel::class, 'preaviso_id', 'id');
+    }
     
 }

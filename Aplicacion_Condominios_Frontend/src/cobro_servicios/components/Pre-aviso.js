@@ -137,13 +137,17 @@ const PreAviso = () => {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
+      let totalMonto = parseFloat(monto);
+      multas.forEach((multa) => {
+        totalMonto += parseFloat(multa.monto);
+      });
       const url = `${endpoint}/generar-preaviso`;
       const data = {
         departamento_id,
         fecha,
         propietario_pagar: propietarioSeleccionado,
         descripcion_servicios,
-        monto,
+        monto: totalMonto.toString(), // Convertir el total a string antes de enviarlo
         servicio_pagar: servicioPagar,
         id_propietarioPagar: propietarioSeleccionadoID,
       };

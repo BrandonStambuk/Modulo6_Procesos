@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cobro_Servicios;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Cobro_Servicios\MultasModel;
+use App\Models\Cobro_Servicios\PreAvisoModel;
 
 class MultasController extends Controller
 {
@@ -81,4 +82,68 @@ class MultasController extends Controller
             'message' => 'Multa eliminada exitosamente',
         ]);
     }
+
+
+    public function actualizarMonto(Request $request, $id)
+    {
+        $preaviso = PreAvisoModel::findOrFail($id);
+        
+        // Verificar si el nuevo monto se proporciona en la solicitud y actualizarlo si es así
+        if ($request->has('nuevo_monto')) {
+            $preaviso->monto = $request->nuevo_monto;
+        }
+        
+        $preaviso->save();
+        
+        return response()->json([
+            'status' => 200,
+            'message' => 'Monto del preaviso actualizado exitosamente',
+            'preaviso' => $preaviso,
+        ]);
+    }
+
+    public function obtenerPreAvisosConMultas()
+    {
+        $preavisosConMultas = PreAvisoModel::has('multas')->with('multas')->get();
+    
+        // Iterar sobre cada preaviso y agregar el ID de la multa (si existe)
+        $preavisosConMultas->transform(function ($preaviso) {
+            $preaviso->multa_id = $preaviso->multas->isNotEmpty() ? $preaviso->multas->first()->id : null;
+            return $preaviso;
+        });
+    
+        return response()->json([
+            'status' => 200,
+            'data' => $preavisosConMultas,
+        ]);
+    }
+
+    public function obtenerPreAvisosSinMultas()
+    {
+        $preavisosSinMultas = PreAvisoModel::doesntHave('multas')->get();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $preavisosSinMultas,
+        ]);
+    }
+    public function obtenerMultasPorPreaviso($idPreaviso)
+{
+    $preaviso = PreAvisoModel::find($idPreaviso);
+    
+    if (!$preaviso) {
+        return response()->json([
+            'status' => 404,
+            'message' => 'Preaviso no encontrado',
+        ], 404);
+    }
+    
+    $multas = $preaviso->multas;
+    
+    return response()->json([
+        'status' => 200,
+        'multas' => $multas,
+    ]);
+}
+    
 }

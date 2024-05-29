@@ -55,7 +55,9 @@ import GestionEquipos from "../cobro_servicios/components/gestionEquipos.js";
 import EditarEquipo from "../cobro_servicios/components/editarEquipo";
 import GenerarPreAviso from "../cobro_servicios/components/Pre-aviso";
 import PreAvisoExpensas from "../cobro_servicios/components/Pre-avisoExpensas.js";
-
+import Multas from "../cobro_servicios/components/Multas";
+import Expensas from "../cobro_servicios/components/Expensas";
+import FormularioPagoExpensa from "../cobro_servicios/components/FormularioPagoExpensa";
 const appRoutes: RouteType[] = [
   {
     index: true,
@@ -184,6 +186,14 @@ const appRoutes: RouteType[] = [
         },
       },
       {
+        path: "/cobros/expensas",
+        element: <Expensas/>,
+        state: "cobros.expensas",
+        sidebarProps: {
+          displayText: "Expensas",
+        },
+      },
+      {
         path: "/cobros/edicion-equipo/:id",
         element: <EditarEquipo />,
         state: "cobros.editar-equipo",
@@ -191,6 +201,12 @@ const appRoutes: RouteType[] = [
       {
         path: "/cobros/generar-preaviso/:departamento_id",
         element: <GenerarPreAviso />,
+        state: "cobros.generar-pre-aviso",
+        
+      },
+      {
+        path: "/cobros/multas/:idPreaviso",
+        element: <Multas/>,
         state: "cobros.generar-pre-aviso",
         
       },
@@ -206,6 +222,13 @@ const appRoutes: RouteType[] = [
         path: "/cobros/pagar-reserva/:id",
         element: <TablaReservas/>,
         state: "cobros.tabla.reservas",
+        
+        
+      },
+      {
+        path: "/cobros/pagar-expensa/:id",
+        element: <FormularioPagoExpensa/>,
+        state: "cobros.formulario.expensa",
         
         
       },

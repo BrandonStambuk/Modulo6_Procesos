@@ -424,4 +424,16 @@ class ResidenteController extends Controller
 	return $residente;
     }
 
+    public function getResidentesByContratoWhereDepartamentoBelongsABuilding($id)
+    {
+        $residentes = Residente::whereHas('contrato', function ($query) use ($id) {
+            $query->whereHas('departamento', function ($query) use ($id) {
+                $query->whereHas('edificio', function ($query) use ($id) {
+                    $query->where('id', $id);
+                });
+            });
+        })->get();
+        return $residentes;
+    }
+
 }

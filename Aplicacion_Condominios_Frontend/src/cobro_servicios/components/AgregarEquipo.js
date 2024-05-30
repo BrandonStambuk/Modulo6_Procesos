@@ -157,12 +157,15 @@ class AgregarEquipo extends Component {
         descripcion: this.state.descripcion_equipo,
         costo: this.state.costo_equipo,
         area_comun_nombre: this.state.area_comun_nombre,
-        tipo_equipo_danado: this.state.tipo_equipo_danado,
+        categoriaEquipoDanado: this.state.tipo_equipo_danado,
         culpable: this.state.culpable,
         residente_culpable: this.state.residente_culpable,
+        categoria_servicio: this.state.categoria_servicio,
         edificio: this.state.edificio,
         bloque: this.state.bloque,
       };
+
+      console.log("Data:", data);
 
       const url = `${endpoint}/agregarEquipo`;
       try {
@@ -170,6 +173,7 @@ class AgregarEquipo extends Component {
         console.log("Equipo guardado exitosamente:", response.data);
         window.location.href = "./gestion-equipo";
       } catch (error) {
+
         console.error("Error al guardar el equipo:", error);
       }
     }

@@ -70,4 +70,10 @@ class PersonalExternoController extends Controller
         
         return response()->json($response, $status);
     }
+    
+    public function getPersonalExternoByCategoria($id) 
+    {
+        $personalExterno = PersonalExterno::where('idCategoria', $id)->get();
+        return $personalExterno;
+    } 
 }

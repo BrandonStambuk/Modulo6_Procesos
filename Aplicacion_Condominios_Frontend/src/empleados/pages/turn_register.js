@@ -23,16 +23,6 @@ function TurnRegister() {
 
     const [errors, setErrors] = useState({});
 
-    const [diasHorarios, setDiasHorarios] = useState({
-      Lunes: { hora_inferior: "", hora_superior: "" },
-      Martes: { hora_inferior: "", hora_superior: "" },
-      Miercoles: { hora_inferior: "", hora_superior: "" },
-      Jueves: { hora_inferior: "", hora_superior: "" },
-      Viernes: { hora_inferior: "", hora_superior: "" },
-      Sabado: { hora_inferior: "", hora_superior: "" },
-      Domingo: { hora_inferior: "", hora_superior: "" }
-    });
-
     const [horarios, setHorarios] = useState({
       Lunes: { hora1: "", hora2: "", checked: false },
       Martes: { hora1: "", hora2: "", checked: false },
@@ -97,7 +87,7 @@ function TurnRegister() {
         switch (horario) {
           case 1:
             nuevosHorarios[dia] = {
-              hora1: "06:00",
+              hora1: "20:00",
               hora2: "18:00",
               checked: true,
             };
@@ -234,14 +224,6 @@ function TurnRegister() {
         }
     };
     
-      const cambiarHorarioInferior1 = (e) => {
-        diasHorarios[e.target.name].hora_inferior = e.target.value;
-      };
-    
-      const cambiarHorarioSuperior1 = (e) => {
-        diasHorarios[e.target.name].hora_superior = e.target.value;
-      };
-
     return (
       <>
         <MDBContainer fluid>

@@ -69,4 +69,10 @@ class RegistroSolicitudController extends Controller
         
         return response()->json($response, $status);
     }
+    
+    public function getSolicitudByPersonalExterno($id) 
+    {
+        $solicitud = RegistroSolicitud::where('idPersonalExterno', $id)->get();
+        return $solicitud;
+    } 
 }

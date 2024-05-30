@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Departamento;
 use App\Http\Controllers\Controller;
 use App\Models\GestDepartamento\Residente;
 use Illuminate\Http\Request;
-//use League\Csv\Reader;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -57,7 +57,7 @@ class ResidenteController extends Controller
             'estado_residente' => 'required',
             'imagen_residente' => 'sometimes|file|image|mimes:jpeg,png,jpg,gif,svg|max:3048',
             'contrato_id' => 'nullable',
-            'monto_pagar'=>'nullable',
+            'monto_pagar' => 'nullable'
         ]);
         //Residente::create($validate);
         $residente = new Residente($validate);
@@ -133,13 +133,21 @@ class ResidenteController extends Controller
 
     public function actualizarEstadoResidente(Request $request, $id)
     {
-        $usuario = Residente::findOrFail($id);
+        $residente = Residente::findOrFail($id);
 
-        // Actualiza el atributo específico
-        $usuario->estado_residente = $request->input('estado_residente');
-        $usuario->save();
+        // Verifica si el residente tiene contrato_id null antes de modificar los atributos
+        if ($residente->contrato_id === null) {
+            $usuario->estado_residente = $request->input('estado_residente');
+            
+        }else{
+            $residente->contrato_id = null;
+            $residente->estado_residente = $request->input('estado_residente');
+            $residente->tipo_residente = "ninguno";
+        }
 
-        return response()->json(['mensaje' => 'Atributo actualizado correctamente']);
+        $residente->save();
+
+        return response()->json(['mensaje' => 'Atributos actualizados correctamente']);
     }
 
     /**
@@ -228,7 +236,7 @@ class ResidenteController extends Controller
         return response()->json(['mensaje' => 'Atributo actualizado correctamente']);
     }
 
-    /*public function import(Request $request){
+    /* public function import(Request $request){
         $file = $request->file('file');
         //leer el archivo csv
         $csv = Reader::createFromPath($file->getPathname(), 'r');
@@ -264,10 +272,10 @@ class ResidenteController extends Controller
                 continue; //continuar con el siguiente registro
             }
             //crear un nuevo residente
-             $residente = new Residente();
-            $residente->nombre_residente = $record['nombre_residente'];
-            $residente->apellido_residente = $record['apellido_residente'];
-            $residente->cedula_residente = $record['cedula_residente']; 
+            //$residente = new Residente();
+            //$residente->nombre_residente = $record['nombre_residente'];
+            //$residente->apellido_residente = $record['apellido_residente'];
+            //$residente->cedula_residente = $record['cedula_residente']; 
             //si la validación es exitosa, crear un nuevo residente
             $residente = Residente::create([
                 'nombre_residente' => $record['nombre_residente'],
@@ -290,7 +298,7 @@ class ResidenteController extends Controller
             'status' => 200,
             'message' => 'Residentes importados exitosamente'
         ]);
-    }*/
+    } */
     
     public function getResidentesByContrato($id)
     {

@@ -64,7 +64,8 @@ export const EquipmentForm: React.FC<FormElementProps> = ({
           element.nombre ||
           element.descripcion ||
           element.costo ||
-          element.area_comun_id
+          element.area_comun_id ||
+          element.cantidad
         )
         // || element.area_comun_nombre
       )
@@ -98,7 +99,7 @@ export const EquipmentForm: React.FC<FormElementProps> = ({
           console.log("Error", error);
         });
     } else {
-      fetch("http://localhost:8000/api/agregarEquipo", {
+      fetch("http://localhost:8000/api/equipments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -166,6 +167,18 @@ export const EquipmentForm: React.FC<FormElementProps> = ({
                 <input
                   className="form-control"
                   name="costo"
+                  defaultValue={product ? product.costo : ""}
+                />
+              </div>
+            </div>
+
+            <div className="row mb-3">
+              <label className="col-sm-4 col-form-label"> Cantidad </label>
+              <div className="col-sm-8">
+                <input
+                  className="form-control"
+                  name="cantidad"
+                  type="number"
                   defaultValue={product ? product.costo : ""}
                 />
               </div>

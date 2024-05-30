@@ -14,6 +14,7 @@ class RegistroSolicitud extends Model
     protected $fillable = [
         'idCategoria', 
         'idEstado', 
+        'idPersonalExterno',
         'descripcion', 
         'nombrePropietario', 
         'ubicacion', 

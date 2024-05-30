@@ -2,7 +2,6 @@
 
 namespace App\Models\GestDepartamento;
 
-use App\Models\CommonArea\Reservation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,14 +21,9 @@ class Residente extends Model
         'estado_residente',
         'imagen_residente',
         'contrato_id',
-        'monto_pagar',
+        'monto_pagar'
     ];
     public function contrato(){
         return $this->belongsTo(Contrato::class);
-    }
-
-    public function reservations()
-    {
-        return $this->hasMany(Reservation::class, 'id_resident', 'id');
     }
 }

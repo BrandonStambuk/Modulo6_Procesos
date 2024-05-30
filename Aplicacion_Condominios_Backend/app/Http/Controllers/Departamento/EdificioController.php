@@ -20,9 +20,28 @@ class EdificioController extends Controller
         $edificio = new edificio();
         $edificio-> nombre_edificio = $request -> nombre_edificio;
         $edificio-> descripcion_edificio = $request -> descripcion_edificio;
-        $edificio-> imagen_edificio = $request -> imagen_edificio;
         $edificio-> cantidad_pisos = $request -> cantidad_pisos;
         $edificio-> bloque_id = $request -> bloque_id;
+
+        if($request -> hasFile ('imagen_edificio')){
+            $image = $request->file('imagen_edificio');
+            $name = time().'.'.$image->getClientOriginalExtension();
+            $image->move('departamento/images/edificios/', $name);
+
+            $edificio-> imagen_edificio = "departamento/images/edificios/${name}";
+            $edificio-> save();
+
+            return response()->json([
+                'status' => 200,
+                'message' =>'Evento añadido exitosamente',
+            ]);
+
+        }
+        if (!$request->hasFile('imagen_edificio') || !$edificio->imagen_edificio) {
+            // Ruta de la imagen predeterminada
+            $imagenPredeterminada = 'departamento/images/edificios/edificio_default.jpg';
+            $edificio->imagen_edificio = $imagenPredeterminada;
+        }
 
         $edificio->save();
     }

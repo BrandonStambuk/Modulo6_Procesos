@@ -1,0 +1,27 @@
+.content__insu {
+    display: flex;
+    flex-direction: column;
+    /* border: solid 2px #233044; */
+    border-radius: 11px;
+    padding: 2em;
+    gap: 2em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
+  }
+
+  .button__insu {
+    display: flex;
+    justify-content: flex-end;
+    
+  }
+
+  .ajustar__insu {
+    display: flex;
+    justify-content: space-between;
+    width: 60px;
+  }
+
+  .block__texto{
+    text-align: center;
+    padding-top: 7px;
+  }
+  

@@ -11,7 +11,6 @@ import ModalConfirm from "./ModalConfirm";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import "./customs.css";
-import { Form } from "react-router-dom";
 
 const endpoint = "http://localhost:8000/api";
 const endpointImg = 'http://localhost:8000';
@@ -24,7 +23,7 @@ class CrearContrato extends Component {
         console.log("id dep",idDep);
 
         try {
-            const response = await axios.post(`${endpoint}/residentes/actualizar-estado-contrato`);
+            //const response = await axios.post(`${endpoint}/residentes/actualizar-estado-contrato`);
             const departamento = await axios.get(`${endpoint}/departamento/${idDep}`);
             const depa = departamento.data
             this.setState({
@@ -255,7 +254,7 @@ class CrearContrato extends Component {
                         tipo_residente: tipoResidente,
                     });
                 }
-                window.location.href = "./departamentos";
+                window.location.href = "./edificios";
         }
     };
 
@@ -363,7 +362,7 @@ class CrearContrato extends Component {
                                 <Label className="label-custom">Residentes</Label>
                                 
                                     {residentesSeleccionados.map((residente, index) => (
-                                        <Row className="d-flex align-items-center justify-content-around mt-2 customCard" key={index}>
+                                        <Row className="d-flex align-items-center justify-content-between mt-2 customCard" key={index}>
                                             <Col sm={3} >
                                                 <CardImg
                                                    className="cardlistaResidente"
@@ -392,7 +391,7 @@ class CrearContrato extends Component {
                                                     <span style={{ color: 'red', fontSize: '0.9rem', marginLeft: "0.7rem"}}>Seleccione un tipo</span>    
                                                 )}
                                             </Col>
-                                            <Col className="d-flex justify-content-center mr-2"sm={3}>
+                                            <Col className="d-flex justify-content-center" sm={3}>
                                                 <Button className="botoncardContr" type="button" onClick={() => this.eliminarListaResidente(residente.id)} >
                                                     <FontAwesomeIcon icon={faTrashAlt} className="iconContr" />
                                                 </Button>

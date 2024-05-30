@@ -9,9 +9,8 @@ import '../css/contract_register_style.css'
 import AddIcon from '@mui/icons-material/Add';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import ClearIcon from '@mui/icons-material/Clear';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 const cookies = new Cookies();
 
 function AssignTurn() {
@@ -45,12 +44,7 @@ function AssignTurn() {
   const asignarTurnos = (empleado)  => {
 
     cookies.set("empleado_seleccionado", empleado, { path: "/" });
-
-
-
-      window.location.href = "./turnRegister";
-
-
+    window.location.href = "./turnRegister";
   }
 
   const manejarBuscador = (e) => {
@@ -200,6 +194,11 @@ function AssignTurn() {
     document.querySelector("#segunda_fecha").value = '';
   }
 
+  const editarTurnoEmpleado = (empleado)  => {
+    cookies.set("empleado_seleccionado", empleado, { path: "/" });
+    window.location.href = "./editarTurno";
+  }
+
   return (
     <>
       <Row className="d-flex align-items-center justify-content-center">
@@ -329,7 +328,17 @@ function AssignTurn() {
                   </td>
                   <td>
                     {empleado.working_hours.length > 0 ? (
-                      <div> Turno(s) asignado(s)</div>
+                      <Button
+                        variant="info"
+                        onClick={() => editarTurnoEmpleado(empleado)}
+                        style={{
+                          backgroundColor: "#65B8A6",
+                          borderColor: "#65B8A6",
+                        }}
+                      >
+                        <ModeEditIcon />
+                      </Button>
+
                     ) : (
                       <Button
                         variant="danger"

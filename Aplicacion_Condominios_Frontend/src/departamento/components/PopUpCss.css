@@ -23,13 +23,37 @@
     background-color: rgba(45, 96, 115, 1);
     border-color: rgba(45, 96, 115, 1);
     color: white; 
+    margin: 0.25rem auto;
 }
 
 .confirmBoton:hover{
     background-color: rgb(32, 63, 75); 
     border-color: rgba(32, 63, 75);
 }
+
 .checkModal.form-check-input{
     box-shadow: none;
     border: 1px solid rgb(63, 63, 63);
+}
+.button-PD{
+    padding-top: 0.2em;
+}
+
+#modalBodyParqueo{
+    margin-inline: 1.2em;
+}
+.modalContainer{
+    position: fixed;
+    top: 29vh;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    --bs-modal-width: unset !important; 
+    min-width: 35vw;
+    transition: width 2.3s ease, height 2.3s ease;
+}
+.text-danger{
+    font-size: 0.9rem;
+}
+.opcionSelect {
+    transition: size 2.3s ease;
 }

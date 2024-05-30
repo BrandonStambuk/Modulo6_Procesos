@@ -14,8 +14,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        $this->call(EdificioSeeder::class);
+
+        //No borrar el orden de los seeders, Areas Comunes lo necesita.🤬
         $this->call(BloqueSeeder::class);
+        $this->call(EdificioSeeder::class);
         $this->call(DepartamentoSeeder::class);
         $this->call(ContratoSeeder::class);
         $this->call(ResidenteSeeder::class);

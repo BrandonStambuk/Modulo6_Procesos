@@ -27,7 +27,7 @@ class DepartamentoFactory extends Factory
         $imagePath = $imageName ? $ruta . '/' . $imageName : 'departamento/images/departamentos/departamento_pred.jpeg';
         $nombreDepa = $this->faker->word;
         //quiero agregar la palabra departamento al nombre del departamento
-        $nombreDepa = 'Dep. '.$nombreDepa;
+        $nombreDepa = 'Dep '.$nombreDepa;
         //quiero agregar un numero a en nombre del departamento
         $nombreDepa = $nombreDepa.' '.$this->faker->numberBetween(1,100);
         //quiero agregar una letra de la A a la Z al nombre del departamento en mayuscula
@@ -42,9 +42,9 @@ class DepartamentoFactory extends Factory
             'superficie' => $this->faker->numberBetween(100, 999),
             'disponibilidad' => true,
             'amoblado' => $this->faker->boolean(),
-            'ofertado_venta' => false,
-            'ofertado_alquiler' => false,
-            'ofertado_anticretico' => false,
+            'ofertado_venta' => $this->faker->boolean(),
+            'ofertado_alquiler' => $this->faker->boolean(),
+            'ofertado_anticretico' => $this->faker->boolean(),
             'descripcion_departamento' => $this->faker->sentence(),
             'piso' => $this->faker->numberBetween(1,10),
             'imagen_departamento' => $imagePath,

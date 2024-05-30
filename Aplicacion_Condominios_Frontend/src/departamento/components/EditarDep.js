@@ -299,7 +299,7 @@ class EditarDep extends Component {
                 />
                 <Container className="custom-form">
                     <Row>
-                        <Col sm={12}>
+                        <Col md={12}>
                             <h2 className="text-center mb-5 titulosForms">Editar departamento</h2>
                             <form onSubmit={this.updateDepartment}>
                                 <FormGroup className="mb-4">
@@ -322,7 +322,7 @@ class EditarDep extends Component {
                                 </FormGroup >
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -340,7 +340,7 @@ class EditarDep extends Component {
                                             />
                                             <FormFeedback>{this.state.errors.numero_habitaciones}</FormFeedback>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -358,7 +358,7 @@ class EditarDep extends Component {
                                             />
                                             <FormFeedback>{this.state.errors.numero_personas}</FormFeedback>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -381,7 +381,7 @@ class EditarDep extends Component {
                                 </FormGroup>
 
                                 <Row className="mb-3">
-                                    <Col sm={6}>
+                                    <Col md={6}>
 
                                         <Label
                                             check
@@ -409,7 +409,7 @@ class EditarDep extends Component {
 
                                     </Label>
                                     <Row className="mb-3 mt-1">
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 check
                                                 className="label-custom"
@@ -425,7 +425,7 @@ class EditarDep extends Component {
                                                 />
                                             </Label>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 check
                                                 className="label-custom"
@@ -441,7 +441,7 @@ class EditarDep extends Component {
                                                 />
                                             </Label>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 check
                                                 className="label-custom"

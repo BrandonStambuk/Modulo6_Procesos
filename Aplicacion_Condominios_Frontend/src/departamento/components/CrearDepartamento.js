@@ -6,7 +6,6 @@ import {
 } from "reactstrap";
 import ModalConfirm from "./ModalConfirm";
 import "./customs.css";
-import { Form } from "react-router-dom";
 
 const endpoint = "http://localhost:8000/api";
 class CrearDepartamento extends Component {
@@ -246,14 +245,14 @@ class CrearDepartamento extends Component {
 
             axios.post(url, data).then((res) => {
                 console.log(res);
-                window.location.href = "./departamentos";
+                window.location.href = "./edificios";
             });
 
         }
     };
 
     render() {
-        const { numeroPisos, pisoSeleccionado } = this.state;
+        const { numeroPisos,} = this.state;
         const pisosOptions = [];
 
         for (let i = 1; i <= numeroPisos; i++) {
@@ -271,7 +270,7 @@ class CrearDepartamento extends Component {
                 />
                 <Container className="custom-form">
                     <Row>
-                        <Col sm={12}>
+                        <Col md={12}>
                             <h2 className="text-center mb-5 titulosForms">Crear departamento</h2>
                             <form onSubmit={this.storeDepartment}>
                                 <FormGroup className="mb-4">
@@ -294,7 +293,7 @@ class CrearDepartamento extends Component {
                                 </FormGroup >
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -311,7 +310,7 @@ class CrearDepartamento extends Component {
                                             />
                                             <FormFeedback>{this.state.errors.numero_habitaciones}</FormFeedback>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -328,7 +327,7 @@ class CrearDepartamento extends Component {
                                             />
                                             <FormFeedback>{this.state.errors.numero_personas}</FormFeedback>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -351,7 +350,7 @@ class CrearDepartamento extends Component {
                                 
                                 <Row className="mb-3">
 
-                                    <Col sm={6}>
+                                    <Col md={6}>
 
                                         <Label
                                             check
@@ -380,7 +379,7 @@ class CrearDepartamento extends Component {
 
                                     </Label>
                                     <Row className="mb-3 mt-1">
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 check
                                                 className="label-custom"
@@ -394,7 +393,7 @@ class CrearDepartamento extends Component {
                                                 />
                                             </Label>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 check
                                                 className="label-custom"
@@ -409,7 +408,7 @@ class CrearDepartamento extends Component {
                                                 />
                                             </Label>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 check
                                                 className="label-custom"
@@ -432,7 +431,7 @@ class CrearDepartamento extends Component {
 
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -454,7 +453,7 @@ class CrearDepartamento extends Component {
                                             </Input>
                                             <FormFeedback>{this.state.errors.bloqueSeleccionado}</FormFeedback>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -476,7 +475,7 @@ class CrearDepartamento extends Component {
                                             </Input>
                                             <FormFeedback>{this.state.errors.edificioSeleccionado}</FormFeedback>
                                         </Col>
-                                        <Col sm={4}>
+                                        <Col md={4}>
                                             <Label
                                                 className="label-custom"
                                             >

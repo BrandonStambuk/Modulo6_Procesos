@@ -18,6 +18,7 @@ const InfoDepartamento = () => {
     const [residentes, setResidentes] = useState ([]);
     useEffect(() => {
         const idDep = cookies.get('idDepa');
+        cookies.remove('idContrato');
         obtenerDatosDepartamento(idDep);
     }, []);
 
@@ -29,43 +30,47 @@ const InfoDepartamento = () => {
     
         return `${day}-${month}-${year}`;
     }
-
-const  obtenerDatosDepartamento = async (idDepartamento) => {
-        try {
-            const response = await axios.get(`${endpoint}/departamento/${idDepartamento}`);
-            const departamentoSelec = response.data;
-            setDepartamentos(departamentoSelec);
-
-            const contrato = await axios.get(`${endpoint}/contratoDep/${idDepartamento}`);
-            const contratoSelec = contrato.data;
-            console.log("contratos", contratoSelec)
-            setContratos(contratoSelec.contratos);
-
-            const edificio = departamentoSelec.edificio_id;
-            console.log("edificio id ", edificio)
-            const edificioBus = await axios.get(`${endpoint}/edificio/${edificio}`);
-            const edificioSelect = edificioBus.data;
-            setEdificios(edificioSelect);
-
-            const bloque = edificioSelect.bloque_id;
-            console.log("bloque id ", bloque)
-            const bloqueBus = await axios.get(`${endpoint}/bloque/${bloque}`);
-            const bloqueSelect = bloqueBus.data;
-            setBloques(bloqueSelect);
-
-
-            const residentesPorContratoData = {};
-            for (const contrato of contratoSelec.contratos) {
-                const responseResidentes = await axios.get(`${endpoint}/residentes-by-contrato/${contrato.id}`);
-                residentesPorContratoData[contrato.id] = responseResidentes.data;
-            }
-            setResidentes(residentesPorContratoData);
-
-
-        } catch (error) {
-            console.error('Error al obtener datos del departamento:', error);
-        }
+    const handleClickEdit = (idContrato) => {
+        cookies.set('idContrato', idContrato);
+        window.location.href = '/dashboard/editContrato';
     };
+
+    const  obtenerDatosDepartamento = async (idDepartamento) => {
+            try {
+                const response = await axios.get(`${endpoint}/departamento/${idDepartamento}`);
+                const departamentoSelec = response.data;
+                setDepartamentos(departamentoSelec);
+
+                const contrato = await axios.get(`${endpoint}/contratoDep/${idDepartamento}`);
+                const contratoSelec = contrato.data;
+                console.log("contratos", contratoSelec)
+                setContratos(contratoSelec.contratos);
+
+                const edificio = departamentoSelec.edificio_id;
+                console.log("edificio id ", edificio)
+                const edificioBus = await axios.get(`${endpoint}/edificio/${edificio}`);
+                const edificioSelect = edificioBus.data;
+                setEdificios(edificioSelect);
+
+                const bloque = edificioSelect.bloque_id;
+                console.log("bloque id ", bloque)
+                const bloqueBus = await axios.get(`${endpoint}/bloque/${bloque}`);
+                const bloqueSelect = bloqueBus.data;
+                setBloques(bloqueSelect);
+
+
+                const residentesPorContratoData = {};
+                for (const contrato of contratoSelec.contratos) {
+                    const responseResidentes = await axios.get(`${endpoint}/residentes-by-contrato/${contrato.id}`);
+                    residentesPorContratoData[contrato.id] = responseResidentes.data;
+                }
+                setResidentes(residentesPorContratoData);
+
+
+            } catch (error) {
+                console.error('Error al obtener datos del departamento:', error);
+            }
+        };
         return (
             <div>
             <div className="background-image"></div>
@@ -89,18 +94,18 @@ const  obtenerDatosDepartamento = async (idDepartamento) => {
                             {contratos.map((contrato) => (
                                
                                 <Card className="contratoinf" key={contrato.id}>
-                                    <span id="tupla">
-                                        <h2 id="text-infDep"><b>Fecha inicio: </b>{formatDate(contrato.fecha_inicio_contrato)}</h2>
-                                        {contrato.tipo_contrato !== "Venta" && (
-                                        <h2 id="text-infDep">
-                                            <b>Fecha fin:</b> {formatDate(contrato.fecha_fin_contrato)}
-                                        </h2>
-                                        )}
-                                    </span>
-                                    <span id="tupla">
-                                        <h2 id="text-infDep"><b>Monto: </b>{contrato.precio_contrato} $</h2>
-                                        <h2 id="text-infDep"><b>Tipo de contrato: </b>{contrato.tipo_contrato}</h2>
-                                    </span>
+                                    <a className="linkContrato" onClick={() => handleClickEdit(contrato.id)}>
+                                        <div className="selectContrato">
+                                            <span id="tupla">
+                                                <h2 id="text-infDep"><b>Fecha inicio: </b>{formatDate(contrato.fecha_inicio_contrato)}</h2>
+                                                <h2 id="text-infDep"><b>Fecha fin:</b>{formatDate(contrato.fecha_fin_contrato)}</h2>
+                                            </span>
+                                            <span id="tupla">
+                                                <h2 id="text-infDep"><b>Monto: </b>{contrato.precio_contrato} $</h2>
+                                                <h2 id="text-infDep"><b>Tipo de contrato: </b>{contrato.tipo_contrato}</h2>
+                                            </span>
+                                        </div>
+                                    </a>
                                     {residentes[contrato.id] && residentes[contrato.id].length > 0 && (
                                 <div>
                                     <h1 id="text-subtit"><b>Residentes:</b></h1>

@@ -19,6 +19,7 @@ class CreateEquipamientosTable extends Migration
             $table->string('categoria');
             $table->text('descripcion')->nullable();
             $table->decimal('costo', 10, 2); // Cambiado a decimal para manejar decimales
+            $table->integer('cantidad');
             $table->unsignedBigInteger('area_comun_id'); // Agregado campo para la relación con áreas comunes
             $table->unsignedBigInteger('categoria_id')->nullable(); // Agregado campo para la relación con categorías de servicios
             $table->unsignedBigInteger('residente_id')->nullable(); // Agregado campo para la relación con residentes

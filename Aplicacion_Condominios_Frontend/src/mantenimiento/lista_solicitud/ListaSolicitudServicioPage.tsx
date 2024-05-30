@@ -6,6 +6,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 import Box from "@mui/material/Box";
 import {
+  deleteSolicitudServicio,
   getAllSolicitudServicio,
   updateSolicitudServicio,
 } from "../services/maintenance/solicitudMantenimientoService";
@@ -15,13 +16,14 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 import "./style.css";
 import { getAllCategories } from "../services/maintenance/categoryService";
-import { getAllPersonal } from "../services/maintenance/personalExternoService";
+import { getAllPersonal, getPersonalByCategory } from "../services/maintenance/personalExternoService";
 import { getAllEstados } from "../services/maintenance/estadoService";
 
 interface SolicitudServicioResponse {
   idRegistroSolicitud: number;
   idCategoria: number;
   idEstado: number;
+  idPersonalExterno:number;
   descripcion: string;
   nombrePropietario: string;
   ubicacion: string;
@@ -67,6 +69,7 @@ export default function PersonalPage() {
     useState<SolicitudServicioResponse>({
       idRegistroSolicitud: 0,
       idCategoria: 0,
+      idPersonalExterno: 0,
       idEstado: 0,
       descripcion: "",
       nombrePropietario: "",
@@ -98,13 +101,24 @@ export default function PersonalPage() {
       const categoryService = await getAllCategories();
       console.log("🚀 ~ loadData ~ categoryService:", categoryService);
       setCategoryService(categoryService);
-      const personal = await getAllPersonal();
-      setPersonalExterno(personal);
+     // const personal = await getPersonalByCategory(servicioActual.idCategoria);
+     // console.log("🚀 ~ loadData ~ personal:", personal)
+      // setPersonalExterno(personal);
       const estadoData = await getAllEstados();
       setEstados(estadoData);
     } catch (error) {}
   };
 
+  useEffect(()=>{
+    const allPersonalExterno =async()=>{
+      const personal = await getPersonalByCategory(servicioActual.idCategoria);
+      console.log("🚀 ~ allPersonalExterno ~ personal:", personal)
+      setPersonalExterno(personal);
+    } 
+    allPersonalExterno();
+  },[servicioActual])
+
+  
   const handleOpenModal = (solicitudServicio: SolicitudServicioResponse) => {
     if (solicitudServicio.idEstado == 3) {
       alert("Este servicio ya se ha finalizado y no se puede modificar");
@@ -119,6 +133,12 @@ export default function PersonalPage() {
     setShowModal(false);
   };
 
+  const handleDelete = async (id: number) => {
+    console.log("🚀 ~ handleDelete ~ id:", id);
+    await deleteSolicitudServicio(id);
+    //window.location.reload();
+  };
+
   const handleChangeEncargado = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -130,7 +150,7 @@ export default function PersonalPage() {
       }
     });
     if (encargado !== undefined) {
-      setServicioActual({ ...servicioActual, encargado: encargado.nombre });
+      setServicioActual({ ...servicioActual, encargado: encargado.nombre, idPersonalExterno: encargado.idPersonalExterno });
     }
   };
 
@@ -151,7 +171,7 @@ export default function PersonalPage() {
       dataToSend.idRegistroSolicitud,
       dataToSend
     );
-    console.log("🚀 ~ handleClickGuardar ~ response:", response);
+
     window.location.reload();
   };
 
@@ -212,7 +232,12 @@ export default function PersonalPage() {
                               fontSize="large"
                             />
                           </button>
-                          <button type="button">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDelete(solicitud.idRegistroSolicitud)
+                            }
+                          >
                             <DeleteOutlinedIcon
                               className="c-dark-blue "
                               fontSize="large"
@@ -265,6 +290,7 @@ export default function PersonalPage() {
                       <TextField
                         id="outlined-select-currency"
                         value={servicioActual?.idCategoria}
+                        disabled={true}
                         select
                       >
                         {categoryService?.map((option, index) => (
@@ -287,6 +313,7 @@ export default function PersonalPage() {
                         id="outlined"
                         placeholder="Ingrese la descripción del servicio"
                         value={servicioActual?.descripcion}
+                        disabled={true}
                         multiline
                       />
                     </div>
@@ -304,6 +331,7 @@ export default function PersonalPage() {
                         id="outlined"
                         placeholder="Ingrese Nombre del Propietario"
                         value={servicioActual?.nombrePropietario}
+                        disabled={true}
                       />
                     </div>
                   </div>
@@ -319,6 +347,7 @@ export default function PersonalPage() {
                         type="number"
                         placeholder="Ingrese telefono"
                         value={servicioActual?.numerReferencia}
+                        disabled={true}
                       />
                     </div>
                   </div>
@@ -332,6 +361,7 @@ export default function PersonalPage() {
                     <div className="col">
                       <TextField
                         id="outlined-select-currency"
+                        value={servicioActual.idPersonalExterno}
                         onChange={(event) => handleChangeEncargado(event)}
                         select
                       >

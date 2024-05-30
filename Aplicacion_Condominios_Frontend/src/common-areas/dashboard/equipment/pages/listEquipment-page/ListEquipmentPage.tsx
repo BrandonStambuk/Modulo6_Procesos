@@ -10,7 +10,7 @@ export const ListEquipmentPage: React.FC<ListElementProps> = ({ showForm }) => {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
 
   function fetchEquipment() {
-    fetch("http://localhost:8000/api/obtener-equipamientos")
+    fetch("http://localhost:8000/api/equipments")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Unexpected server response");
@@ -58,8 +58,9 @@ export const ListEquipmentPage: React.FC<ListElementProps> = ({ showForm }) => {
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Cantidad</th>
             <th>Costo</th>
-            <th>Id Area</th>
+            {/* <th>Id Area</th> */}
             <th>Area común</th>
             <th>Acción</th>
           </tr>
@@ -71,8 +72,9 @@ export const ListEquipmentPage: React.FC<ListElementProps> = ({ showForm }) => {
                 <td>{equipments.id}</td>
                 <td>{equipments.nombre}</td>
                 <td>{equipments.descripcion}</td>
+                <td>{equipments.cantidad}</td>
                 <td>{equipments.costo}</td>
-                <td>{equipments.area_comun_id}</td>
+                {/* <td>{equipments.area_comun_id}</td> */}
                 <td>{equipments.area_comun_nombre}</td>
                 <td style={{ width: "10px", whiteSpace: "nowrap" }}>
                   <button

@@ -15,6 +15,8 @@ use App\Models\CommonArea\Reservation;
 use App\Models\CommonArea\Schedule;
 use Illuminate\Support\Facades\DB;
 use App\Models\Cobro_Servicios\EquipamientosModel;
+use App\Models\Reporte;
+
 use Illuminate\Http\Request;
 
 class CommonAreaController extends Controller
@@ -195,14 +197,14 @@ class CommonAreaController extends Controller
 
     public function pagarReserva($idReserva) {
         $reservation = Reservation::find($idReserva);
-        
+
         if(!$reservation){
             return response()->json(['message' => 'Reserva no encontrada'], 404);
         }
-        
+
         $reservation->reserva_pagada = 1;
         $reservation->save();
-        
+
         return response()->json(['message' => 'Reserva pagada exitosamente'], 200);
     }
 
@@ -275,4 +277,47 @@ class CommonAreaController extends Controller
         return response()->json(['data' => $equipment], 200);
     }
 
+    public function createReport(Request $request)
+    {
+        $request->validate([
+            'Id_residente' => 'required|integer',
+            'Id_areaComun' => 'required|integer',
+            'Id_equipment' => 'required|integer',
+            'Costo_reponer' => 'required|numeric',
+            'Cantidad_reponer' => 'required|integer',
+            'Situacion' => 'required|string',
+            'Info' => 'required|string',
+        ]);
+
+        $reporte = Reporte::create([
+            'id_residente' => $request->Id_residente,
+            'id_common_area' => $request->Id_areaComun,
+            'id_equipment' => $request->Id_equipment,
+            'costo_reponer' => $request->Costo_reponer,
+            'cantidad_reponer' => $request->Cantidad_reponer,
+            'situacion' => $request->Situacion,
+            'info' => $request->Info,
+        ]);
+
+        return response()->json($reporte, 201);
+    }
+
+    public function getReports() {
+        $reports = collect(Reporte::all())->map(function ($report) {
+            $nameResidente = DB::table('residentes')->where('id', $report->id_residente)->value('nombre_residente');
+            $nameCommonArea = DB::table('common_areas')->where('id_common_area', $report->id_common_area)->value('common_area_name');
+            $nameEquipment = DB::table('equipamientos')->where('id', $report->id_equipment)->value('nombre');
+            return [
+                'id' => $report->id,
+                'residentName' => $nameResidente,
+                'commonAreaName' => $nameCommonArea,
+                'equipmentName' => $nameEquipment,
+                'cosToReplace' => $report->costo_reponer,
+                'countToReplace' => $report->cantidad_reponer,
+                'situation' => $report->situacion,
+                'information' => $report->info,
+            ];
+        });
+        return response()->json(['data' => $reports], 200);
+    }
 }

@@ -9,12 +9,11 @@ import {
   Label,
   Input,
   Button,
-  FormFeedback
+  FormFeedback,
 } from "reactstrap";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaTimes } from "react-icons/fa";  // Importa el icono de react-icons
-
+import { FaTimes } from "react-icons/fa"; // Importa el icono de react-icons
 
 const endpoint = "http://localhost:8000/api";
 
@@ -29,7 +28,8 @@ const PreAviso = () => {
   const [propietarios, setPropietarios] = useState([]);
   const [propietarioSeleccionado, setPropietarioSeleccionado] = useState("");
   const [servicioPagar, setServicioPagar] = useState("");
-  const [propietarioSeleccionadoID, setPropietarioSeleccionadoID] = useState("");
+  const [propietarioSeleccionadoID, setPropietarioSeleccionadoID] =
+    useState("");
   const [multas, setMultas] = useState([]);
 
   useEffect(() => {
@@ -53,44 +53,62 @@ const PreAviso = () => {
   useEffect(() => {
     const fetchPropietarios = async () => {
       try {
-        const contratoDepResponse = await axios.get(`${endpoint}/contratoDep/${departamento_id}`);
+        const contratoDepResponse = await axios.get(
+          `${endpoint}/contratoDep/${departamento_id}`
+        );
         const contratoDepId = contratoDepResponse.data.contratos[0].id;
         console.log("id del contrato encontrado " + contratoDepId);
-        
-        const propietariosByContratoResponse = await axios.get(`${endpoint}/propietario-by-contrato/${contratoDepId}`);
-  
-        if (propietariosByContratoResponse.data.message !== "No tiene propietario") {
+
+        const propietariosByContratoResponse = await axios.get(
+          `${endpoint}/propietario-by-contrato/${contratoDepId}`
+        );
+
+        if (
+          propietariosByContratoResponse.data.message !== "No tiene propietario"
+        ) {
           // Si hay propietario, mostrar solo ese propietario
-          const nombrePropietario = propietariosByContratoResponse.data.residente.nombre_residente;
-          const idPropietario = propietariosByContratoResponse.data.residente.id;
+          const nombrePropietario =
+            propietariosByContratoResponse.data.residente.nombre_residente;
+          const idPropietario =
+            propietariosByContratoResponse.data.residente.id;
           console.log(nombrePropietario);
           setPropietarios([nombrePropietario]);
           setPropietarioSeleccionadoID(idPropietario);
         } else {
           // Si no hay propietario, obtener los titulares por la otra ruta
-          const titularesByContratoResponse = await axios.get(`${endpoint}/titular-by-contrato/${contratoDepId}`);
+          const titularesByContratoResponse = await axios.get(
+            `${endpoint}/titular-by-contrato/${contratoDepId}`
+          );
           console.log(titularesByContratoResponse);
-          
+
           if (Array.isArray(titularesByContratoResponse.data)) {
-            const nombresTitulares = titularesByContratoResponse.data.map(titular => titular.nombre_residente);
+            const nombresTitulares = titularesByContratoResponse.data.map(
+              (titular) => titular.nombre_residente
+            );
             setPropietarios(nombresTitulares);
-          } else if (titularesByContratoResponse.data.message === "Titular encontrado") {
+          } else if (
+            titularesByContratoResponse.data.message === "Titular encontrado"
+          ) {
             // Si se encuentra un titular pero no es un array, mostrar solo ese titular
-            const nombreTitular = titularesByContratoResponse.data.residente.nombre_residente;
+            const nombreTitular =
+              titularesByContratoResponse.data.residente.nombre_residente;
             const idTitular = titularesByContratoResponse.data.residente.id;
 
             console.log(nombreTitular);
             setPropietarios([nombreTitular]);
             setPropietarioSeleccionadoID(idTitular);
           } else {
-            console.error("La respuesta de la API no es válida:", titularesByContratoResponse.data);
+            console.error(
+              "La respuesta de la API no es válida:",
+              titularesByContratoResponse.data
+            );
           }
         }
       } catch (error) {
         console.error("Error al obtener la lista de propietarios:", error);
       }
     };
-  
+
     fetchPropietarios();
   }, []);
 
@@ -121,15 +139,15 @@ const PreAviso = () => {
     if (!fecha.trim()) {
       validationErrors.fecha = "Este campo es obligatorio";
     }
-    
+
     if (!descripcion_servicios.trim()) {
       validationErrors.descripcion_servicios = "Este campo es obligatorio";
     }
-    
+
     if (!monto.trim()) {
       validationErrors.monto = "Este campo es obligatorio";
     }
-    
+
     if (!servicioPagar.trim()) {
       validationErrors.tipo_servicio = "Seleccione un servicio a pagar";
     }
@@ -151,24 +169,26 @@ const PreAviso = () => {
         servicio_pagar: servicioPagar,
         id_propietarioPagar: propietarioSeleccionadoID,
       };
-      
+
       let multaData;
 
       try {
         const response = await axios.post(url, data);
         console.log("Preaviso guardado exitosamente:", response.data);
         console.log("id del preaviso", response.data.id);
-        
-        await Promise.all(multas.map(async (multa) => {
-          multaData = {
-            preaviso_id: response.data.id,  
-            descripcion: multa.descripcion,
-            monto: multa.monto,
-            fecha: multa.fecha,
-          };
-          await axios.post(`${endpoint}/agregar-multita`, multaData);
-        }));
-        
+
+        await Promise.all(
+          multas.map(async (multa) => {
+            multaData = {
+              preaviso_id: response.data.id,
+              descripcion: multa.descripcion,
+              monto: multa.monto,
+              fecha: multa.fecha,
+            };
+            await axios.post(`${endpoint}/agregar-multita`, multaData);
+          })
+        );
+
         window.location.href = "/cobros/pre-aviso";
       } catch (error) {
         console.error("Error al guardar el preaviso:", error);
@@ -176,7 +196,6 @@ const PreAviso = () => {
       }
     }
   };
-
 
   const handleAddMulta = () => {
     setMultas([...multas, { descripcion: "", monto: "", fecha: "" }]);
@@ -207,7 +226,8 @@ const PreAviso = () => {
                 type="select"
                 name="propietario"
                 onChange={(e) => setPropietarioSeleccionado(e.target.value)}
-                value={propietarioSeleccionado}                >
+                value={propietarioSeleccionado}
+              >
                 <option value="">Seleccionar propietario</option>
                 {propietarios.map((propietario) => (
                   <option key={propietario} value={propietario}>
@@ -253,6 +273,9 @@ const PreAviso = () => {
                 value={servicioPagar}
               >
                 <option value="">Seleccionar servicio</option>
+                <option value="Pago al portero">Pago al portero</option>
+                <option value="Agua">Agua</option>
+                <option value="Basura">Basura</option>
                 {tiposServicio.map((tipo, index) => (
                   <option key={index} value={tipo}>
                     {tipo}
@@ -275,44 +298,47 @@ const PreAviso = () => {
 
             <h4 className="text-center mb-5">Multas</h4>
 
-              {multas.map((multa, index) => (
-            <Row key={index} className="align-items-center">
-              <Col sm={3}>
-                <Label className="label-custom">Descripción</Label>
-                <Input
-                  type="text"
-                  name="descripcion"
-                  placeholder="Ingrese la descripción"
-                  onChange={(e) => handleMultaChange(index, e)}
-                  value={multa.descripcion}
-                />
-              </Col>
-              <Col sm={3}>
-                <Label className="label-custom">Monto</Label>
-                <Input
-                  type="number"
-                  name="monto"
-                  placeholder="Ingrese el monto"
-                  onChange={(e) => handleMultaChange(index, e)}
-                  value={multa.monto}
-                />
-              </Col>
-              <Col sm={3}>
-                <Label className="label-custom">Fecha</Label>
-                <Input
-                  type="date"
-                  name="fecha"
-                  onChange={(e) => handleMultaChange(index, e)}
-                  value={multa.fecha}
-                />
-              </Col>
-              <Col sm={3} className="d-flex justify-content-end">
-                <Button color="danger" onClick={() => handleRemoveMulta(index)}>
-                  <FaTimes />
-                </Button>
-              </Col>
-            </Row>
-          ))}
+            {multas.map((multa, index) => (
+              <Row key={index} className="align-items-center">
+                <Col sm={3}>
+                  <Label className="label-custom">Descripción</Label>
+                  <Input
+                    type="text"
+                    name="descripcion"
+                    placeholder="Ingrese la descripción"
+                    onChange={(e) => handleMultaChange(index, e)}
+                    value={multa.descripcion}
+                  />
+                </Col>
+                <Col sm={3}>
+                  <Label className="label-custom">Monto</Label>
+                  <Input
+                    type="number"
+                    name="monto"
+                    placeholder="Ingrese el monto"
+                    onChange={(e) => handleMultaChange(index, e)}
+                    value={multa.monto}
+                  />
+                </Col>
+                <Col sm={3}>
+                  <Label className="label-custom">Fecha Infraccion</Label>
+                  <Input
+                    type="date"
+                    name="fecha"
+                    onChange={(e) => handleMultaChange(index, e)}
+                    value={multa.fecha}
+                  />
+                </Col>
+                <Col sm={3} className="d-flex justify-content-end">
+                  <Button
+                    color="danger"
+                    onClick={() => handleRemoveMulta(index)}
+                  >
+                    <FaTimes />
+                  </Button>
+                </Col>
+              </Row>
+            ))}
 
             <Button
               size="lg"
@@ -341,4 +367,3 @@ const PreAviso = () => {
 };
 
 export default PreAviso;
-

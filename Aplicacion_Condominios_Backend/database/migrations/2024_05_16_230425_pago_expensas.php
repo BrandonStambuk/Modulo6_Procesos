@@ -16,6 +16,7 @@ class PagoExpensas extends Migration
         Schema::create('Pago_Expensas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('residente_id'); 
+            $table->unsignedBigInteger('montoPagar');
             $table->foreign('residente_id')->references('id')->on('residentes')->onDelete('cascade');
             $table->timestamps(); 
         });

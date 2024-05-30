@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import './DepartamentosCss.css';
 
-import { Link } from "react-router-dom";
 import Cookies from 'universal-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, CardImg, CardBody, CardTitle , Button } from 'reactstrap';
+import { Card, CardImg, CardBody, CardTitle , Button} from 'reactstrap';
 import ModalConfirm from "./ModalConfirm";
 import ModalDisponible from "./PopUPSelectOferta";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowCircleRight, faPenToSquare , faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare , faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const endpoint = 'http://localhost:8000/api';
 const endpointImg = 'http://localhost:8000';
 const cookies = new Cookies();
 const MostrarDep = () => {
     const [departamentos, setDepartamentos] = useState ([]);
+    const [edificioSel, setEdificioSel] = useState([]);
     const [switchStates, setSwitchStates] = useState({});
     const [isOpenModal1, setIsOpenModal1] = useState(false);
     const [isOpenModal2, setIsOpenModal2] = useState(false);
@@ -23,25 +23,19 @@ const MostrarDep = () => {
 
 
     useEffect(() => {
-        getAllDepartments();
         cookies.remove('idDepa');
+        const idEdif = cookies.get('idEdif');
+        getAllDepartments(idEdif);
     }, []);
 
-    /* const getAllDepartments = async () => {
-        const response = await axios.get(`${endpoint}/departamentos`);
-        setDepartamentos(response.data);
-        const initialSwitchStates = {};
-        response.data.forEach(departamento => {
-            initialSwitchStates[departamento.id]  = departamento.disponibilidad;
-        });
-        setSwitchStates(initialSwitchStates);
-    } */
-
-    const getAllDepartments = async () => {
+    const getAllDepartments = async (idEdif) => {
         try {
-            const response = await axios.get(`${endpoint}/departamentos`);
+            const response = await axios.get(`${endpoint}/departamentos-by-edificios/${idEdif}`);
             const departamentos = response.data;
             setDepartamentos(departamentos);
+            const edificioBus = await axios.get(`${endpoint}/edificio/${idEdif}`);
+            const edifNombre = edificioBus.data;
+            setEdificioSel(edifNombre);
             const initialSwitchStates = {};
             // Iterar sobre cada departamento
             for (const departamento of departamentos) {
@@ -148,7 +142,7 @@ const MostrarDep = () => {
     }
 
     return(
-        
+
         <div className="Deps">
             <ModalConfirm
                 isOpen={isOpenModal1}
@@ -162,24 +156,21 @@ const MostrarDep = () => {
                 toggle={() => setIsOpenModal2(false)}
                 //confirm={() => handleConfirm()}
                 idDep={estadoIdDepa}
-            />
-            )
-
-            }
+                />
+            )}
             
-            <h1 className="title">Departamentos</h1>
-            <div className= "lista">
+            <h1 className="title">Departamentos del edificio: {edificioSel.nombre_edificio}</h1>
+            <div className= "row">
                 {departamentos.map((departamento) => (
-                    <Card className="cardDepa" key={departamento.id} onClick={() => handleClickInfo(departamento.id)}>
+                    <div className="col-sm-12 col-md-12 col-lg-6 col-xl-4" key={departamento.id}>
+                    <div className="d-flex h-100">
+                    <Card className="mt-3 mb-3 flex-fill cardDepa" onClick={() => handleClickInfo(departamento.id)}>
                         <CardImg
                             alt="Card image cap"
                             src={`${endpointImg}/${departamento.imagen_departamento}`}
-                            top
-                            width="100%"
-                            height={225}
-                            style={{ objectFit: "fill" }}
+                            style={{ objectFit: "cover", width: "100%", height: "250px", borderBottomLeftRadius: 0, borderBottomRightRadius: 0}}
                         />
-                        <CardBody className="d-flex flex-column justify-content-between">
+                        <CardBody className="d-flex flex-column justify-content-between align-items-stretch">
                             <CardTitle tag="h5">{departamento.nombre_departamento}</CardTitle>
                             {departamento.contratos && departamento.contratos.length > 0 && (
                                 <div>
@@ -187,33 +178,31 @@ const MostrarDep = () => {
                                         <div key={contrato.id}>
                                             {contrato.tipo_contrato === "Venta" && contrato.residente && (
                                                 //console.log("Propietario: ", contrato.residente.nombre_residente);
-                                               <p>Propietario: {contrato.residente.nombre_residente} {contrato.residente.apellidos_residente}</p>
+                                               <p id="contenidoCard">Propietario: {contrato.residente.nombre_residente} {contrato.residente.apellidos_residente}</p>
                                             )}
                                             {contrato.tipo_contrato !== "Venta" && contrato.titular && (
-                                                <p>Titular: {contrato.titular.nombre_residente} {contrato.titular.apellidos_residente}</p>
+                                                <p id="contenidoCard">Titular: {contrato.titular.nombre_residente} {contrato.titular.apellidos_residente}</p>
                                             )}
                                         </div>
-
                                     ))}
                                 </div>
-                                
                             )}
                             <div id="datosCard">
                             {departamento.disponibilidad ? (
                                 <>
                                     <span>Modalidad de oferta: </span>
-                                    {departamento.ofertado_venta ? <span>Venta </span> : null}
-                                    {departamento.ofertado_alquiler ? <span>Alquiler </span> : null}
-                                    {departamento.ofertado_anticretico ? <span>Anticretico </span> : null}
+                                    {[
+                                        departamento.ofertado_venta && "Venta",
+                                        departamento.ofertado_alquiler && "Alquiler",
+                                        departamento.ofertado_anticretico && "Anticretico"
+                                    ].filter(Boolean).join(" / ") || "Ninguna"}
                                 </>
                             ) : null}
                             </div>
                             <div className="botones">
                             <Button className="botoncard" onClick={(e) => { e.stopPropagation(); deleteDepartment(departamento.id); }}><FontAwesomeIcon icon={faTrashAlt} className="iconos"/></Button>
                             <Button className="botoncard" onClick={(e) => { e.stopPropagation(); handleClickEditar(departamento.id); }} ><FontAwesomeIcon icon={faPenToSquare} className="iconos"/></Button>
-                            <Button className="botoncard" onClick={(e) => { e.stopPropagation(); handleClickInfo(departamento.id); }} ><FontAwesomeIcon icon={faArrowCircleRight} className="iconos"/></Button>
-                                
-                                <label className="switch" onClick={(e) => e.stopPropagation()}>
+                            <label className="switch" onClick={(e) => e.stopPropagation()}>
                                 <input
                                     type="checkbox"
                                     checked={switchStates[departamento.id]}
@@ -229,6 +218,8 @@ const MostrarDep = () => {
                             </div>
                         </CardBody>
                     </Card>
+                    </div>
+                    </div>
                 ))}
             </div>
         </div>

@@ -32,4 +32,8 @@ class departamento extends Model
     {
         return $this->hasMany(Contrato::class, 'id');
     }
+    public function parqueos()
+    {
+        return $this->hasMany(Parqueo::class, 'id');
+    }
 }

@@ -3,10 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import { CreateReservationDTO } from "../interfaces/reservations";
-import {
-  createReservation,
-  getResidents,
-} from "../services/reservation.service";
+import { createReservation } from "../services/reservation.service";
+import { getResidents } from "../../shared/services/resident.service";
 
 interface Props {
   idCommonArea: number;

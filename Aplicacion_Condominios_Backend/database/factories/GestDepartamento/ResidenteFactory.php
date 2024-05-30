@@ -43,9 +43,15 @@ class ResidenteFactory extends Factory
                 if ($contrato->tipo_contrato === 'Venta' && $contrato->vigente_contrato === true) {
                     // Si es de tipo "venta", establecer el tipo de residente como "propietario"
                     $tipo_residente = 'Propietario';
-                } else {
+                } 
+                if ($contrato->tipo_contrato <> 'Venta' && $contrato->vigente_contrato === true){
                     // Si no es de tipo "venta", asignar el tipo de residente de forma aleatoria entre "inquilino" y "titular"
                     $tipo_residente = $this->faker->randomElement(['Residente', 'Titular']);
+                }
+                if ($contrato->vigente_contrato === false){
+                    // Si el contrato no está vigente, devolver null
+                    $tipo_residente = 'ninguno'; 
+                    return null;
                 }
                 // Devolver el id del contrato
                 return $contrato->id;

@@ -23,10 +23,16 @@ class ContratoObserver
         $fechaActual = Carbon::now();
         if($contrato->fecha_fin_contrato && $contrato->fecha_fin_contrato->lessThan($fechaActual)){
             $contrato->vigente_contrato = false;
-            $departamento = Departamento::find($contrato->departamento_id);
-            $departamento->disponibilidad = true;
-            $departamento->save();
-            $contrato->departamento_id = null;
+            if($contrato->departamento_id <> null){
+                $departamento = Departamento::find($contrato->departamento_id);
+                $departamento->disponibilidad = true;
+                $departamento->save();
+                $contrato->departamento_id = null;
+            }
+            $contrato->save();
+        }
+        if($contrato->departamento_id === null){
+            $contrato->vigente_contrato = false;
             $contrato->save();
         }
 

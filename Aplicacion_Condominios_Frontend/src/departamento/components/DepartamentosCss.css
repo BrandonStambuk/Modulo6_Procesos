@@ -8,31 +8,25 @@
     color: black;
     font-weight: bold;
     text-align: center;
-    margin-top: 0.7em;
-    margin-bottom: 1.5em;
+    margin-top: 0.5em;
+    margin-bottom: 1.4em;
     font-size: 2rem;
 }
 
-.lista {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-  
 .cardDepa.card {
-    width: calc(33.33% - 1.4rem); 
-    margin-bottom: 2.7rem; 
     border:none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+    margin: 0.3vw;
 }
 
 .cardDepa.card:hover {
-    filter: brightness(95%); 
+    filter: brightness(93%); 
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 
 #datosCard{
-    margin-bottom: 1rem;
+    font-size: 0.97rem;
     margin-bottom: auto;
     flex-wrap: nowrap; 
     align-items: center;
@@ -68,17 +62,13 @@
 
 .iconos {
     color: rgba(45, 96, 115, 1);
-    font-size: 1.4rem;
+    font-size: 1.45rem;
 }
 .iconos:hover {
     color: rgb(26, 61, 73);
 }
 .iconos:active {
     color: rgb(83, 116, 128);
-}
-
-.card-img-top {
-    max-height: 22rem;
 }
 
 .switch {
@@ -128,4 +118,12 @@ input:checked + .slider:before {
     -webkit-transform: translateX(1.5rem);
     -ms-transform: translateX(1.5rem);
     transform: translateX(1.35rem);
+}
+#contenidoCard {
+	font-size: 0.97rem;
+	margin-bottom: 0.5rem;
+}
+#infoEdifcio {
+	font-size: 0.95rem;
+	margin-bottom: 0.25rem;
 }

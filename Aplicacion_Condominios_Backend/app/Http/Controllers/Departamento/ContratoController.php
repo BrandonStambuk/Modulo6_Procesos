@@ -124,6 +124,15 @@ class ContratoController extends Controller
             ], 500);
         }
     }
+
+    public function show($id)
+    {
+        //mostrar el residente por su id
+        $contrato = Contrato::find($id);
+        //return response()->json($residente);
+        return $contrato;
+    }
+
     /* public function show(Contrato $contrato)
     {
         //

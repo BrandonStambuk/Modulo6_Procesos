@@ -34,10 +34,31 @@ li {
 	background-color: rgb(25, 118, 162);
 	border-color: rgb(25, 118, 162);
 	font-size: 1rem;
+	font-weight: bold;
 }
 .custom-button:hover {
 	background-color: rgb(11, 79, 110);
 	border-color: rgb(22, 101, 138);
+}
+.custom-buttonVisita {
+	background-color: rgb(25, 118, 162);
+	font-size: 0.8rem;
+	font-weight: bold;
+}
+.custom-buttonVisita:hover {
+	background-color: rgb(11, 79, 110);
+}
+
+.iconVisita {
+	color: rgb(25, 118, 162);
+	font-size: 1.6rem;
+}
+
+.iconVisita:hover {
+	color: rgb(11, 79, 110);
+}
+.iconVisita:active {
+	color: rgb(22, 101, 138);
 }
 .custom-form {
 	background-color: #FFFEF6;
@@ -144,8 +165,14 @@ input[type='number'] {
 	border: 2px solid rgba(45, 96, 115, 1);
 	box-shadow: none;
 }
+.customInput.is-invalid.form-control:focus, .customInput.is-invalid.form-control:active{
+	box-shadow: none;
+}
 .customInput.form-select {
 	font-size: 0.9rem;
+}
+.customInput.form-select:focus, .customInput.form-select:active{
+	box-shadow: none;
 }
 input[type="date"].customInput{
 	font-size: 0.9rem;
@@ -170,7 +197,7 @@ input[type="date"].customInput{
 .cardImgResidente{
 	width: 100%;
 	height: 14em;
-	object-fit: fill;
+	object-fit: cover;
 }
 .labelResidente.form-label{
 	font-size: 0.8rem;
@@ -196,6 +223,18 @@ input[type="date"].customInput{
 	margin: 6px;
 	border-radius: 5px ;
 }
-
+.visitasTabla{
+	font-size: 0.95rem;
+}
+td.celdaVisita{
+	vertical-align: middle;
+	text-align: center;
+}
+.buscadorDepa:hover{
+	border: 2px solid rgba(45, 96, 115, 1) !important;
+}
+.buscadorDepa:focus{
+	border: 2px solid rgba(45, 96, 115, 1) !important;
+}
 
 

@@ -16,7 +16,7 @@ class CreateAnuncioEmailsTable extends Migration
         Schema::create('anuncio_emails', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
-            $table->string('anuncio');
+            $table->longText('anuncio');
             $table->string('email')->unique(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

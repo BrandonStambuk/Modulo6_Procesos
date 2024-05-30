@@ -90,5 +90,34 @@ class ExpensasController extends Controller
             'status' => 200,
             'message' => 'Expensa eliminada exitosamente',
         ]);
+
+
     }
+
+
+    public function pagar($id)
+{
+    $expensa = ExpensaModel::findOrFail($id);
+    
+    if(!$expensa){
+        return response()->json(['message' => 'Expensa no encontrada'], 404);
+    }    
+    
+    if ($expensa->pagado) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'La expensa ya ha sido pagada anteriormente',
+        ]);
+    }
+
+    // Cambiar el valor de la propiedad 'pagado' a true
+    $expensa->pagado = true;
+    $expensa->save();
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Expensa marcada como pagada exitosamente',
+    ]);
+}
+
 }

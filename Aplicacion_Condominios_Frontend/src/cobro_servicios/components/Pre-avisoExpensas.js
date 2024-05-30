@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye, FaPen } from 'react-icons/fa';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const GestionCobro = () => {
     const endpoint = "http://localhost:8000/api";
     const [preavisosConMultas, setPreavisosConMultas] = useState([]);
     const [preavisosSinMultas, setPreavisosSinMultas] = useState([]);
+    const [generarExpensaHabilitado, setGenerarExpensaHabilitado] = useState(true); // Estado para controlar la habilitación del botón
 
     useEffect(() => {
         const obtenerPreavisosConMultas = async () => {
@@ -26,30 +29,64 @@ const GestionCobro = () => {
                 const response = await fetch(`${endpoint}/PreAvisoSinMulta`);
                 const data = await response.json();
                 setPreavisosSinMultas(data.data);
-                console.log(data); // Imprimir los datos en la consola
+                console.log(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
 
-        obtenerPreavisosSinMultas(); // Agregar esta línea para ejecutar la función
+        obtenerPreavisosSinMultas(); 
     }, []);
 
     const handleVerMultas = (idPreaviso) => {
-        // Obtener el ID de la primera multa de la lista de multas
             window.location.href = `/cobros/multas/${idPreaviso}`;
       
     };
 
     const calcularMontoTotal = (montoOriginal, multas) => {
-        // Calcular el monto total restando el monto de todas las multas del monto original
         const montoMultaTotal = multas.reduce((total, multa) => total + parseFloat(multa.monto), 0);
         return parseFloat(montoOriginal) - montoMultaTotal;
     };
 
-    const handleGenerarExpensa = (idPreaviso) => {
-        // Lógica para generar la expensa
-        console.log(`Generar expensa para el preaviso con ID ${idPreaviso}`);
+    const handleGenerarExpensa = async (preaviso_id) => {
+        try {
+            setGenerarExpensaHabilitado(false); // Deshabilitar el botón antes de enviar la solicitud
+
+            const response = await axios.post(`${endpoint}/generar-expensa`, { preaviso_id });
+            
+            if (response.status === 200) {
+                console.log('Expensa generada con éxito');
+                console.log(response);
+                // Mostrar la alerta de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Expensa generada con éxito',
+                    text: 'La expensa ha sido generada exitosamente.',
+                }).then(() => {
+                    setGenerarExpensaHabilitado(true); // Habilitar el botón después de cerrar la alerta
+                });
+            } else {
+                console.error('Error al generar la expensa:', response.statusText);
+                // Mostrar una alerta de error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al generar la expensa',
+                    text: response.statusText,
+                }).then(() => {
+                    setGenerarExpensaHabilitado(true); // Habilitar el botón después de cerrar la alerta
+                });
+            }
+        } catch (error) {
+            console.error('Error al generar la expensa:', error);
+            // Mostrar una alerta de error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al generar la expensa',
+                text: 'Hubo un error al generar la expensa. Por favor, inténtalo de nuevo más tarde.',
+            }).then(() => {
+                setGenerarExpensaHabilitado(true); // Habilitar el botón después de cerrar la alerta
+            });
+        }
     };
 
     return (
@@ -91,8 +128,10 @@ const GestionCobro = () => {
                             <td style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => handleVerMultas(preaviso.id)}>
                                 <FaEye />
                             </td>
-                            <td style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => handleGenerarExpensa(preaviso.id)}>
+                            <td style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => handleGenerarExpensa(preaviso.id)}></td>
                                 <FaPen /> {/* Icono de lápiz */}
+                            <td style={{ textAlign: 'center', cursor: 'pointer' }}>
+                                <FaPen onClick={() => handleGenerarExpensa(preaviso.id)} disabled={!generarExpensaHabilitado} />
                             </td>
                         </tr>
                     ))}
@@ -122,8 +161,8 @@ const GestionCobro = () => {
                             <td>{preaviso.descripcion_servicios}</td>
                             <td>{preaviso.servicio_pagar}</td>
                             <td>{preaviso.monto}</td>
-                            <td style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => handleGenerarExpensa(preaviso.id)}>
-                                <FaPen /> {/* Icono de lápiz */}
+                            <td style={{ textAlign: 'center', cursor: 'pointer' }}>
+                                <FaPen onClick={() => handleGenerarExpensa(preaviso.id)} disabled={!generarExpensaHabilitado} />
                             </td>
                         </tr>
                     ))}

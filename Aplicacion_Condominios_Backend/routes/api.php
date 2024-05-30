@@ -186,7 +186,8 @@ Route::controller(PreAvisoController::class)->group(function(){
 
 });
 Route::controller(ExpensasController::class)->group(function(){
-    
+    Route::put('/expensas/{id}/pagarExpensa', [ExpensasController::class, 'pagar']);
+
     Route::post('/generar-expensa', [ExpensasController::class, 'store']);
     Route::get('/obtener-expensas', [ExpensasController::class, 'index']);
     Route::get('/obtener-expensas/{id}', [ExpensasController::class, 'show']);

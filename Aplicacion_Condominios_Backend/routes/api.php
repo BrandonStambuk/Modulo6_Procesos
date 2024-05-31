@@ -117,7 +117,7 @@ Route::controller(ResidenteController::class)->group(function(){
     Route::get('/residente-by-departamento/{id}', 'getResidenteByDepartamento')->name('residente.getResidenteByDepartamento');
     Route::get('/propietario-by-contratoS/{id}', 'getPropietByContratShort')->name('residente.getPropietByContratShort');
     Route::get('/titular-by-contratoS/{id}', 'getTituByContratShort')->name('residente.getTituByContratShort');
-
+    Route::get('/redidentesDepartamentoPerteneceEdifico/{id}', 'getResidentesByContratoWhereDepartamentoBelongsABuilding')->name('residente.getResidentesByContratoWhereDepartamentoBelongsABuilding');
 });
 Route::controller(ContratoController::class)->group(function(){
     Route::get('/contratos','index')->name('contrato.index');
@@ -240,7 +240,9 @@ Route::controller(EquipamientosController::class)->group(function(){
     Route::get('/obtenerAreasComunes', [EquipamientosController::class, 'getAllCommonAreas']);
     Route::get('/obtenerAreasComunesID',[EquipamientosController::class,'getAllCommonAreasID']);
     Route::get('/obtener-equipamientos', [EquipamientosController::class, 'getAllEquipamientos']);
+    Route::get('/obtener-equipamientos-todo', [EquipamientosController::class, 'getAllEquipamientosTodo']);
     Route::get('/obtener-equipamiento/{id}', [EquipamientosController::class, 'getEquipoById']);
+    Route::get('/obtener-equipamiento-todo/{id}', [EquipamientosController::class, 'getEquipoByIdTodo']);
     Route::delete('/eliminar-equipo/{id}', [EquipamientosController::class, 'delete']);
     Route::put('/editar-equipo/{id}', [EquipamientosController::class, 'edit']);
 });

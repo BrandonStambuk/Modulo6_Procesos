@@ -65,7 +65,7 @@ export default function ListaCompras() {
               <th></th>
             </tr>
           </thead>
-          {listaComprasList.length > 0 &&
+          {listaComprasList?.length > 0 &&
             listaComprasList.map((element: any) => (
               <tbody key={element.idSolicitud}>
                 <tr>

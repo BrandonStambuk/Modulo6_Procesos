@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Cobro_Servicios\ExpensaModel;
 use App\Models\Cobro_Servicios\PreAvisoModel;
+use App\Models\GestDepartamento\Residente;
 class ExpensasController extends Controller
 {
     public function index()
@@ -120,4 +121,40 @@ class ExpensasController extends Controller
     ]);
 }
 
+
+
+public function acumularMonto($residente_id, $monto)
+    {
+        $residente = Residente::findOrFail($residente_id);
+
+        $residente->monto_pagar += $monto;
+        $residente->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Monto acumulado exitosamente',
+            'data' => $residente,
+        ]);
+    }
+
+
+
+
+
+    public function decrementarMonto($residente_id, $monto)
+    {
+        $residente = Residente::findOrFail($residente_id);
+
+        $residente->monto_pagar -= $monto;
+        $residente->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Monto decrementado exitosamente',
+            'data' => $residente,
+        ]);
+    }
 }
+
+
+

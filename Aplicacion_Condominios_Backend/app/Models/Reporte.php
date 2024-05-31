@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CommonArea\Reservation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
@@ -20,7 +21,8 @@ class Reporte extends Model
         'costo_reponer',
         'cantidad_reponer',
         'situacion',
-        'info'
+        'info',
+        'id_reservation',
     ];
 
     // Definir las relaciones
@@ -41,5 +43,10 @@ class Reporte extends Model
     public function equipment()
     {
         return $this->belongsTo(EquipamientosModel::class, 'id_equipment');
+    }
+
+    public function reservation()
+    {
+        return $this->belongsTo(Reservation::class, 'id_reservation');
     }
 }

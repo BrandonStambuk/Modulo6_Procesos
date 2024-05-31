@@ -11,7 +11,14 @@
   .button__insu {
     display: flex;
     justify-content: flex-end;
+    background-color: #1976A2;
+    max-width: 150px;
+    border-radius: 7px;
+    width: 100%;
     
+  }
+  .button__insu:hover{
+    background-color:#2E82AA ;
   }
 
   .ajustar__insu {
@@ -25,3 +32,21 @@
     padding-top: 7px;
   }
   
+.button_delete{
+  color: #ffffff;
+  background-color: #DC3545;
+  width: 80px;
+  padding: 2px 15px;
+}
+
+.button_edit{
+  color: #ffffff;
+  background-color: #72BDAD;
+  width: 80px;
+  padding: 2px 15px;
+}
+
+.tamIcon1{
+  font-size: 30px;
+  
+}

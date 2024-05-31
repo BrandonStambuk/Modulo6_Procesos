@@ -231,7 +231,7 @@ export default function PersonalPage() {
             </div>
             {!flagUpdate ? (
               <button
-                className="block"
+                className="block_button personal  d-flex justify-content-center w-40"
                 type="button"
                 onClick={handleClickRegistrar}
               >
@@ -268,26 +268,26 @@ export default function PersonalPage() {
                         <td>{personal?.direccion}</td>
                         <td>{personal?.categoria.catnombre}</td>
                         <td className="actions">
-                          <button
+                          <button className="button_edit mr-5"
                             type="button"
                             onClick={() =>
                               handleClickEdit(personal.idPersonalExterno)
                             }
                           >
                             <CreateOutlinedIcon
-                              className="c-dark-blue"
-                              fontSize="large"
+                              className="c-dark-blue tamIcon1"
+                              
                             />
                           </button>
-                          <button
+                          <button className="button_delete "
                             type="button"
                             onClick={() =>
                               handleClickDelete(personal.idPersonalExterno)
                             }
                           >
                             <DeleteOutlinedIcon
-                              className="c-dark-blue "
-                              fontSize="large"
+                              className="c-dark-blue tamIcon1 "
+                              
                             />
                           </button>
                         </td>

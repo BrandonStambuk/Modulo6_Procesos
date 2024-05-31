@@ -4,7 +4,8 @@ import './customs.css';
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, CardImg, CardBody, Row, Col, Container, Label, CardText, Input, InputGroup } from 'reactstrap';
+import { Card, CardImg, CardBody, Row, Col, Container, Label, CardText, Input, InputGroup} from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 
 const endpoint = 'http://localhost:8000/api';
@@ -134,6 +135,10 @@ const MostrarResidentes = () => {
                                                 <Label className="labelResidenteDep"> Departamento: {departamento?.nombre_departamento || 'Ninguno'}</Label>
                                                 <Label className="labelResidenteTel"> Celular: {residente.telefono_residente}</Label>
                                                 <Label className="labelResidente"> Tipo: {residente.tipo_residente}</Label>
+                                                <Label className="labelResidente"> Monto adeudado:{residente.monto_pagar}</Label>
+                                                <Label className="labelResidente"><Link to={`/cobros/ver-pagos/${residente.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                 Pagos realizados</Link></Label>
+
                                             </Row>
                                         </CardText>
                                     </CardBody>

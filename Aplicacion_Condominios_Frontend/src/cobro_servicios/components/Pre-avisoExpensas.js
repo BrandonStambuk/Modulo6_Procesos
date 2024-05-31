@@ -80,13 +80,14 @@ const GestionCobro = () => {
     const handleGenerarExpensa = async (preaviso_id) => {
         try {
             setGenerarExpensaHabilitado(false); // Deshabilitar el botón antes de enviar la solicitud
-
+            
             const response = await axios.post(`${endpoint}/generar-expensa`, { preaviso_id });
-
+          //  axios.delete(`${endpoint}/eliminar-preaviso`,{preaviso_id});
             if (response.status === 200) {
                 console.log('Expensa generada con éxito');
                 console.log(response);
-                // Mostrar la alerta de éxito
+               // await axios.delete(`${endpoint}/eliminar-preaviso/${preaviso_id}`);
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Expensa generada con éxito',
@@ -108,6 +109,7 @@ const GestionCobro = () => {
                     // Habilitar el botón después de cerrar la alerta
                 });
             }
+            
         } catch (error) {
             console.error('Error al generar la expensa:', error);
             // Mostrar una alerta de error

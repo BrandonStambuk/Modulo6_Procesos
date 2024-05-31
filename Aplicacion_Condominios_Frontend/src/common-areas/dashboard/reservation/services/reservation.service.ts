@@ -6,6 +6,21 @@ import {
 
 const API_URL = "http://localhost:8000/api/";
 
+export async function getAllReservations(): Promise<Reservation[]> {
+  const response = await fetch(`${API_URL}common-areas/reservations`);
+
+  const data: Reservation[] = await response.json();
+
+  const formattedData = data.map((reservation) => {
+    return {
+      ...reservation,
+      reservationDate: new Date(reservation.reservationDate),
+    };
+  });
+
+  return formattedData;
+}
+
 export async function getReservationsByCommonAreaId(
   commonAreaId: number
 ): Promise<Reservation[]> {
@@ -33,4 +48,12 @@ export async function createReservation(reservation: CreateReservationDTO) {
   if (!response.ok) {
     throw data;
   }
+}
+
+export async function getReservationById(id: number): Promise<Reservation> {
+  const response = await fetch(`${API_URL}common-areas/reservations/${id}`);
+
+  const data: Reservation = await response.json();
+
+  return data;
 }

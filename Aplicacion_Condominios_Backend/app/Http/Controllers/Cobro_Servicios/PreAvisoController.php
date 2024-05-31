@@ -58,6 +58,23 @@ class PreAvisoController extends Controller
 
 
 
+    public function destroy($id)
+    {
+        $preaviso = PreAvisoModel::findOrFail($id);
+        $preaviso->delete();
+        return response()->json([
+            'status' => 200,
+            'message' => 'Preaviso eliminado exitosamente',
+        ]);
+
+
+    }
+
+
+
+
+
+
     public function obtenerTodosPreAvisos()
 {
     $preAvisos = PreAvisoModel::with('departamento:id,nombre_departamento')->get()->toArray();

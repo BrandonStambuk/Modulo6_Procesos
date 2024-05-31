@@ -17,7 +17,8 @@ const FormularioPagoExpensa = () => {
     const [fechaPago,setFechaPago] = useState("")
     const [idPropietario,setIdPropietario] = useState("");
     const [formaPago, setFormaPago] = useState("");
-    const [efectivo, setEfectivo] = useState(""); 
+    const [efectivo, setEfectivo] = useState("");
+    const [idExpensa,setIDExpensa] = useState("");
     const [errors, setErrors] = useState({});
     const [showQR, setShowQR] = useState(false);
     const [cambio, setCambio] = useState(0);
@@ -35,6 +36,7 @@ const FormularioPagoExpensa = () => {
                 setFechaPago(expensaData.fecha);
                 setIdPropietario(expensaData.id_propietarioPagar);
                 setDescServicios(expensaData.descripcion_servicios);
+                setIDExpensa(expensaData.id);
             } catch (error) {
                 console.error("Error fetching expensa data:", error);
             }
@@ -126,8 +128,10 @@ const FormularioPagoExpensa = () => {
 
             axios.post(`${endpoint}/pago-expensas`, {
                 residente_id: idPropietario,
-                monto: monto
+                monto: monto,
+                expensa_id:idExpensa
             })
+            axios.post(`${endpoint}/disminuirMonto/${idPropietario}/${monto}`)
             .then(response => {
                 console.log(response.data);
                 setShowQR(formaPago === "qr");

@@ -2,43 +2,43 @@ import React, { useRef } from "react";
 import ReactToPrint from "react-to-print";
 import { Button } from "reactstrap";
 
-const ComponentToPrint = React.forwardRef(
-  ({ titulo, descripcion, fechaComunicacion, fechaRealizacion }, ref) => {
-    return (
-      <div
-        className="p-5 "
-        ref={ref}
-        style={{ textAlign: "center", paddingTop: "10px" }}
-      >
-        <h2 className="h1">{titulo}</h2>
-        <p>{descripcion}</p>
-        <p>Fecha de comunicación: {fechaComunicacion}</p>
-        <p>Fecha de realización: {fechaRealizacion}</p>
-        <p>Atte: Direcciones</p>
-      </div>
-    );
-  }
-);
+// Función para obtener la fecha actual
+const getCurrentDate = () => {
+  const date = new Date();
+  return date.toLocaleDateString();
+};
 
-const Imprimir = ({
-  titulo,
-  descripcion,
-  fechaComunicacion,
-  fechaRealizacion,
-  setFechaComunicacion,
-  setFechaRealizacion,
-}) => {
-  const componentRef = useRef();
-
-  const handleFechaComunicacionChange = (e) =>
-    setFechaComunicacion(e.target.value);
-  const handleFechaRealizacionChange = (e) =>
-    setFechaRealizacion(e.target.value);
-
+const ComponentToPrint = React.forwardRef(({ titulo, descripcion }, ref) => {
   return (
-    <div className="container mt-5 bg-body-secondary">
+    <div
+    className=" p-5 justify-content-center"
+      ref={ref}
+    >
+      <h2 className="text-center">Aviso Importante</h2>
+      <p className="text-right p-4">Fecha: {getCurrentDate()}</p>
+      <p>Para: A todos los residentes del Condominio</p>
+      <p>De: Administración del Condominio</p>
+      <p>Asunto: {titulo}</p>
+      <hr />
+      <p>Estimados residentes,</p>
+      <p>{descripcion}</p>
+      <p>
+        Para cualquier consulta o emergencia, por favor contacten a la
+        administración a través del número de teléfono (123) 456-7890 o el
+        correo electrónico admin@condominioxyz.com.
+      </p>
+      <p>Atentamente:</p>
+      <p className="text-center">Administración del Condominio</p>
+    </div>
+  );
+});
+
+const Imprimir = ({ titulo, descripcion }) => {
+  const componentRef = useRef();
+  return (
+    <div className="container mt-5 bg-body-secondary alingn-items-center">
       <div className="p-5">
-        <h2>Notificación</h2>
+        <h2>AVISO</h2>
         <div className="mb-3">
           <label>Título:</label>
           <input type="text" value={titulo} readOnly className="form-control" />
@@ -47,28 +47,10 @@ const Imprimir = ({
           <label>Descripción:</label>
           <textarea value={descripcion} readOnly className="form-control" />
         </div>
-        <div className="mb-3">
-          <label>Fecha de comunicación:</label>
-          <input
-            type="date"
-            value={fechaComunicacion}
-            onChange={handleFechaComunicacionChange}
-            className="form-control"
-          />
-        </div>
-        <div className="mb-3">
-          <label>Fecha de realización:</label>
-          <input
-            type="date"
-            value={fechaRealizacion}
-            onChange={handleFechaRealizacionChange}
-            className="form-control"
-          />
-        </div>
         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
           <ReactToPrint
             trigger={() => (
-              <Button className="bg-primary text-white" color="light">
+              <Button style={{ width: "auto" }} className="bg-primary text-white" color="light">
                 Imprimir
               </Button>
             )}
@@ -81,8 +63,6 @@ const Imprimir = ({
           ref={componentRef}
           titulo={titulo}
           descripcion={descripcion}
-          fechaComunicacion={fechaComunicacion}
-          fechaRealizacion={fechaRealizacion}
         />
       </div>
     </div>

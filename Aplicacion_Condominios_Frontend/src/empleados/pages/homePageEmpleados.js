@@ -34,17 +34,18 @@ function EmployeHomePage() {
 
     const respuesta = await axios.get(`http://127.0.0.1:8000/api/get_all_employees`);
     setEmpleados(respuesta.data.empleados)
+    console.log(respuesta.data.empleados)
   }
 
   const eliminarEmpleado = (id) => {
     console.log(id);
 
-    const url = `http://127.0.0.1:8000/api/delete_employee/${id}`; 
-      axios.delete(url).then(respuesta => {
-        if(respuesta.data.status === 200){
-          window.location.reload();
-        }
-    })
+    const url = `http://127.0.0.1:8000/api/delete_employee/${id}`;
+    axios.delete(url).then((respuesta) => {
+      if (respuesta.data.status === 200) {
+        window.location.reload();
+      }
+    });
   }
 
   const manejarBuscador = (e) => {
@@ -165,9 +166,9 @@ function EmployeHomePage() {
             </tr>
           </thead>
           <tbody>
-            {empleados.map((empleado) => {
+            {empleados.map((empleado, index) => {
               return (
-                <tr className="empleado">
+                <tr className="empleado" key={index}>
                   <td className="empleado_nombre">{empleado.nombre}</td>
                   <td>{empleado.apellido}</td>
                   <td>{empleado.ci}</td>

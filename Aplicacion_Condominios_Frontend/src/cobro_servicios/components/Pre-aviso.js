@@ -174,6 +174,8 @@ const PreAviso = () => {
 
       try {
         const response = await axios.post(url, data);
+        axios.post(`${endpoint}/anotarMonto/${propietarioSeleccionadoID}/${totalMonto.toString()}`)
+
         console.log("Preaviso guardado exitosamente:", response.data);
         console.log("id del preaviso", response.data.id);
 

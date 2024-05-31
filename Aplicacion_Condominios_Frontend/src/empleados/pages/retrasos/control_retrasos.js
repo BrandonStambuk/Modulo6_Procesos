@@ -20,28 +20,47 @@ function ControlRetrasos() {
 
   const [empleados, setEmpleados] = useState([]);
   const [errors, setErrors] = useState({});
-  
+  const [areas, setAreas] = useState([]);
+
   useEffect(()=>{
     getEmpleados();
+    obtenerAreas();
   }, []);
 
   const getEmpleados = async () => {
 
-    const respuesta = await axios.get(`http://127.0.0.1:8000/api/get_employee_with_contract`); //Aqui obtener los empleados con al menos un retraso
+    const respuesta = await axios.get(`http://127.0.0.1:8000/api/obtener_atrasos`); //Aqui obtener los empleados con al menos un retraso
+    console.log(respuesta.data.atrasos);
 
-    console.log(respuesta.data.empleados)
+    let empleadosConAtrasos = [];
 
-    
-    for (let i = 0; i < respuesta.data.empleados.length; i++) {
-      let fecha = new Date(respuesta.data.empleados[i].contracts[0].fecha_inicio);
-      
-      let dia = fecha.getDate() + 1;
-      let mes = fecha.getMonth() + 1;
-      let format4 = dia + "-" + mes + "-" + fecha.getFullYear();
-      respuesta.data.empleados[i]["fecha_convertida"] = format4
+    for (let i = 0; i < respuesta.data.atrasos.length; i++) {
+      let empleado = respuesta.data.atrasos[i];
+      for(let j = 0; j < empleado.atrasos.length; j++){
+          let nombre = empleado.nombre;
+          let apellido = empleado.apellido;
+          let ci = empleado.ci;
+          let area = empleado.contracts[0].area;
+          let cargo = empleado.contracts[0].cargo;
+          let fechaInicio = empleado.contracts[0].fecha_inicio;
+          let fechaFinal = empleado.contracts[0].fecha_final;
+
+          let fechaRetraso = empleado.atrasos[j].fecha;
+          var mydate = new Date(fechaRetraso);
+          let dia = mydate.getDate() + 1;
+          let mes = mydate.getMonth() + 1;
+          let format4 = dia + "-" + mes + "-" + mydate.getFullYear();
+          
+          let tiempoDemora = empleado.atrasos[j].tiempo_demora
+          let idDemora = empleado.atrasos[j].id
+          let motivo = empleado.atrasos[j].motivo
+          let datos = {nombre: nombre, apellido: apellido, ci: ci, area: area, cargo:cargo, tiempo_demora:tiempoDemora ,fecha_inicio:fechaInicio, fecha_final:fechaFinal, fecha: format4, id_retraso: idDemora, motivo: motivo, fecha_retraso_original:fechaRetraso };
+          empleadosConAtrasos.push(datos);
+      }
     }
 
-    setEmpleados(respuesta.data.empleados)
+    setEmpleados(empleadosConAtrasos);
+    console.log(empleadosConAtrasos);
   }
 
   const manejarBuscador = (e) => {
@@ -127,14 +146,11 @@ function ControlRetrasos() {
     if(segunda_fecha_valor){
       document.querySelectorAll(".empleado").forEach(empleado =>{
 
-        fecha_date = new Date(empleado.querySelector(".empleado_fecha_inicio").textContent)
+        fecha_date = new Date(empleado.querySelector(".empleado_fecha_retraso").textContent)
+        console.log(fecha_date)
 
         primera_fecha_valor_date = new Date(primera_fecha_valor)
         segunda_fecha_valor_date = new Date(segunda_fecha_valor)
-
-        console.log(fecha_date)
-        console.log(primera_fecha_valor_date)
-        console.log(fecha_date)
 
         if(fecha_date >= primera_fecha_valor_date && fecha_date <= segunda_fecha_valor_date){
           empleado.classList.remove("filtro")
@@ -162,7 +178,8 @@ function ControlRetrasos() {
     if(primera_fecha_valor){
       document.querySelectorAll(".empleado").forEach(empleado =>{
 
-        fecha_date = new Date(empleado.querySelector(".empleado_fecha_inicio").textContent)
+        fecha_date = new Date(empleado.querySelector(".empleado_fecha_retraso").textContent)
+        console.log(fecha_date)
 
         primera_fecha_valor_date = new Date(primera_fecha_valor)
         segunda_fecha_valor_date = new Date(segunda_fecha_valor)
@@ -181,7 +198,7 @@ function ControlRetrasos() {
     setErrors(validationErrors);
   }
 
-  const despejarFechas = (e)  => {
+  const despejarFechas = ()  => {
     document.querySelectorAll(".empleado").forEach(empleado =>{
 
       empleado.classList.remove("filtro")
@@ -189,6 +206,7 @@ function ControlRetrasos() {
     })
     document.querySelector("#primera_fecha").value = '';
     document.querySelector("#segunda_fecha").value = '';
+    setErrors({});
   }
 
   const redirigirInformacionRetraso = (empleado)  => {
@@ -197,6 +215,11 @@ function ControlRetrasos() {
     window.location.href = "./informacionRetraso";
 
   }
+
+  const obtenerAreas = async ()  => {
+    const respuesta = await axios.get(`http://127.0.0.1:8000/api/get_all_areas`);
+    setAreas(respuesta.data.areas)
+  };
 
   return (
     <>
@@ -222,25 +245,30 @@ function ControlRetrasos() {
             onChange={manejar_Filtro_Por_Tipo}
           >
             <option>Todos</option>
-            <option>Seguridad</option>
-            <option>Limpieza</option>
+            {areas.map((area) => {
+              return (
+                <>
+                  <option value={area.nombre}>{area.nombre}</option>
+                </>
+              );
+            })}
           </select>
         </div>
       </div>
 
       <Row>
         <Col className="d-flex justify-content-center align-items-center">
-          <h5>Fecha de inicio</h5>
+          <h5>Fecha de retraso</h5>
         </Col>
       </Row>
 
       <Row className="my-2 d-flex justify-content-center align-items-center">
         <Col
-          xs={5}
+          xs={4}
           className="d-flex align-items-center justify-content-center"
-          
+          style={{ marginLeft: "100px" }}
         >
-          <div className="entradaBuscador-admin" >
+          <div className="entradaBuscador-admin">
             <input
               type="date"
               id="primera_fecha"
@@ -250,7 +278,7 @@ function ControlRetrasos() {
         </Col>
 
         <Col
-          xs={5}
+          xs={4}
           className="d-flex align-items-center justify-content-center"
         >
           <div className="entradaBuscador-admin">
@@ -266,14 +294,10 @@ function ControlRetrasos() {
           xs={1}
           className="d-flex align-items-center justify-content-center"
         >
-          <Button
-                      variant="danger"
-                      onClick={despejarFechas}
-                    >
-                      <CloseIcon />
-                    </Button>{" "}
+          <Button variant="danger" onClick={despejarFechas}>
+            <CloseIcon />
+          </Button>{" "}
         </Col>
-
       </Row>
 
       <Row className="d-flex justify-content-center align-items-center">
@@ -315,18 +339,16 @@ function ControlRetrasos() {
                 <tr className="empleado">
                   <td className="empleado_nombre">{empleado.nombre}</td>
                   <td>{empleado.apellido}</td>
-                  <td className="empleado_area">
-                    {empleado.contracts[0].area}
-                  </td>
-                  <td>{empleado.fecha_convertida} /*Aqui fecha de retraso */</td>
+                  <td className="empleado_area">{empleado.area}</td>
+                  <td>{empleado.fecha}</td>
                   <td
-                    className="empleado_fecha_inicio"
+                    className="empleado_fecha_retraso"
                     style={{ display: "none" }}
                   >
-                    {empleado.contracts[0].fecha_inicio} 
+                    {empleado.fecha_retraso_original}
                   </td>
                   <td>
-                  <Button
+                    <Button
                       variant="info"
                       onClick={() => redirigirInformacionRetraso(empleado)}
                       style={{

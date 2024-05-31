@@ -101,4 +101,55 @@ class AvisosController extends Controller
             "message" => "se elimino correctamente"
         ], 204);
     }
+
+    public function approveNotice($id)
+    {
+        $aviso = Aviso::find($id);
+
+        if (!$aviso) {
+            return response()->json(['message' => 'Aviso no encontrado'], 404);
+        }
+
+        $aviso->aprobado = 1;
+        $aviso->revisado = 1;
+        $aviso->save();
+
+        return response()->json([
+            'message' => 'Se aprobo el aviso'
+        ], 200);
+    }
+
+    public function rejectNotice($id)
+    {
+        $aviso = Aviso::find($id);
+
+        if (!$aviso) {
+            return response()->json(['message' => 'Aviso no encontrado'], 404);
+        }
+
+        $aviso->aprobado = 0;
+        $aviso->revisado = 1;
+        $aviso->save();
+
+        return response()->json([
+            'message' => 'Se rechazo el aviso'
+        ], 200);
+    }
+
+    public function getNoticesPendingReview()
+    {
+        $avisos = Aviso::where('aprobado', '=', 0)
+            ->where('revisado', '=', 0)->get();
+
+        return response()->json($avisos, 200);
+    }
+
+    public function getApprovedNotices()
+    {
+        $avisos = Aviso::where('aprobado', '=', 1)
+            ->where('revisado', '=', 1)
+            ->orderBy('created_at')->get();
+
+        return response()->json($avisos, 200);
+    }
 }

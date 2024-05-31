@@ -19,7 +19,8 @@ class ReservationResource extends JsonResource
             "startTime" => $startTime,
             "endTime" => $endTime,
             "reason" => $this->reason,
-            "numberPeople" => $this->number_of_people
+            "numberPeople" => $this->number_of_people,
+            'reserva_pagada' => $this->reserva_pagada,
         ];
     }
 }

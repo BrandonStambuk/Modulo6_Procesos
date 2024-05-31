@@ -23,6 +23,8 @@ class PagoExpensasController extends Controller
         $pagoExpensa = new PagoExpensas();
         $pagoExpensa->residente_id = $request ->residente_id;
         $pagoExpensa->montoPagar = $request -> monto;
+        $pagoExpensa->expensa_id = $request ->expensa_id;
+
         $pagoExpensa->save();
 
         // Retornar una respuesta JSON exitosa
@@ -32,4 +34,19 @@ class PagoExpensasController extends Controller
             'data' => $pagoExpensa,
         ], 201);
     }
+
+
+
+    public function obtenerPagosPorResidente($resident_id)
+    {
+        $payments = PagoExpensas::where('residente_id', $resident_id)->get();
+
+        // Retornar una respuesta JSON con los pagos obtenidos
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Pagos de expensas obtenidos exitosamente.',
+            'data' => $payments,
+        ]);
+    }
+ 
 }

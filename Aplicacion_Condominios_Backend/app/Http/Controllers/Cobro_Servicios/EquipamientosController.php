@@ -146,12 +146,40 @@ public function getEquipoById($id)
     }
 }
 
+
+public function getEquipoByIdTodo($id)
+{
+    try {
+        $equipo = EquipamientosModel::select('id','nombre','categoria','descripcion', 'costo', 'area_comun_id','categoria_id','residente_id','area_comun_nombre')
+                                    ->findOrFail($id);
+
+        return response()->json([
+            'status' => 200,
+            'equipo' => $equipo,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Error al obtener los detalles del equipo: ' . $e->getMessage(),
+        ], 500);
+    }
+}
+
 public function getAllEquipamientos()
 {
-    $equipamientos = EquipamientosModel::select('id','nombre', 'descripcion', 'costo', 'area_comun_nombre')->get();
+    $equipamientos = EquipamientosModel::select('id','nombre','descripcion', 'costo', 'area_comun_nombre')->get();
     return response()->json([
         'equipamientos' => $equipamientos,
     ]);
+}
+
+public function getAllEquipamientosTodo()
+{
+    $equipamientos = EquipamientosModel::select('id','nombre','categoria','descripcion', 'costo', 'area_comun_id','categoria_id','residente_id','area_comun_nombre')->get();
+    return response()->json([
+        'equipamientos' => $equipamientos,
+    ]);
+
 }
 
 public function delete($id)

@@ -3,33 +3,24 @@ import React, { useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
 import Cookies from 'universal-cookie';
-
+import Table from 'react-bootstrap/Table';
 import {
-  MDBBtn,
-  MDBCard,
-  MDBCardBody,
-  MDBCardFooter,
-  MDBCardImage,
   MDBCol,
-  MDBContainer,
-  MDBIcon,
   MDBRow,
-  MDBTextArea,
   MDBInput,
 } from "mdb-react-ui-kit";
+
 const cookies = new Cookies();
 
 function VerReporte() {
   const id_empleado = cookies.get("id_empleado_seleccionado");
+  const empleado_seleccionado = cookies.get("empleado_seleccionado");
 
   const [empleado, setEmpleado] = useState([]);
-  const [turno, setTurno] = useState([]);
+  const [turnos, setTurnos] = useState([]);
   const [contratos, setContratos] = useState([]);
   const [atrasos, setAtrasos] = useState([]);
   const [faltas, setFaltas] = useState([]);
@@ -43,9 +34,10 @@ function VerReporte() {
       `http://127.0.0.1:8000/api/get_employee/${id_empleado}`
     );
     setEmpleado(respuesta.data.empleado);
-    setTurno(respuesta.data.empleado.working_hours);
+    setTurnos(respuesta.data.empleado.working_hours);
     setContratos(respuesta.data.empleado.contracts);
     setAtrasos(respuesta.data.empleado.atrasos);
+    setFaltas(respuesta.data.empleado.ausencias)
     console.log(respuesta.data.empleado)
     //'contracts', 'working_hours','atrasos'
   };
@@ -59,7 +51,7 @@ function VerReporte() {
           <Row>
             <Col lg={12} className="pt-2">
               <div className="employee-info">
-                <h4 className="mb-3 ">Empleado</h4>
+                <h2 className="mb-3 ">Empleado</h2>
                 <div
                   className="employee-details"
                   style={{
@@ -67,6 +59,7 @@ function VerReporte() {
                     gridTemplateColumns: "1fr 1fr",
                     justifyItems: "start",
                     alignItems: "center",
+                    fontSize: "30px",
                   }}
                 >
                   <div
@@ -93,56 +86,6 @@ function VerReporte() {
                     <strong className="mb-0">CI:</strong>
                     <p className="mb-0">{empleado.ci}</p>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "1rem",
-                    }}
-                  >
-                    <strong className="mb-0">
-                      Fecha de inicio de contrato:
-                    </strong>
-                    <p className="mb-0">{empleado.fecha_inicio}</p>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "1rem",
-                    }}
-                  >
-                    <strong className="mb-0">Fecha de fin de contrato:</strong>
-                    <p className="mb-0">
-                      {empleado.fecha_final === null
-                        ? "Indefinido"
-                        : empleado.fecha_final}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "1rem",
-                    }}
-                  >
-                    <strong className="mb-0">Area:</strong>
-                    <p className="mb-0">{empleado.area}</p>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "1rem",
-                    }}
-                  >
-                    <strong className="mb-0">Cargo:</strong>
-                    <p className="mb-0">{empleado.cargo}</p>
-                  </div>
                 </div>
               </div>
             </Col>
@@ -156,15 +99,48 @@ function VerReporte() {
           className="border p-3 bg-white border rounded shadow-sm mb-3"
         >
           <Row>
-            <h3>Turno</h3>
+            <h3>Turnos</h3>
           </Row>
           <Row>
-            {turno.length === 0 ? (
+            {turnos.length === 0 ? (
               <Col className="d-flex align-items-center justify-content-center">
                 <h3> Sin turno asignado</h3>{" "}
               </Col>
             ) : (
-              <p>SIUU</p>
+              <>
+                {turnos.map((turno, index) => {
+                  return (
+                    <>
+                      <MDBRow
+                        className="justify-content-center align-items-center mb-2"
+                        key={index}
+                      >
+                        <MDBCol md="2">
+                          <h5>{turno.dia}</h5>
+                        </MDBCol>
+
+                        <MDBCol md="3" className="mb-2">
+                          <MDBInput
+                            type="time"
+                            id={turno.dia}
+                            name={turno.dia}
+                            value={turno.hora_entrada}
+                          />
+                        </MDBCol>
+
+                        <MDBCol md="3" className="mb-2">
+                          <MDBInput
+                            type="time"
+                            id={turno.dia}
+                            name={turno.dia}
+                            value={turno.hora_salida}
+                          />
+                        </MDBCol>
+                      </MDBRow>
+                    </>
+                  );
+                })}
+              </>
             )}
           </Row>
         </Row>
@@ -184,7 +160,42 @@ function VerReporte() {
                 <h3> Sin contratos</h3>{" "}
               </Col>
             ) : (
-              <p>SIUU</p>
+              <div
+                className="
+                        border 
+                        rounded 
+                        d-flex 
+                        justify-content-between 
+                      "
+              >
+                <Table striped hover>
+                  <thead>
+                    <tr>
+                      <th>Tipo de Contrato</th>
+                      <th>Area</th>
+                      <th>Cargo</th>
+                      <th>Fecha Inicio</th>
+                      <th>Salario</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {contratos.map((contrato) => {
+                      return (
+                        <>
+                          <tr>
+                            <td>{contrato.tipo_contrato}</td>
+                            <td>{contrato.area}</td>
+                            <td>{contrato.cargo}</td>
+                            <td>{contrato.fecha_inicio}</td>
+                            <td>{contrato.salario}</td>
+                          </tr>
+                        </>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </div>
             )}
           </Row>
         </Row>
@@ -204,7 +215,39 @@ function VerReporte() {
                 <h3> Sin atrasos</h3>{" "}
               </Col>
             ) : (
-              <p>SIUU</p>
+              <div
+                className="
+                        border 
+                        rounded 
+                        d-flex 
+                        justify-content-between 
+                      "
+              >
+                <Table striped hover>
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Hora marcada</th>
+                      <th>Tiempo de demora</th>
+                      <th>Motivo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {atrasos.map((atraso) => {
+                      return (
+                        <>
+                          <tr>
+                            <td>{atraso.fecha}</td>
+                            <td>{atraso.hora_entrada}</td>
+                            <td>{atraso.tiempo_demora}</td>
+                            <td>{atraso.motivo}</td>
+                          </tr>
+                        </>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </div>
             )}
           </Row>
         </Row>
@@ -224,7 +267,35 @@ function VerReporte() {
                 <h3> Sin faltas</h3>{" "}
               </Col>
             ) : (
-              <p>SIUU</p>
+              <div
+                className="
+                        border 
+                        rounded 
+                        d-flex 
+                        justify-content-between 
+                      "
+              >
+                <Table striped hover>
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Motivo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {faltas.map((falta) => {
+                      return (
+                        <>
+                          <tr>
+                            <td>{falta.fecha}</td>
+                            <td>{falta.motivo}</td>
+                          </tr>
+                        </>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </div>
             )}
           </Row>
         </Row>

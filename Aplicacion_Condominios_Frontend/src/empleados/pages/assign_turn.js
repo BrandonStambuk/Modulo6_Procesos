@@ -40,6 +40,8 @@ function AssignTurn() {
       respuesta.data.empleados[i]["fecha_convertida"] = format4
     }
 
+    //const respuesta_area = await axios.get(`http://127.0.0.1:8000/api/get_area_id/${id}`)
+
     setEmpleados(respuesta.data.empleados)
   }
 

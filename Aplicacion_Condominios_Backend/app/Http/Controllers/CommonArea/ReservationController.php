@@ -4,6 +4,8 @@ namespace App\Http\Controllers\CommonArea;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommonArea\ReservationRequest;
+use App\Http\Resources\CommonArea\ReservationCollection;
+use App\Http\Resources\CommonArea\ReservationResource;
 use App\Models\CommonArea\CommonArea;
 use App\Models\CommonArea\Reservation;
 use App\Models\GestDepartamento\Residente;
@@ -24,7 +26,9 @@ class ReservationController extends Controller
 
     public function index()
     {
-        //
+        $reservations = Reservation::all();
+
+        return response()->json(new ReservationCollection($reservations), 200);
     }
 
     public function store(ReservationRequest $request)
@@ -99,5 +103,16 @@ class ReservationController extends Controller
     public function destroy(Reservation $reservation)
     {
         //
+    }
+
+    public function getReservationById($id)
+    {
+        $reservation = Reservation::find($id);
+
+        if(!$reservation){
+            return response()->json(['message' => 'Reservación no encontrada',"errors" => []], 404);
+        }
+
+        return response()->json(new ReservationResource($reservation), 200);
     }
 }

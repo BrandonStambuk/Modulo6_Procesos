@@ -8,3 +8,15 @@ export async function getEquipments(): Promise<Equipment[]> {
 
   return equipamientos;
 }
+
+export async function getEquipmentsByCommonAreaId(
+  commonAreaId: number
+): Promise<Equipment[]> {
+  const response = await fetch(
+    `${API_URL}common-areas/${commonAreaId}/equipments`
+  );
+
+  const data = await response.json();
+
+  return data.data;
+}

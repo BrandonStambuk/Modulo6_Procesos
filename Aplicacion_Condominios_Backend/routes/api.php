@@ -30,6 +30,8 @@ use App\Http\Controllers\Cobro_Servicios\EquipamientosController;
 use App\Http\Controllers\Cobro_Servicios\PreAvisoController;
 use App\Http\Controllers\Cobro_Servicios\ExpensasController;
 use App\Http\Controllers\Cobro_Servicios\MultasController;
+use App\Http\Controllers\Cobro_Servicios\PagoExpensasController;
+
 use App\Models\Mantenimiento\CategoriaServicio;
 use App\Http\Controllers\Mantenimiento\CategoriaServicioController;
 use App\Http\Controllers\Mantenimiento\PersonalExternoController;
@@ -216,6 +218,8 @@ Route::put('/lista-compra/update/{id}', [ListaCompraController::class,'updateReg
 
 // COMMON AREAS
 Route::get('/common-areas/{id}/reservations', [CommonAreaController::class, 'reservations']);
+Route::get('/common-areas/reservations/{id}', [ReservationController::class, 'getReservationById']);
+Route::get('/common-areas/{id}/equipments', [CommonAreaController::class, 'equipments']);
 Route::apiResource('/common-areas/reservations', ReservationController::class);
 Route::apiResource('/common-areas', CommonAreaController::class);
 Route::apiResource('/equipments', EquipmentController::class);
@@ -228,7 +232,7 @@ Route::apiResource('/equipments', EquipmentController::class);
 
 Route::post('/reports', [CommonAreaController::class, 'createReport']);
 Route::get('/reports', [CommonAreaController::class, 'getReports']);
-
+Route::get('/reports/{idReserva}', [CommonAreaController::class, 'getReportsByReservationId']);
 
 //Cobro_Servicios
 Route::controller(EquipamientosController::class)->group(function(){
@@ -250,17 +254,20 @@ Route::controller(PreAvisoController::class)->group(function(){
     Route::get('/obtener-preavisos', [PreAvisoController::class, 'obtenerTodosPreAvisos']);
     //Route::get('/obtener-preaviso/{id}', [PreAvisoController::class, 'show']);
     //Route::put('/editar-preaviso/{id}', [PreAvisoController::class, 'update']);
-    //Route::delete('/eliminar-preaviso/{id}', [PreAvisoController::class, 'destroy']);
+    Route::delete('/eliminar-preaviso/{id}', [PreAvisoController::class, 'destroy']);
 
 });
 Route::controller(ExpensasController::class)->group(function(){
     Route::put('/expensas/{id}/pagarExpensa', [ExpensasController::class, 'pagar']);
-
+    Route::post('/pago-expensas', [PagoExpensasController::class, 'store']);
     Route::post('/generar-expensa', [ExpensasController::class, 'store']);
     Route::get('/obtener-expensas', [ExpensasController::class, 'index']);
     Route::get('/obtener-expensas/{id}', [ExpensasController::class, 'show']);
     Route::put('/editar-expensas/{id}', [ExpensasController::class, 'update']);
     Route::delete('/eliminar-expensas/{id}', [ExpensasController::class, 'destroy']);
+    Route::post('anotarMonto/{residente_id}/{monto}',[ExpensasController::class,'acumularMonto']);
+    Route::post('disminuirMonto/{residente_id}/{monto}',[ExpensasController::class,'decrementarMonto']);
+    Route::get('/obtener-pagos-residente/{id}', [PagoExpensasController::class, 'obtenerPagosPorResidente']);
 });
 
 Route::controller(MultasController::class)->group(function(){
@@ -282,11 +289,8 @@ Route::controller(PersonaController::class)->group(function() {
     Route::get('/persons', 'index');
 });
 
-Route::group(['prefix' =>  'v1'], function () {
-    Route::post('send', [AuthController::class, 'send']);
-    Route::post('email/verify/{id}', [VerificationController::class,'verify'])->name('verification.verify');
-});
 
+Route::post('/email', [AuthController::class, 'enviarCorreo']);
 //emails de preavisso
 Route::post('/cobrar-servicio', [CorreoController::class, 'enviarCorreo']);
 
@@ -296,14 +300,17 @@ Route::controller(TelegramNotificationController::class)->group(function() {
 });Route::get('/obtener-equipamientos', [EquipamientosController::class, 'getAllEquipamientos']);
 
 Route::get("/avisos",[AvisosController::class,"index"]);
+Route::get('/avisos/sin-revision', [AvisosController::class, 'getNoticesPendingReview']);
+Route::get('/avisos/aprobados', [AvisosController::class, 'getApprovedNotices']);
 Route::post("/avisos",[AvisosController::class,"store"]);
 Route::get("/avisos/{id}",[AvisosController::class,"show"]);
 Route::put("/avisos/{id}",[AvisosController::class,"update"]);
 Route::delete("/avisos/{id}",[AvisosController::class,"destroy"]);
+Route::put('/avisos/aprobar/{id}', [AvisosController::class, 'approveNotice']);
+Route::put('/avisos/rechazar/{id}', [AvisosController::class, 'rejectNotice']);
 
 Route::get('/obtener-equipamiento/{id}', [EquipamientosController::class, 'getEquipoById']);
     Route::delete('/eliminar-equipo/{id}', [EquipamientosController::class, 'delete']);
     Route::put('/editar-equipo/{id}', [EquipamientosController::class, 'edit']);
-
 
 

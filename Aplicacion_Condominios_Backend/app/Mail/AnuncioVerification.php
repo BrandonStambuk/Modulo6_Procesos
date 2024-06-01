@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Mail;
 
-use App\Models\Notificaciones\AnuncioEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,17 +11,30 @@ class AnuncioVerification extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $anuncioEmail;
+    public $titulo;
+    public $anuncio;
 
-    public function __construct(AnuncioEmail $anuncioEmail)
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($titulo, $anuncio)
     {
-        $this->anuncioEmail = $anuncioEmail;
+        $this->titulo = $titulo;
+        $this->anuncio = $anuncio;
+ 
     }
 
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
     public function build()
     {
-        return $this->from(env('MAIL_USERNAME'))
-            ->view('name')
-            ->subject('Notificaciones Condominio');
+        return $this->from(env('MAIL_FROM_ADDRESS', 'example@example.com'), env('MAIL_FROM_NAME', 'Example'))
+                    ->subject('Anuncio General')
+                    ->view('emails.name');
     }
 }

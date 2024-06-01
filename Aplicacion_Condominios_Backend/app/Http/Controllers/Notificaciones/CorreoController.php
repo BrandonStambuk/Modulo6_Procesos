@@ -14,13 +14,18 @@ class CorreoController extends Controller
         $titulo = $request->input('titulo');
         $correo = $request->input('correo');
         $monto = $request->input('monto');
-        $multa = $request ->input('multa');
-        $mensajeAdicional = $request->input('mensaje'); // Nuevo campo para el mensaje adicional desde el frontend
+        $multa = $request->input('multa');
+        $mensajeAdicional = $request->input('mensaje');
 
-        // Aquí puedes agregar la lógica necesaria para enviar el correo electrónico
-        // Por ejemplo:
-        Mail::to($correo)->send(new ContactanosMailable($titulo, $monto,  $multa ,$mensajeAdicional));
+        try {
+            // Envía el correo electrónico usando el mailable ContactanosMailable
+            Mail::to($correo)->send(new ContactanosMailable($titulo, $monto, $multa, $mensajeAdicional));
 
-        return response()->json(['message' => 'Correo enviado correctamente']);
+            // Devuelve una respuesta JSON indicando que el correo se envió correctamente
+            return response()->json(['message' => 'Correo enviado correctamente']);
+        } catch (\Exception $e) {
+            // Si hay un error al enviar el correo, devuelve un mensaje de error
+            return response()->json(['error' => 'Error al enviar el correo electrónico: ' . $e->getMessage()], 500);
+        }
     }
 }

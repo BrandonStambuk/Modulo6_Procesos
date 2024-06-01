@@ -21,7 +21,8 @@ class Reporte extends Model
         'costo_reponer',
         'cantidad_reponer',
         'situacion',
-        'info'
+        'info',
+        'id_reservation',
     ];
 
     // Definir las relaciones

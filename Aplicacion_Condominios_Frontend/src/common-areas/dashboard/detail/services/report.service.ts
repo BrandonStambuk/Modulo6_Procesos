@@ -1,3 +1,4 @@
+import { getResidents } from "../../shared/services/resident.service";
 import {
   ReportCreateDTO,
   ReportReadDTO,
@@ -15,7 +16,20 @@ export async function getReports(): Promise<ReportReadDTO[]> {
     throw data;
   }
 
-  return reports;
+  const residents = await getResidents();
+
+  const reportsWithResidents = reports.map((report) => {
+    const resident = residents.find(
+      (resident) => resident.id === report.id_residente
+    );
+
+    return {
+      ...report,
+      residentName: `${resident?.nombre_residente} ${resident?.apellidos_residente}`,
+    };
+  });
+
+  return reportsWithResidents;
 }
 
 export async function createReport(report: ReportCreateDTO) {

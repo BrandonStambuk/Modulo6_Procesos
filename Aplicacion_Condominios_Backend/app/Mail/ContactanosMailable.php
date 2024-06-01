@@ -11,7 +11,6 @@ class ContactanosMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
-
     public $titulo;
     public $monto;
     public $multa;
@@ -22,12 +21,12 @@ class ContactanosMailable extends Mailable
      *
      * @return void
      */
-    public function __construct($titulo, $monto, $multa , $mensajeAdicional) // Modify the constructor to accept the new parameter
+    public function __construct($titulo, $monto, $multa, $mensajeAdicional)
     {
         $this->titulo = $titulo;
         $this->monto = $monto;
         $this->multa = $multa;
-        $this->mensajeAdicional = $mensajeAdicional; // Assign the new parameter
+        $this->mensajeAdicional = $mensajeAdicional;
     }
 
     /**
@@ -37,7 +36,7 @@ class ContactanosMailable extends Mailable
      */
     public function build()
     {
-        return $this->from('gerenciaa65@gmail.com')
+        return $this->from(env('MAIL_FROM_ADDRESS', 'example@example.com'), env('MAIL_FROM_NAME', 'Example'))
                     ->subject('Cobro de servicio')
                     ->view('emails.contactanos');
     }

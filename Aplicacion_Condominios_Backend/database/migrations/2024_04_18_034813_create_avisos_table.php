@@ -17,6 +17,8 @@ class CreateAvisosTable extends Migration
             $table->id();
             $table->string('titulo');
             $table->text('descripcion');
+            $table->boolean('aprobado')->default('0');
+            $table->boolean('revisado')->default('0');
             $table->timestamps();
         });
     }

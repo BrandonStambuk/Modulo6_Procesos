@@ -2,62 +2,28 @@
 namespace App\Http\Controllers\Notificaciones;
 
 use App\Http\Controllers\Controller;
-use App\Mail\AnuncioVerification;
-use App\Models\Notificaciones\AnuncioEmail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\AnuncioVerification;
+
 
 class AuthController extends Controller
 {
-    public function send(Request $request)
+    public function enviarCorreo(Request $request)
     {
-        // Validación de los datos de entrada
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'titulo' => 'required',
-            'anuncio' => 'required'
-        ]);
-
-        // Si la validación falla, se devuelve una respuesta de error
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 401,
-                'errors' => $validator->errors(),
-            ], 422);
-        }
+        $titulo = $request->input('titulo');
+        $correo = $request->input('correo');
+        $anuncio = $request->input('anuncio');
 
         try {
-            // Busca un usuario existente con el email proporcionado
-            $anuncioEmail = AnuncioEmail::where('email', $request->email)->first();
+            // Envía el correo electrónico usando el mailable ContactanosMailable
+            Mail::to($correo)->send(new AnuncioVerification($titulo, $anuncio));
 
-            if ($anuncioEmail) {
-                // Si el usuario ya existe, actualiza los campos 'titulo' y 'anuncio'
-                $anuncioEmail->titulo = $request->titulo;
-                $anuncioEmail->anuncio = $request->anuncio;
-                $anuncioEmail->save();
-            } else {
-                // Si el usuario no existe, crea uno nuevo
-                $anuncioEmail = AnuncioEmail::create([
-                    'email' => $request->email,
-                    'titulo' => $request->titulo,
-                    'anuncio' => $request->anuncio,
-                ]);
-            }
-
-            // Envía un correo de verificación al usuario
-            Mail::to($anuncioEmail->email)->send(new AnuncioVerification($anuncioEmail));
-
-            return response()->json([
-                'status' => 200,
-                'message' => "Mensaje enviado correctamente",
-            ], 200);
-        } catch (\Exception $err) {
-            // Si hay un error, se devuelve una respuesta de error
-            return response()->json([
-                'status' => 500,
-                'message' => $err->getMessage()
-            ], 500);
+            // Devuelve una respuesta JSON indicando que el correo se envió correctamente
+            return response()->json(['message' => 'Correo enviado correctamente']);
+        } catch (\Exception $e) {
+            // Si hay un error al enviar el correo, devuelve un mensaje de error
+            return response()->json(['error' => 'Error al enviar el correo electrónico: ' . $e->getMessage()], 500);
         }
     }
 }

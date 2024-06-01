@@ -119,9 +119,9 @@ function ControlReportes() {
     }
   }
   
-  const editarInformacionEmpleado = (id)  => {
+  const verReporteEmpleado = (id)  => {
     cookies.set("id_empleado_seleccionado", id, { path: "/" });
-    window.location.href = "./employeeEdit";
+    window.location.href = "./ver_reporte";
   }
 
   return (
@@ -175,7 +175,7 @@ function ControlReportes() {
                   <td>
                     <Button
                       variant="info"
-                      onClick={() => editarInformacionEmpleado(empleado.id)}
+                      onClick={() => verReporteEmpleado(empleado.id)}
                       style={{
                         backgroundColor: "#65B8A6",
                         borderColor: "#65B8A6",

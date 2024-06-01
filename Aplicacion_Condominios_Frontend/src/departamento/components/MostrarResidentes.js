@@ -24,35 +24,44 @@ const MostrarResidentes = () => {
 
     const getAllData = async () => {
         try {
-            const responseContratos = await axios.get(`${endpoint}/contratosVigentes`);
+            const [
+                responseContratos,
+                responseDepartamentos,
+                responseEdificios,
+                responseBloques,
+                responseResidentes
+            ] = await Promise.all([
+                axios.get(`${endpoint}/contratosVigentes`),
+                axios.get(`${endpoint}/departamentos`),
+                axios.get(`${endpoint}/edificios`),
+                axios.get(`${endpoint}/bloques`),
+                axios.get(`${endpoint}/residentes`)
+            ]);
+
             const contratosData = responseContratos.data.contratos.reduce((acc, contrato) => {
                 acc[contrato.id] = contrato;
                 return acc;
             }, {});
             setContratos(contratosData);
 
-            const responseDepartamentos = await axios.get(`${endpoint}/departamentos`);
             const departamentosData = responseDepartamentos.data.reduce((acc, departamento) => {
                 acc[departamento.id] = departamento;
                 return acc;
             }, {});
             setDepartamentos(departamentosData);
 
-            const responseEdificios = await axios.get(`${endpoint}/edificios`);
             const edificiosData = responseEdificios.data.reduce((acc, edificio) => {
                 acc[edificio.id] = edificio;
                 return acc;
             }, {});
             setEdificios(edificiosData);
 
-            const responseBloques = await axios.get(`${endpoint}/bloques`);
             const bloquesData = responseBloques.data.reduce((acc, bloque) => {
                 acc[bloque.id] = bloque;
                 return acc;
             }, {});
             setBloques(bloquesData);
 
-            const responseResidentes = await axios.get(`${endpoint}/residentes`);
             setResidentes(responseResidentes.data);
         } catch (error) {
             console.error('Error al obtener los datos:', error);
@@ -67,15 +76,20 @@ const MostrarResidentes = () => {
             <Container>
                 <Row >
                     <Label className="text-center mb-4 titulosForms">Residentes</Label>
-                    <InputGroup className="mb-4">
-                        <Input placeholder="Buscar residente..." onChange={manejarCambio}
-                            style={{
-                                borderRadius: "15px",
-                                border: "1px solid rgba(0, 0, 0, 0.3)",
-                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)",
-                            }}
-                        />
-                    </InputGroup>
+                    <Row className="d-flex align-items-center justify-content-center">
+                        <Col md={8}>
+                            <InputGroup className="mb-4">
+                                <Input placeholder="Buscar residente..." className="buscadorDepa" onChange={manejarCambio}
+                                    style={{
+                                        borderRadius: "15px",
+                                        border: "1px solid rgba(0, 0, 0, 0.3)",
+                                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)",
+                                    }}
+                                />
+                            </InputGroup>
+                        </Col>
+                    </Row>
+                    
                     {residentes.filter(residente => {
                         if (busqueda === "") {
                             return residente;

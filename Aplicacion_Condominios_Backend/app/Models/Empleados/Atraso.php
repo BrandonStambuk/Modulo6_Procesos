@@ -6,18 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Empleados\Employee;
 
-class WorkingHour extends Model
-{
+class Atraso extends Model{
+
     use HasFactory;
+    
     protected $fillable = [
-        'dia',
+        'id_empleado',
         'hora_entrada',
-        'hora_salida',
-        'empleado'
+        'tiempo_demora'
     ];
 
-    public function empleado()
-    {
-        return $this->belongsTo(Employee::class, 'empleado');
+    public function empleado(){
+        return $this->belongsTo(Employee::class,'id_empleado');
     }
 }

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Empleados\Contract;
 use App\Models\Empleados\WorkingHour;
+use App\Models\Empleados\Atraso;
+
+
 class Employee extends Model
 {
     use HasFactory;
@@ -19,7 +22,7 @@ class Employee extends Model
         'ci'
     ];
 
-    protected $with = ['contracts', 'working_hours'];
+    protected $with = ['contracts', 'working_hours','atrasos'];
 
     public function contracts(){
 
@@ -35,5 +38,9 @@ class Employee extends Model
 
     public function asistencias(){
         return $this->hasMany(Asistencia::class, 'id_empleado', 'id');
+    }
+
+    public function atrasos(){
+        return $this->hasMany(Atraso::class, 'id_empleado', 'id');
     }
 }

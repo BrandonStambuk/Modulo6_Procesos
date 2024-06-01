@@ -187,50 +187,50 @@ function EditarTurno() {
         "Domingo"
       ]);
 
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      console.log(horarios);
 
-    const handleSubmit =  async (e) => {
-        e.preventDefault(); 
-        console.log(horarios);
-        console.log(horariosAntiguos);
-        const validationErrors = {};
+      const validationErrors = {};
 
-        for (let i = 0; i < dias.length; i++) {
-          let confirmacionDia = document.getElementById(dias[i]);
+      for (let i = 0; i < dias.length; i++) {
+        let confirmacionDia = document.getElementById(dias[i]);
 
-          if(confirmacionDia.checked && !horarios[dias[i]].hora1.trim()){
-            validationErrors[dias[i] + "_inferior"] = "Este campo es obligatorio"
-          }
-
-          if(confirmacionDia.checked && !horarios[dias[i]].hora2.trim()){
-            validationErrors[dias[i] + "_superior"] = "Este campo es obligatorio"
-          }
+        if (confirmacionDia.checked && !horarios[dias[i]].hora1.trim()) {
+          validationErrors[dias[i] + "_inferior"] = "Este campo es obligatorio";
         }
 
-        setErrors(validationErrors);
+        if (confirmacionDia.checked && !horarios[dias[i]].hora2.trim()) {
+          validationErrors[dias[i] + "_superior"] = "Este campo es obligatorio";
+        }
+      }
 
-        if (Object.keys(validationErrors).length === 0) {
+      setErrors(validationErrors);
 
-            /* 
-
-          for (let i = 0; i < dias.length; i++) {
-            if(horarios[dias[i]].hora1){
-              const data = new FormData();
-              data.append("dia", dias[i]);
-              data.append("hora_entrada", horarios[dias[i]].hora1);
-              data.append("hora_salida", horarios[dias[i]].hora2);
-              data.append("empleado", empleado.id);
-              const respuesta_horario = await axios.post(
-                `http://127.0.0.1:8000/api/add_working_hour`,
-                data
-              );
-              if(respuesta_horario.data.status === 200){
-                console.log(respuesta_horario.data)
+      if (Object.keys(validationErrors).length === 0) {
+        const url = `http://127.0.0.1:8000/api/borrar_horarios_dado_empleado/${empleado.id}`;
+        axios.delete(url).then(async (respuesta) => {
+          if (respuesta.data.status === 200) {
+            for (let i = 0; i < dias.length; i++) {
+              if (horarios[dias[i]].hora1) {
+                const data = new FormData();
+                data.append("dia", dias[i]);
+                data.append("hora_entrada", horarios[dias[i]].hora1);
+                data.append("hora_salida", horarios[dias[i]].hora2);
+                data.append("empleado", empleado.id);
+                const respuesta_horario = await axios.post(
+                  `http://127.0.0.1:8000/api/add_working_hour`,
+                  data
+                );
+                if (respuesta_horario.data.status === 200) {
+                  console.log(respuesta_horario.data);
+                }
               }
             }
+            window.location.href = "./assignTurn";
           }
-          window.location.href = "./assignTurn";
-          */
-        }
+        });
+      }
     };
 
     const cambiarHorario1 = (dia) => {

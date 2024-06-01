@@ -36,7 +36,6 @@ function EmployeeRegister() {
   });
 
   const handleInput = (e) => {
-    console.log("ASASS")
     const {name, value} = e.target;
     setValues({
         ...values,

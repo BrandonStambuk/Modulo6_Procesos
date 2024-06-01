@@ -11,6 +11,7 @@ class Parqueo extends Model
     //public $timestamps = false;
     protected $fillable = [
         'nombre_parqueo',
+        'direccion_parqueo',
         'departamento_id'
     ];
     public function departamento()

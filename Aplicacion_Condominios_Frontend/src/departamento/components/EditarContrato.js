@@ -170,12 +170,12 @@ class EditarContrato extends Component {
                 />
                 <Container className="custom-form">
                     <Row>
-                        <Col sm={12}>
+                        <Col md={12}>
                             <h2 className="text-center mb-5 titulosForms">Editar contrato</h2>
                             <form onSubmit={this.storeResident}>
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -191,7 +191,7 @@ class EditarContrato extends Component {
                                                 disabled
                                             />
                                         </Col>
-                                        <Col sm={6}>
+                                        <Col md={6}>
 
                                             <Label
                                                 className="label-custom"
@@ -214,7 +214,7 @@ class EditarContrato extends Component {
                                 </FormGroup>
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -230,7 +230,7 @@ class EditarContrato extends Component {
                                                 disabled
                                             />
                                         </Col>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label
                                                 className={`label-custom ${fecha_fin_contrato_disabled ? 'active' : ''}`}
                                             >
@@ -254,18 +254,18 @@ class EditarContrato extends Component {
                                 
                                     {residentesSeleccionados.map((residente, index) => (
                                         <Row className="d-flex align-items-center justify-content-between mt-2 customCard" key={index}>
-                                            <Col sm={3} >
+                                            <Col md={3} >
                                                 <CardImg
                                                    className="cardlistaResidente"
                                                     src={`${endpointImg}/${residente.imagen_residente}`}
                                                     alt={residente.nombre_residente}
                                                 />
                                             </Col>
-                                            <Col sm={3} >
+                                            <Col md={3} >
                                                 <li style={{ fontWeight: 'bold', fontSize: '0.9rem'}}>{residente.nombre_residente} {residente.apellidos_residente}
                                                 </li>
                                             </Col>
-                                            <Col sm={3}>
+                                            <Col md={3}>
                                                 {console.log("residente",residente)}
                                                 {console.log("residente",residente.tipo_residente)}
                                                 <Input
@@ -285,7 +285,7 @@ class EditarContrato extends Component {
                                                     <span style={{ color: 'red', fontSize: '0.9rem', marginLeft: "0.7rem"}}>Seleccione un tipo</span>    
                                                 )}
                                             </Col>
-                                            <Col className="d-flex justify-content-center" sm={3}>
+                                            <Col className="d-flex justify-content-center" md={3}>
                                                 <Button className="botoncardContr" type="button" onClick={() => this.eliminarListaResidente(residente.id)} >
                                                     <FontAwesomeIcon icon={faTrashAlt} className="iconContr" />
                                                 </Button>

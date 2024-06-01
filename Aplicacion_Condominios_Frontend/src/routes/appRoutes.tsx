@@ -22,6 +22,8 @@ import EditarContrato from "../departamento/components/EditarContrato";
 import MostrarEdificio from "../departamento/components/MostrarEdificios";
 import RegistrarParqueo from "../departamento/components/RegistrarParqueo";
 import CrearEdificio from "../departamento/components/CrearEdificio";
+import VisualizarParqueos from "../departamento/components/VisualizarParqueos";
+import HistorialVisitas from "../departamento/components/HistorialVisitas";
 
 import AgregarEquipo from "../cobro_servicios/components/AgregarEquipo.js";
 import PagoAreaComun from "../cobro_servicios/components/PagoAreaComun";
@@ -42,6 +44,9 @@ import ControlFaltas from "../empleados/pages/faltas/control_faltas";
 import InformacionFalta from "../empleados/pages/faltas/informacion_falta";
 import InformacionRetraso from "../empleados/pages/retrasos/informacion_retraso";
 import EditarTurno from "../empleados/pages/turnos/editar_turno";
+import VerAreas from "../empleados/pages/areas/ver_areas";
+import VerBeneficios from "../empleados/pages/beneficios/ver_beneficios";
+import ControlReportes from "../empleados/pages/reportes/control_reportes";
 
 import CommonAreasLayout from "../common-areas/CommonAreasLayout";
 import CreatePage from "../common-areas/dashboard/common-area/pages/create-page/CreatePage";
@@ -93,20 +98,20 @@ const appRoutes: RouteType[] = [
     state: "dashboard",
     sidebarProps: {
       displayText: "Departamentos",
-      icon: <ApartmentIcon />,
+      icon: <ApartmentIcon />
     },
     child: [
       {
         index: true,
         element: <DashboardIndex />,
-        state: "dashboard.index",
+        state: "dashboard.index"
       },
       {
         path: "/dashboard/crearEdificio",
         element: <CrearEdificio />,
         state: "dashboard.crearEdificio",
         sidebarProps: {
-          displayText: "Crear Edificio",
+          displayText: "Registrar Edificio"
         },
       },
       {
@@ -114,7 +119,7 @@ const appRoutes: RouteType[] = [
         element: <CrearDepa />,
         state: "dashboard.crearDepa",
         sidebarProps: {
-          displayText: "Crear Departamento",
+          displayText: "Registrar Departamento"
         },
       },
       {
@@ -122,7 +127,7 @@ const appRoutes: RouteType[] = [
         element: <MostrarEdificio />,
         state: "dashboard.edificios",
         sidebarProps: {
-          displayText: "GestionarDepartamento",
+          displayText: "GestionarDepartamento"
         },
       },
       {
@@ -135,7 +140,7 @@ const appRoutes: RouteType[] = [
         element: <RegistrarResidente />,
         state: "dashboard.regResidente",
         sidebarProps: {
-          displayText: "Registrar Residente",
+          displayText: "Registrar Residente"
         },
       },
       {
@@ -163,7 +168,7 @@ const appRoutes: RouteType[] = [
         element: <MostrarResidentes />,
         state: "dashboard.residentes",
         sidebarProps: {
-          displayText: "Residentes",
+          displayText: "Residentes"
         },
       },
       {
@@ -171,7 +176,7 @@ const appRoutes: RouteType[] = [
         element: <GestionVisitas />,
         state: "dashboard.visitas",
         sidebarProps: {
-          displayText: "Visitas",
+          displayText: "Gestionar Visitas"
         },
       },
       {
@@ -180,14 +185,30 @@ const appRoutes: RouteType[] = [
         state: "dashboard.registrarVisita",
       },
       {
+        path: "/dashboard/historialVisitas",
+        element: <HistorialVisitas />,
+        state: "dashboard.historialVisitas",
+        sidebarProps: {
+          displayText: "Historial de Visitas"
+        },
+      },
+      {
         path: "/dashboard/parqueo",
         element: <RegistrarParqueo />,
         state: "dashboard.parqueo",
         sidebarProps: {
-          displayText: "Parqueos",
+          displayText: "Gestionar Parqueos"
         },
       },
-    ],
+      {
+        path: "/dashboard/visualizarParqueo",
+        element: <VisualizarParqueos />,
+        state: "dashboard.visualizarParqueo",
+        sidebarProps: {
+          displayText: "Visualizar Parqueos"
+        },
+      },
+    ]
   },
 
   {
@@ -542,6 +563,35 @@ const appRoutes: RouteType[] = [
         state: "employee.analytics",
         sidebarProps: {
           displayText: "Control de faltas",
+        },
+      },
+
+      
+
+      {
+        path: "/employees/ver_areas",
+        element: <VerAreas />,
+        state: "employee.analytics",
+        sidebarProps: {
+          displayText: "Areas",
+        },
+      },
+
+      {
+        path: "/employees/ver_beneficios",
+        element: <VerBeneficios />,
+        state: "employee.analytics",
+        sidebarProps: {
+          displayText: "Beneficios",
+        },
+      },
+
+      {
+        path: "/employees/control_reportes",
+        element: <ControlReportes />,
+        state: "employee.analytics",
+        sidebarProps: {
+          displayText: "Reportes",
         },
       },
 

@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-class CreateAsistenciasTable extends Migration
+class CreateAtrasosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,16 +14,17 @@ class CreateAsistenciasTable extends Migration
      */
     public function up()
     {
-        Schema::create('asistencias', function (Blueprint $table) {
+        Schema::create('atrasos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_empleado');
             $table->date('fecha')->default(DB::raw('CURDATE()'));
             $table->time('hora_entrada');
-            $table->time('hora_salida')->nullable();
+            $table->time('tiempo_demora');
+            $table->text('motivo')->nullable();
             $table->timestamps();
 
-
             $table->foreign('id_empleado')->references('id')->on('employees')->onDelete('cascade');
+
         });
     }
 
@@ -34,6 +35,6 @@ class CreateAsistenciasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asistencias');
+        Schema::dropIfExists('atrasos');
     }
 }

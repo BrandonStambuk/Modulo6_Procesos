@@ -189,7 +189,7 @@ class CrearResidente extends Component {
 
             axios.post(url, data).then((res) => {
                 console.log(res);
-                window.location.href = "./departamentos";
+                window.location.href = "./edificios";
             });
 
         }
@@ -206,12 +206,12 @@ class CrearResidente extends Component {
                 />
                 <Container className="custom-form">
                     <Row>
-                        <Col sm={12}>
+                        <Col md={12}>
                             <h2 className="text-center mb-5 titulosForms">Registrar residente</h2>
                             <form onSubmit={this.storeResident}>
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -228,7 +228,7 @@ class CrearResidente extends Component {
                                             />
                                             <FormFeedback>{this.state.errors.nombre_residente}</FormFeedback>
                                         </Col>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -251,7 +251,7 @@ class CrearResidente extends Component {
 
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label className="label-custom">
                                                 Cédula de identidad
                                             </Label>
@@ -266,7 +266,7 @@ class CrearResidente extends Component {
                                             />
                                             <FormFeedback>{this.state.errors.cedula_residente}</FormFeedback>
                                         </Col>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label className="label-custom">
                                                 Celular
                                             </Label>
@@ -286,7 +286,7 @@ class CrearResidente extends Component {
 
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label className="label-custom">
                                                 Fecha de nacimiento
                                             </Label>
@@ -301,7 +301,7 @@ class CrearResidente extends Component {
                                             />
                                             <FormFeedback>{this.state.errors.fecha_nacimiento_residente}</FormFeedback>
                                         </Col>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label className="label-custom">
                                                 Nacionalidad
                                             </Label>
@@ -554,7 +554,7 @@ class CrearResidente extends Component {
 
                                 <FormGroup className="mb-4">
                                     <Row>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label
                                                 className="label-custom"
                                             >
@@ -571,7 +571,7 @@ class CrearResidente extends Component {
                                             />
                                             <FormFeedback>{this.state.errors.email_residente}</FormFeedback>
                                         </Col>
-                                        <Col sm={6}>
+                                        <Col md={6}>
                                             <Label
                                                 className="label-custom"
                                             >

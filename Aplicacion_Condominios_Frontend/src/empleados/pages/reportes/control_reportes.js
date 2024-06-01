@@ -7,13 +7,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Cookies from 'universal-cookie';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import '../css/homePageEmpleados_style.css'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import '../../css/homePageEmpleados_style.css'
 
 const cookies = new Cookies();
 
-function EmployeHomePage() {
+function ControlReportes() {
 
   const [empleados, setEmpleados] = useState([]);
   
@@ -129,7 +128,7 @@ function EmployeHomePage() {
     <>
       <Row className="d-flex align-items-center justify-content-center">
         <Col className="d-flex align-items-center justify-content-center">
-          <h2>Lista de Empleados</h2>
+          <h2>Reportes</h2>
         </Col>
       </Row>
       <div className="filtrarElementos-admin">
@@ -175,13 +174,6 @@ function EmployeHomePage() {
                   <td className="tipo_contrato">{empleado.estado_contrato}</td>
                   <td>
                     <Button
-                      variant="danger"
-                      onClick={() => eliminarEmpleado(empleado.id)}
-                    >
-                      <DeleteIcon />
-                    </Button>{" "}
-                    {}
-                    <Button
                       variant="info"
                       onClick={() => editarInformacionEmpleado(empleado.id)}
                       style={{
@@ -189,7 +181,7 @@ function EmployeHomePage() {
                         borderColor: "#65B8A6",
                       }}
                     >
-                      <ModeEditIcon />
+                      <RemoveRedEyeIcon />
                     </Button>
                   </td>
                 </tr>
@@ -202,4 +194,4 @@ function EmployeHomePage() {
   );
 }
 
-export default EmployeHomePage;
+export default ControlReportes;

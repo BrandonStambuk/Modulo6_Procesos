@@ -17,9 +17,11 @@ function AssignTurn() {
 
   const [empleados, setEmpleados] = useState([]);
   const [errors, setErrors] = useState({});
+  const [areas, setAreas] = useState([]);
   
   useEffect(()=>{
     getEmpleados();
+    obtenerAreas();
   }, []);
 
   const getEmpleados = async () => {
@@ -192,12 +194,18 @@ function AssignTurn() {
     })
     document.querySelector("#primera_fecha").value = '';
     document.querySelector("#segunda_fecha").value = '';
+    setErrors({});
   }
 
   const editarTurnoEmpleado = (empleado)  => {
     cookies.set("empleado_seleccionado", empleado, { path: "/" });
     window.location.href = "./editarTurno";
   }
+
+  const obtenerAreas = async ()  => {
+    const respuesta = await axios.get(`http://127.0.0.1:8000/api/get_all_areas`);
+    setAreas(respuesta.data.areas)
+  };
 
   return (
     <>
@@ -223,8 +231,13 @@ function AssignTurn() {
             onChange={manejar_Filtro_Por_Tipo}
           >
             <option>Todos</option>
-            <option>Seguridad</option>
-            <option>Limpieza</option>
+            {areas.map((area) => {
+              return (
+                <>
+                  <option value={area.nombre}>{area.nombre}</option>
+                </>
+              );
+            })}
           </select>
         </div>
       </div>
@@ -237,11 +250,11 @@ function AssignTurn() {
 
       <Row className="my-2 d-flex justify-content-center align-items-center">
         <Col
-          xs={5}
+          xs={4}
           className="d-flex align-items-center justify-content-center"
-          
+          style={{ marginLeft: "100px" }}
         >
-          <div className="entradaBuscador-admin" >
+          <div className="entradaBuscador-admin">
             <input
               type="date"
               id="primera_fecha"
@@ -251,7 +264,7 @@ function AssignTurn() {
         </Col>
 
         <Col
-          xs={5}
+          xs={4}
           className="d-flex align-items-center justify-content-center"
         >
           <div className="entradaBuscador-admin">
@@ -267,14 +280,10 @@ function AssignTurn() {
           xs={1}
           className="d-flex align-items-center justify-content-center"
         >
-          <Button
-                      variant="danger"
-                      onClick={despejarFechas}
-                    >
-                      <CloseIcon />
-                    </Button>{" "}
+          <Button variant="danger" onClick={despejarFechas}>
+            <CloseIcon />
+          </Button>{" "}
         </Col>
-
       </Row>
 
       <Row className="d-flex justify-content-center align-items-center">
@@ -338,7 +347,6 @@ function AssignTurn() {
                       >
                         <ModeEditIcon />
                       </Button>
-
                     ) : (
                       <Button
                         variant="danger"

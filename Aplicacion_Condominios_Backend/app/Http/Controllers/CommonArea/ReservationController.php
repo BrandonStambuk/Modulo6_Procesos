@@ -69,6 +69,9 @@ class ReservationController extends Controller
                 'id_common_area' => $id_common_area,
                 'id_resident' => $id_resident
             ]);
+            $commonArea->update([
+                'available' => false
+            ]);
             } catch (\Exception $e) {
             return response()->json(['message' => 'Error al crear la reservacion.',"errors" => [
                 $e->getMessage()
@@ -82,7 +85,7 @@ class ReservationController extends Controller
 
 
 
-    
+
     public function show(Reservation $reservation)
     {
         //

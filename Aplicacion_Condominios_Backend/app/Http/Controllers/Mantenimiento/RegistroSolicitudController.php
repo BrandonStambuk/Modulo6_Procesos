@@ -36,6 +36,7 @@ class RegistroSolicitudController extends Controller
         $registroSolicitud-> ubicacion = $request -> ubicacion;
         $registroSolicitud-> numerReferencia = $request -> numerReferencia;
         $registroSolicitud-> idEstado = 1;
+        $registroSolicitud-> idEstadoContrato = 1;
         $registroSolicitud-> fechaSolicitud = Carbon::now();
         $registroSolicitud -> save();
     }
@@ -47,7 +48,9 @@ class RegistroSolicitudController extends Controller
             $response = ["message" => "Registro no encontrado"];
             $status = 404;
         } else {
-            $registroSolicitud->update($request->all());
+            $data = $request->all();
+            $data['idEstadoContrato'] = 2;
+            $registroSolicitud->update($data);
             $response = $registroSolicitud;
             $status = 200;
         }

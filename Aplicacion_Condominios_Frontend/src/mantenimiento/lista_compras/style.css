@@ -1,0 +1,46 @@
+.content__list {
+  display: flex;
+  flex-direction: column;
+  /* border: solid 2px #233044; */
+  border-radius: 11px;
+  padding: 2em;
+  gap: 2em;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.personalize_button1 {
+  color: #ffffff;
+  background-color: #72bdad;
+  width: 80px;
+  padding: 2px 2px;
+}
+
+.block {
+  background-color: transparent;
+  width: 80px;
+  padding: 2px 2px;
+  padding-right: 100px;
+}
+
+.block:hover {
+  background-color: transparent;
+}
+.button-container {
+  display: flex;
+  align-items: baseline;
+}
+
+.tamIcon {
+  font-size: 28px;
+}
+.tamanio_acordion {
+  max-width: 400px;
+  width: 100%;
+}
+
+.fixed-width {
+  width: 150px;
+  word-break: break-word;
+  white-space: normal;
+  overflow: hidden;
+}

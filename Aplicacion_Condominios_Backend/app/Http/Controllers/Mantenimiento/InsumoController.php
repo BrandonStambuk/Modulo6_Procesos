@@ -8,6 +8,7 @@ use App\Models\Mantenimiento\Insumo;
 
 class InsumoController extends Controller
 {
+    // de la tabla INSUMO agrupa las solicitudes por idSolicitud (devuelve una sola vez por solicitud)
     public function getInsumoBySolicitud() {
         $insumo = Insumo::with('solicitud.categoria')->get();
         $groupedInsumos = $insumo->groupBy('idSolicitud');
@@ -23,6 +24,36 @@ class InsumoController extends Controller
         return response()->json($uniqueInsumos, 200);
     }
     
+    // devuelve TODOS los registros de una solicitud dada + los precios
+    public function getInsumosBySolicitudAll($idSolicitud) {
+        $insumos = Insumo::where('idSolicitud', $idSolicitud)->get();
+        $totalCompra = 0;
+        $insumos = $insumos->map(function ($insumo) use (&$totalCompra) {
+            $insumo->totalInsumo = $insumo->precioInsumo * $insumo->cantidadInsumo;
+            $totalCompra += $insumo->totalInsumo;
+            return $insumo;
+        });
+        
+        $response = [
+            'insumos' => $insumos,
+            'totalCompra' => $totalCompra
+        ];
+        
+        return response()->json($response, 200);
+    }
+    
+    // agrupa las solicitudes por categoria (devolviendo UNA sola vez por solicitud)
+    public function getInsumosByCategoria($idCategoria) {
+        $insumos = Insumo::whereHas('solicitud', function ($query) use ($idCategoria) {
+            $query->where('idCategoria', $idCategoria);
+        })->with('solicitud:idRegistroSolicitud,idCategoria')
+        ->get()
+        ->unique('idSolicitud');
+        
+        return response()->json($insumos, 200);
+    }
+    
+    // muestra todo el contenido de la tabla INSUMO 
     public function getInsumo() {
         $insumo = Insumo::with('solicitud.categoria')->get();
         return response()->json($insumo, 200);
@@ -87,7 +118,7 @@ class InsumoController extends Controller
         
         return response()->json($response, $status);
     }
-
+    
     // Elimina por idSolicitud de la tabla insumo
     public function deleteInsumobySolicitud($id) {
         $deletedRows = Insumo::where('idSolicitud', $id);

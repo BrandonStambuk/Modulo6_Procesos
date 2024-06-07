@@ -254,7 +254,7 @@ class CrearContrato extends Component {
                         tipo_residente: tipoResidente,
                     });
                 }
-                window.location.href = "./departamentos";
+                window.location.href = "./edificios";
         }
     };
 

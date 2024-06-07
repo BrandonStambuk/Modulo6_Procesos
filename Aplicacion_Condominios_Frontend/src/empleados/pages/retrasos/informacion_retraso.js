@@ -14,18 +14,26 @@ import {
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import '../../css/contract_register_style.css'
+import Swal from 'sweetalert2';
 const cookies = new Cookies();
+
 function InformacionRetraso() {
 
     const empleado = cookies.get('empleado_seleccionado');
 
     const [errors, setErrors] = useState({});
 
-    useEffect(()=>{
+    const [motivo, setMotivo] = useState("");
+
+
+    useEffect(() => {
+
+      verificarMotivo()
+      console.log(empleado)
 
     }, []);
 
-    const handleSubmit =  async (e) => {
+    const registrarMotivo =  async (e) => {
         e.preventDefault(); 
         const validationErrors = {};
 
@@ -33,14 +41,35 @@ function InformacionRetraso() {
 
         if (Object.keys(validationErrors).length === 0) {
 
-          //window.location.href = "./assignTurn";
+          const data = new FormData();
+
+          data.append("motivo", motivo);
+
+          const res = await axios.post(
+            `http://127.0.0.1:8000/api/actualizar_motivo/${empleado.id_retraso}`,
+            data
+          );
+    
+          if (res.data.status === 200) {
+            Swal.fire(
+              "Se registro el motivo correctamente",
+              "",
+              "success"
+            );
+          }
         }
     };
 
-    const cambiarMotivoRetraso = ()  => {
+    const cambiarMotivoRetraso = (event)  => {
+      setMotivo(event.target.value);
+    }
 
-      
-  
+    const verificarMotivo = ()  => {
+      if(empleado.motivo === null){
+        setMotivo("")
+      }else{
+        setMotivo(empleado.motivo)
+      }
     }
     
     return (
@@ -56,93 +85,97 @@ function InformacionRetraso() {
 
               <MDBCard>
                 <MDBCardBody className="px-4">
-                <div className="employee-info">
-                  <h4 className="mb-3 ">Empleado</h4>
-                  <div
-                    className="employee-details"
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      justifyItems: "start",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div className="employee-info">
+                    <h4 className="mb-3 ">Empleado</h4>
                     <div
+                      className="employee-details"
                       style={{
-                        display: "flex",
-                        justifyContent: "center",
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        justifyItems: "start",
                         alignItems: "center",
-                        gap: "1rem",
                       }}
                     >
-                      <strong className="mb-0">Nombre:</strong>
-                      <p className="mb-0">
-                        {empleado.nombre} {empleado.apellido}
-                      </p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
-                    >
-                      <strong className="mb-0">CI:</strong>
-                      <p className="mb-0">{empleado.ci}</p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
-                    >
-                      <strong className="mb-0">Fecha de inicio de contrato:</strong>
-                      <p className="mb-0">
-                        {empleado.contracts[0].fecha_inicio}
-                      </p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
-                    >
-                      <strong className="mb-0">Fecha de fin de contrato:</strong>
-                      <p className="mb-0">
-                        {empleado.contracts[0].fecha_final === null
-                          ? "Indefinido"
-                          : empleado.contracts[0].fecha_final}
-                      </p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
-                    >
-                      <strong className="mb-0">Area:</strong>
-                      <p className="mb-0">{empleado.contracts[0].area}</p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
-                    >
-                      <strong className="mb-0">Cargo:</strong>
-                      <p className="mb-0">{empleado.contracts[0].cargo}</p>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "1rem",
+                        }}
+                      >
+                        <strong className="mb-0">Nombre:</strong>
+                        <p className="mb-0">
+                          {empleado.nombre} {empleado.apellido}
+                        </p>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "1rem",
+                        }}
+                      >
+                        <strong className="mb-0">CI:</strong>
+                        <p className="mb-0">{empleado.ci}</p>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "1rem",
+                        }}
+                      >
+                        <strong className="mb-0">
+                          Fecha de inicio de contrato:
+                        </strong>
+                        <p className="mb-0">
+                          {empleado.fecha_inicio}
+                        </p>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "1rem",
+                        }}
+                      >
+                        <strong className="mb-0">
+                          Fecha de fin de contrato:
+                        </strong>
+                        <p className="mb-0">
+                          {empleado.fecha_final === null
+                            ? "Indefinido"
+                            : empleado.fecha_final}
+                        </p>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "1rem",
+                        }}
+                      >
+                        <strong className="mb-0">Area:</strong>
+                        <p className="mb-0">{empleado.area}</p>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "1rem",
+                        }}
+                      >
+                        <strong className="mb-0">Cargo:</strong>
+                        <p className="mb-0">{empleado.cargo}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
                   <hr className="mx-n3" />
 
@@ -170,7 +203,7 @@ function InformacionRetraso() {
                           >
                             <strong className="mb-0">Fecha del retraso:</strong>
                             <p className="mb-0">
-                              {empleado.nombre} {empleado.apellido} /*Aqui fecha */
+                              {empleado.fecha}
                             </p>
                           </div>
                           <div
@@ -181,8 +214,12 @@ function InformacionRetraso() {
                               gap: "1rem",
                             }}
                           >
-                            <strong className="mb-0">Tiempo del retraso:</strong>
-                            <p className="mb-0">{empleado.ci} /*Aqui tiempo */</p>
+                            <strong className="mb-0">
+                              Tiempo del retraso:
+                            </strong>
+                            <p className="mb-0">
+                              {empleado.tiempo_demora}
+                            </p>
                           </div>
                           <div
                             style={{
@@ -203,9 +240,15 @@ function InformacionRetraso() {
                     <MDBCol>
                       <h4 className="mb-3">Motivo del retraso</h4>
                       <div className="d-flex flex-start w-100">
-                            
-                            <MDBTextArea onChange={cambiarMotivoRetraso} id='textAreaExample' rows={4} style={{ backgroundColor: '#fff' }} wrapperClass="w-100" />
-                          </div>
+                        <MDBTextArea
+                          onChange={cambiarMotivoRetraso}
+                          id="textAreaExample"
+                          rows={4}
+                          style={{ backgroundColor: "#fff" }}
+                          wrapperClass="w-100"
+                          value={motivo}
+                        />
+                      </div>
                     </MDBCol>
                   </MDBRow>
 
@@ -217,7 +260,7 @@ function InformacionRetraso() {
                         block
                         className="my-4"
                         size="lg"
-                        onClick={handleSubmit}
+                        onClick={registrarMotivo}
                         style={{
                           backgroundColor: "#65B8A6",
                           borderColor: "#65B8A6",
@@ -232,14 +275,15 @@ function InformacionRetraso() {
                         block
                         className="my-4"
                         size="lg"
-                        onClick={() => (window.location.href = "./control_retrasos")}
+                        onClick={() =>
+                          (window.location.href = "./control_retrasos")
+                        }
                         variant="danger"
                       >
                         Atras
                       </Button>
                     </MDBCol>
                   </MDBRow>
-
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>

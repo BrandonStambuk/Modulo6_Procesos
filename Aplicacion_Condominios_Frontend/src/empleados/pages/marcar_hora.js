@@ -77,6 +77,7 @@ function MarcarHora() {
         data.append("ci", values.ci);
         const res = await axios.post(`http://127.0.0.1:8000/api/marcar_hora_empleado`, data);
         let mensajeRecibido = res.data.mensaje;
+        console.log(mensajeRecibido);
         if(mensajeRecibido === 'Ingreso realizado'){
           var horaActual = new Date().toLocaleTimeString();
           Swal.fire('Se marcó la hora de entrada correctamente', 'Hora actual: ' + horaActual, 'success');

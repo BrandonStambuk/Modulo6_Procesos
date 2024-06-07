@@ -5,32 +5,75 @@ import { Container, Row, Col, Form, FormGroup, Label, Input, Button } from "reac
 import QRCode from "qrcode.react";
 import Swal from "sweetalert2"; 
 import jsPDF from "jspdf";
+
 const endpoint = "http://localhost:8000/api";
 
 const FormularioPagoArea = () => {
     const { id } = useParams();
-    const [monto, setMonto] = useState("");
+    const [monto, setMonto] = useState(0);
     const [formaPago, setFormaPago] = useState("");
     const [efectivo, setEfectivo] = useState(""); 
     const [errors, setErrors] = useState({});
     const [showQR, setShowQR] = useState(false);
     const [cambio, setCambio] = useState(0);
     const [pagoRealizado, setPagoRealizado] = useState(false);
+    const [reportes, setReportes] = useState([]);
+    const [cosToReplace, setCosToReplace] = useState(0);
+    const [countToReplace, setCountToReplace] = useState(0);
+    const [montoTotal, setMontoTotal] = useState(0);
 
     useEffect(() => {
         console.log("Componente FormularioPagoArea montado");
-    }, []);
+        // Intentar obtener reportes por reserva con diferentes rutas
+        const fetchReports = async () => {
+            try {
+                // Intenta con la primera posible ruta
+                let response = await axios.get(`${endpoint}/reports/${id}`);
+                setReportes(response.data.data);
+                if (response.data.data.length > 0) {
+                    setCosToReplace(response.data.data[0].cosToReplace);
+                    setCountToReplace(response.data.data[0].countToReplace);
+                    setMonto(response.data.data[0].monto);
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    try {
+                        // Si la primera ruta falla, intenta con la segunda posible ruta
+                        let response = await axios.get(`${endpoint}/reservations/${id}/reports`);
+                        setReportes(response.data.data);
+                        if (response.data.data.length > 0) {
+                            setCosToReplace(response.data.data[0].cosToReplace);
+                            setCountToReplace(response.data.data[0].countToReplace);
+                            setMonto(response.data.data[0].monto);
+                        }
+                    } catch (error) {
+                        console.error('Error al obtener los reportes con la segunda ruta:', error);
+                    }
+                } else {
+                    console.error('Error al obtener los reportes:', error);
+                }
+            }
+        };
+
+        fetchReports();
+    }, [id]);
+
+    useEffect(() => {
+        // Calcula el monto total cuando se actualizan cosToReplace, countToReplace o monto
+        const total = parseFloat(cosToReplace) * parseFloat(countToReplace) + parseFloat(monto);
+        setMontoTotal(total);
+    }, [cosToReplace, countToReplace, monto]);
+
     const generatePDF = () => {
         try {
             const doc = new jsPDF();
-            doc.text("Administracion",20,10);
-            doc.text("-------------------",20,20);
+            doc.text("Administracion", 20, 10);
+            doc.text("-------------------", 20, 20);
             doc.text("Recibo de Pago", 20, 30);
-            doc.text("-------------------",20,40);
+            doc.text("-------------------", 20, 40);
 
-            // Verificar que los valores estén definidos antes de usarlos en el PDF
-            if (monto) {
-                doc.text(`Monto: ${monto}`, 20, 50);
+            if (montoTotal) {
+                doc.text(`Monto Total: ${montoTotal}`, 20, 50);
             }
             if (formaPago) {
                 doc.text(`Forma de Pago: ${formaPago}`, 20, 60);
@@ -41,14 +84,16 @@ const FormularioPagoArea = () => {
                     doc.text(`Cambio: ${cambio.toFixed(2)}`, 20, 80);
                 }
             }
-
+            if (cosToReplace !== null) {
+                doc.text(`Costo a Reponer: ${cosToReplace}`, 20, 90);
+            }
+            if (countToReplace !== null) {
+                doc.text(`Cantidad a Reponer: ${countToReplace}`, 20, 100);
+            }
 
             doc.save("recibo_pago.pdf");
         } catch (error) {
-           console.log(monto);
-           console.log(formaPago);
-           console.log(cambio);
-           console.log(error);
+            console.error(error);
         }
     };
     
@@ -84,9 +129,9 @@ const FormularioPagoArea = () => {
         setErrors(validationErrors);
     
         if (Object.keys(validationErrors).length === 0) {
-            console.log("Monto:", monto);
+            console.log("Monto:", montoTotal);
             console.log("Forma de pago:", formaPago);
-            axios.put(`${endpoint}/common-areas/${id}/pagarReserva`)
+            axios.put(`${endpoint}/common-areas/${id}/pagarReserva`, { monto: montoTotal })
                 .then(response => {
                     console.log(response.data);
                     setShowQR(formaPago === "qr");
@@ -97,7 +142,6 @@ const FormularioPagoArea = () => {
                         title: '¡Pago realizado con éxito!'
                     }).then(() => {
                         window.location.href = "/cobros/pagar-reserva";
-    
                     });
     
                 })
@@ -106,17 +150,16 @@ const FormularioPagoArea = () => {
                 });
     
             if (formaPago === "efectivo") {
-                const cambioCalculado = parseFloat(efectivo) - parseFloat(monto);
+                const cambioCalculado = parseFloat(efectivo) - parseFloat(montoTotal);
                 setCambio(cambioCalculado > 0 ? cambioCalculado : 0);
             }
 
             generatePDF();
-
         }
     };
     
     const handleGenerateQR = () => {
-        const qrData = `Monto: ${monto}`;
+        const qrData = `Monto: ${montoTotal}`;
         setShowQR(true);
     };
 
@@ -150,7 +193,6 @@ const FormularioPagoArea = () => {
                             >
                                 <option value="">Seleccione una opción</option>
                                 <option value="efectivo">Efectivo</option>
-
                                 <option value="qr">Pago por QR</option>
                             </Input>
                             {errors.formaPago && <span>{errors.formaPago}</span>}
@@ -168,6 +210,40 @@ const FormularioPagoArea = () => {
                                 />
                             </FormGroup>
                         )}
+                        {cosToReplace !== null && (
+                            <FormGroup>
+                                <Label for="cosToReplace">Costo a Reponer:</Label>
+                                <Input
+                                    type="number"
+                                    name="cosToReplace"
+                                    id="cosToReplace"
+                                    value={cosToReplace}
+                                    disabled
+                                />
+                            </FormGroup>
+                        )}
+                        {countToReplace !== null && (
+                            <FormGroup>
+                                <Label for="countToReplace">Cantidad a Reponer:</Label>
+                                <Input
+                                    type="number"
+                                    name="countToReplace"
+                                    id="countToReplace"
+                                    value={countToReplace}
+                                    disabled
+                                />
+                            </FormGroup>
+                        )}
+                        <FormGroup>
+                            <Label for="montoTotal">Monto Total:</Label>
+                            <Input
+                                type="number"
+                                name="montoTotal"
+                                id="montoTotal"
+                                value={montoTotal}
+                                disabled
+                            />
+                        </FormGroup>
                         <Button type="submit" color="primary">
                             Pagar
                         </Button>
@@ -178,7 +254,7 @@ const FormularioPagoArea = () => {
                     {showQR && ( 
                         <div className="text-center mt-3">
                             <h3>Escanea el siguiente código QR para realizar el pago:</h3>
-                            <QRCode value={`Monto: ${monto}`} />
+                            <QRCode value={`Monto: ${montoTotal}`} />
                         </div>
                     )}
                     {formaPago === "efectivo" && cambio > 0 && ( 

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Empleados\Employee;
 use App\Models\Empleados\Asistencia;
+use App\Models\Empleados\Atraso;
+use App\Models\Empleados\WorkingHour;
+
 class EmployeeController extends Controller
 {
     public function store(Request $request){
@@ -102,7 +105,7 @@ class EmployeeController extends Controller
             $id = $empleadoId -> id;
             //$diaActual = Carbon::now()->isoFormat('dddd');
             date_default_timezone_set('America/La_Paz');
-            $horaActual = date('H:i:s');
+            $horaActual = date('H:i');
             $fechaActual = date('Y-m-d');
             
             $horaMarcada = Asistencia::where('id_empleado',$id)
@@ -124,6 +127,8 @@ class EmployeeController extends Controller
                                                        ->where('fecha',$fechaActual)
                                                        ->whereNotNull('hora_salida')
                                                        ->first();
+                
+                
                 if($horaMarcadaEntradaSalida){
                     return response()->json([
                         'status' => 200,
@@ -135,13 +140,13 @@ class EmployeeController extends Controller
                     $asistencia-> id_empleado = $id;
                     $asistencia-> hora_entrada = $horaActual;
                     $asistencia -> save();
-    
+                    $llegoTarde = $this->marcarAtraso($id,$horaActual);
+
                     return response()->json([
                         'status' => 200,
                         'mensaje' => 'Ingreso realizado',
                     ]);
                 }
-
             }
         }
         else{
@@ -150,5 +155,33 @@ class EmployeeController extends Controller
                 'mensaje' => 'No existe el usuario',
             ]);
         }
+    }
+
+    public function marcarAtraso($id,$horaMarcada){
+        $tarde = false;
+        date_default_timezone_set('America/La_Paz');
+        $numeroDia = date('w');
+        $nombreDia = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'][$numeroDia];
+        $horaYDiaEmpleado = WorkingHour::select('dia','hora_entrada')
+                                  ->where('empleado',$id)
+                                  ->where('dia',$nombreDia)
+                                  ->first();
+        
+        if($horaYDiaEmpleado){
+            $horaEntradaEmpleado = $horaYDiaEmpleado -> hora_entrada;
+            if(strtotime($horaMarcada) > strtotime($horaEntradaEmpleado)){
+                $horaMarcadaDateTime = new \DateTime($horaMarcada);
+                $horaEntradaEmpleadoDateTime = new \DateTime($horaEntradaEmpleado);
+                $interval = $horaEntradaEmpleadoDateTime->diff($horaMarcadaDateTime);
+
+                $atraso = new Atraso();
+                $atraso -> id_empleado = $id;
+                $atraso -> hora_entrada = $horaMarcada;
+                $atraso->  tiempo_demora = $interval->format('%H:%I');
+                $atraso -> save();
+                $tarde = true;
+            }
+        }
+        return $tarde;
     }
 }

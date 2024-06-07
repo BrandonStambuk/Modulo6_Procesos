@@ -16,7 +16,7 @@ class WorkingHour extends Model
         'empleado'
     ];
 
-    public function employees()
+    public function empleado()
     {
         return $this->belongsTo(Employee::class, 'empleado');
     }

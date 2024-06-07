@@ -96,3 +96,15 @@
   text-align: right; /* Alinear texto a la izquierda */
 }
 
+.tam_texField{
+  max-width: 86px;
+  width: 100%;
+}
+.c-dark-blue{
+  color: white;
+}
+.button_delete1{
+  background-color: #DC3545;
+  width: 50px;
+  padding: 4px 4px;
+}

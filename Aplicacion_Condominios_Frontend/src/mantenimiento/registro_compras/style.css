@@ -1,0 +1,48 @@
+.content__registro {
+    display: flex;
+    flex-direction: column;
+    /* border: solid 2px #233044; */
+    border-radius: 11px;
+    padding: 2em;
+    gap: 2em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
+    /* background-color: #ffffff; */
+  }
+.tr__bg-white {
+    background-color: #ffffff;
+  }
+  
+
+/* Desplegables */
+
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0);
+  margin-left: 0%;
+  font-weight:bolder;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0.8rem 0;
+}
+
+.form-item {
+  margin-right: 2rem; /* Ajusta el espacio entre los elementos según sea necesario */
+}
+
+.MuiTextField-root {
+  width: 42ch;
+}
+
+.button_color{
+  color: #ffffff;
+  background-color: #DC3545;
+  width: 80px;
+  padding: 4px 4px;
+}

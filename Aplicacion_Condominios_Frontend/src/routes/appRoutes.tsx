@@ -23,6 +23,8 @@ import EditarContrato from "../departamento/components/EditarContrato";
 import MostrarEdificio from "../departamento/components/MostrarEdificios";
 import RegistrarParqueo from "../departamento/components/RegistrarParqueo";
 import CrearEdificio from "../departamento/components/CrearEdificio";
+import VisualizarParqueos from "../departamento/components/VisualizarParqueos";
+import HistorialVisitas from "../departamento/components/HistorialVisitas";
 
 import AgregarEquipo from "../cobro_servicios/components/AgregarEquipo.js";
 import PagoAreaComun from "../cobro_servicios/components/PagoAreaComun";
@@ -43,6 +45,10 @@ import ControlFaltas from "../empleados/pages/faltas/control_faltas";
 import InformacionFalta from "../empleados/pages/faltas/informacion_falta";
 import InformacionRetraso from "../empleados/pages/retrasos/informacion_retraso";
 import EditarTurno from "../empleados/pages/turnos/editar_turno";
+import VerAreas from "../empleados/pages/areas/ver_areas";
+import VerBeneficios from "../empleados/pages/beneficios/ver_beneficios";
+import ControlReportes from "../empleados/pages/reportes/control_reportes";
+import VerReporte from "../empleados/pages/reportes/ver_reporte";
 
 import CommonAreasLayout from "../common-areas/CommonAreasLayout";
 import CreatePage from "../common-areas/dashboard/common-area/pages/create-page/CreatePage";
@@ -66,19 +72,23 @@ import ChangelogPageLayout from "../mantenimiento/ChangelogPageLayout";
 import Changelog from "../pages/changelog/ChangelogPage";
 import RegistrarInsumoPage from "../mantenimiento/registro_insumo/RegistrarInsumoPage";
 import ListaInsumoPage from "../mantenimiento/lista_insumo/ListaInsumoPage";
+import ListaComprasPage from "../mantenimiento/lista_compras/ListaComprasPage";
+import RegistroComprasPage from "../mantenimiento/registro_compras/RegistroComprasPage";
 
 import TablaReservas from "../cobro_servicios/components/TablaReservas";
 import GestionEquipos from "../cobro_servicios/components/gestionEquipos.js";
 import EditarEquipo from "../cobro_servicios/components/editarEquipo";
 import GenerarPreAviso from "../cobro_servicios/components/Pre-aviso";
 import PreAvisoExpensas from "../cobro_servicios/components/Pre-avisoExpensas.js";
-
+import Pagos from "../cobro_servicios/components/Pagos";
 import ReportListPage from "../common-areas/dashboard/detail/pages/list-page/ReportListPage";
 import Expensas from "../cobro_servicios/components/Expensas";
 
 import Imprimir from "../notificaciones/pages/Imprimir";
 import Multas from "../cobro_servicios/components/Multas";
 import FormularioPagoExpensa from "../cobro_servicios/components/FormularioPagoExpensa";
+
+import ListPageReservations from "../common-areas/dashboard/reservation/pages/list-page/ListPageReservations";
 import { NoticesSection } from "../notificaciones/pages/NoticesSection";
 
 const appRoutes: RouteType[] = [
@@ -107,7 +117,7 @@ const appRoutes: RouteType[] = [
         element: <CrearEdificio />,
         state: "dashboard.crearEdificio",
         sidebarProps: {
-          displayText: "Crear Edificio",
+          displayText: "Registrar Edificio",
         },
       },
       {
@@ -115,7 +125,7 @@ const appRoutes: RouteType[] = [
         element: <CrearDepa />,
         state: "dashboard.crearDepa",
         sidebarProps: {
-          displayText: "Crear Departamento",
+          displayText: "Registrar Departamento",
         },
       },
       {
@@ -172,7 +182,7 @@ const appRoutes: RouteType[] = [
         element: <GestionVisitas />,
         state: "dashboard.visitas",
         sidebarProps: {
-          displayText: "Visitas",
+          displayText: "Gestionar Visitas",
         },
       },
       {
@@ -181,11 +191,27 @@ const appRoutes: RouteType[] = [
         state: "dashboard.registrarVisita",
       },
       {
+        path: "/dashboard/historialVisitas",
+        element: <HistorialVisitas />,
+        state: "dashboard.historialVisitas",
+        sidebarProps: {
+          displayText: "Historial de Visitas",
+        },
+      },
+      {
         path: "/dashboard/parqueo",
         element: <RegistrarParqueo />,
         state: "dashboard.parqueo",
         sidebarProps: {
-          displayText: "Parqueos",
+          displayText: "Gestionar Parqueos",
+        },
+      },
+      {
+        path: "/dashboard/visualizarParqueo",
+        element: <VisualizarParqueos />,
+        state: "dashboard.visualizarParqueo",
+        sidebarProps: {
+          displayText: "Visualizar Parqueos",
         },
       },
     ],
@@ -278,6 +304,11 @@ const appRoutes: RouteType[] = [
         element: <FormularioPagoArea />,
         state: "cobros.formulario.pago",
       },
+      {
+        path: "/cobros/ver-pagos/:id",
+        element: <Pagos />,
+        state: "cobros.expensa.pagosrealizados",
+      },
     ],
   },
 
@@ -317,6 +348,14 @@ const appRoutes: RouteType[] = [
         state: "areas-comunes.calendario",
       },
       {
+        path: "/areas-comunes/reservas",
+        element: <ListPageReservations />,
+        state: "areas-comunes.reservas",
+        sidebarProps: {
+          displayText: "Reservas",
+        },
+      },
+      {
         path: "/areas-comunes/reservar/:id",
         element: <ReservationPage />,
         state: "areas-comunes.reservar",
@@ -338,12 +377,9 @@ const appRoutes: RouteType[] = [
         },
       },
       {
-        path: "/areas-comunes/crear-reporte",
+        path: "/areas-comunes/crear-reporte/:id",
         element: <ReportPage />,
         state: "areas-comunes.crear-reporte",
-        sidebarProps: {
-          displayText: "Crear Reporte",
-        },
       },
     ],
   },
@@ -408,6 +444,24 @@ const appRoutes: RouteType[] = [
           displayText: "Insumos",
         },
       },
+      //Lista compras
+      {
+        path: "/changelog/lista_compras",
+        element: <ListaComprasPage />,
+        state: "changelog.solicitud",
+        sidebarProps: {
+          displayText: "Lista de Compras",
+        },
+      },
+      //Registro compras
+      {
+        path: "/changelog/registro_compras",
+        element: <RegistroComprasPage />,
+        state: "changelog.solicitud",
+        // sidebarProps: {
+        //   displayText: "Lista de Compras",
+        // },
+      },
     ],
   },
 
@@ -430,7 +484,7 @@ const appRoutes: RouteType[] = [
       },*/
       {
         path: "/notifications/generarAviso",
-        element: <Aviso/>,
+        element: <Aviso />,
         state: "notificacion.email",
         sidebarProps: {
           displayText: "Generar Aviso",
@@ -553,6 +607,33 @@ const appRoutes: RouteType[] = [
       },
 
       {
+        path: "/employees/ver_areas",
+        element: <VerAreas />,
+        state: "employee.analytics",
+        sidebarProps: {
+          displayText: "Areas",
+        },
+      },
+
+      {
+        path: "/employees/ver_beneficios",
+        element: <VerBeneficios />,
+        state: "employee.analytics",
+        sidebarProps: {
+          displayText: "Beneficios",
+        },
+      },
+
+      {
+        path: "/employees/control_reportes",
+        element: <ControlReportes />,
+        state: "employee.analytics",
+        sidebarProps: {
+          displayText: "Reportes de Empleados",
+        },
+      },
+
+      {
         path: "/employees/employeeEdit",
         element: <EmployeeEdit />,
         state: "employee.analytics",
@@ -585,6 +666,12 @@ const appRoutes: RouteType[] = [
       {
         path: "/employees/editarTurno",
         element: <EditarTurno />,
+        state: "employee.analytics",
+      },
+
+      {
+        path: "/employees/ver_reporte",
+        element: <VerReporte />,
         state: "employee.analytics",
       },
     ],

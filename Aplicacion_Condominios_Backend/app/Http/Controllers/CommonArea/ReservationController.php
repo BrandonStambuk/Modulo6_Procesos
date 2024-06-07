@@ -4,6 +4,8 @@ namespace App\Http\Controllers\CommonArea;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommonArea\ReservationRequest;
+use App\Http\Resources\CommonArea\ReservationCollection;
+use App\Http\Resources\CommonArea\ReservationResource;
 use App\Models\CommonArea\CommonArea;
 use App\Models\CommonArea\Reservation;
 use App\Models\GestDepartamento\Residente;
@@ -24,7 +26,9 @@ class ReservationController extends Controller
 
     public function index()
     {
-        //
+        $reservations = Reservation::all();
+
+        return response()->json(new ReservationCollection($reservations), 200);
     }
 
     public function store(ReservationRequest $request)
@@ -69,6 +73,9 @@ class ReservationController extends Controller
                 'id_common_area' => $id_common_area,
                 'id_resident' => $id_resident
             ]);
+            $commonArea->update([
+                'available' => false
+            ]);
             } catch (\Exception $e) {
             return response()->json(['message' => 'Error al crear la reservacion.',"errors" => [
                 $e->getMessage()
@@ -82,7 +89,7 @@ class ReservationController extends Controller
 
 
 
-    
+
     public function show(Reservation $reservation)
     {
         //
@@ -96,5 +103,16 @@ class ReservationController extends Controller
     public function destroy(Reservation $reservation)
     {
         //
+    }
+
+    public function getReservationById($id)
+    {
+        $reservation = Reservation::find($id);
+
+        if(!$reservation){
+            return response()->json(['message' => 'Reservación no encontrada',"errors" => []], 404);
+        }
+
+        return response()->json(new ReservationResource($reservation), 200);
     }
 }

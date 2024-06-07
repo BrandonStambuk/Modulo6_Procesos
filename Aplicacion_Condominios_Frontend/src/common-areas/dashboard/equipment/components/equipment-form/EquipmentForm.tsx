@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Equipment } from "../../interfaces/equipment";
 import Swal from "sweetalert2";
+import "./equipmentForm-page.css";
 
 export interface FormElementProps {
   showList: () => void;
@@ -127,7 +128,7 @@ export const EquipmentForm: React.FC<FormElementProps> = ({
       </h2>
       <div className="row">
         <div className="col-lg-6 mx-auto">
-          <form onSubmit={(event) => handleSubmit(event)}>
+          <form onSubmit={(event) => handleSubmit(event)} className="form-container-equipment">
             {/* {product?.id && (
               <div className="row mb-3">
                 <label className="col-sm-4 col-form-label"> ID </label>
@@ -215,7 +216,7 @@ export const EquipmentForm: React.FC<FormElementProps> = ({
             </div>
             <div className="row">
               <div className="offset-sm-4 col-sm-4 d-grid">
-                <button type="submit" className="btn btn-primary btn-sm me-3">
+                <button type="submit" className="btn-guardar">
                   Guardar
                 </button>
               </div>
@@ -223,7 +224,7 @@ export const EquipmentForm: React.FC<FormElementProps> = ({
                 <button
                   onClick={showList}
                   type="button"
-                  className="btn btn-secondary me-2"
+                  className="btn-cancelar"
                 >
                   {" "}
                   Cancelar{" "}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table } from "reactstrap";
-import { FaMoneyBill, FaCheck, FaTimes } from "react-icons/fa"; // Importa los íconos de billete, check y cross de react-icons
+import { FaMoneyBill, FaCheck, FaTimes, FaEye } from "react-icons/fa"; // Importa los íconos adicionales de react-icons
 const endpoint = "http://localhost:8000/api";
 
 const Expensas = () => {
@@ -25,6 +25,11 @@ const Expensas = () => {
         window.location.href = `/cobros/pagar-expensa/${id}`;
     };
 
+    const handleVerPagosRealizados = (id_propietarioPagar, id_expensa) => {
+        console.log(`Ver pagos realizados del propietario ${id_propietarioPagar} para la expensa ${id_expensa}`);
+        window.location.href = `/cobros/ver-pagos/${id_propietarioPagar}`;
+    };
+
     return (
         <div>
             <h2>Expensas</h2>
@@ -39,6 +44,7 @@ const Expensas = () => {
                         <th>Pagado</th>
                         <th>Monto</th>
                         <th>Pagar</th> {/* Columna para pagar */}
+                     
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +67,7 @@ const Expensas = () => {
                                     }}
                                 />
                             </td>
+                           
                         </tr>
                     ))}
                 </tbody>

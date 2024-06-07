@@ -1,17 +1,22 @@
-import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import "./report-Page.css";
 import { getResidents } from "../../../shared/services/resident.service";
-import { getEquipments } from "../../../equipment/services/equipment.service";
+import { getEquipmentsByCommonAreaId } from "../../../equipment/services/equipment.service";
 import { Equipment } from "../../../equipment/interfaces/equipment";
 import Swal from "sweetalert2";
 import { CommonArea } from "../../../common-area/interfaces/common-areas";
 import { ReportCreateDTO, ReportFormData } from "../../interfaces/deatil";
 import { createReport } from "../../services/report.service";
+import { useParams } from "react-router-dom";
+import { Reservation } from "../../../reservation/interfaces/reservations";
+import { getReservationById } from "../../../reservation/services/reservation.service";
+import { getCommonAreaById } from "../../../common-area/services/common-area.service";
 
 function ReportPage() {
+  const { id } = useParams<{ id: string }>();
+
   const [formData, setFormData] = useState<ReportFormData>({
     idUsuario: 0,
-    idAreaComun: 0,
     idProducto: 0,
     costo: 0,
     costoReponer: 0,
@@ -20,9 +25,7 @@ function ReportPage() {
     situacion: "",
     informacionAdicional: "",
   });
-  const [commonAreas, setCommonAreas] = useState<
-    { id: number; name: string }[]
-  >([]);
+
   const [residents, setResidents] = useState<
     {
       id: number;
@@ -30,19 +33,47 @@ function ReportPage() {
     }[]
   >([]);
   const [equipments, setEquipments] = useState<Equipment[]>([]);
-  const [currentEquipments, setCurrentEquipments] = useState<Equipment[]>([]);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(
     null
   );
+  const [reservation, setReservation] = useState<Reservation>();
+  const [commonArea, setCommonArea] = useState<CommonArea>();
 
   useEffect(() => {
-    const get = async () => {
-      const data = await getEquipments();
-      setEquipments(data);
-    };
+    if (id) {
+      getReservationById(parseInt(id, 10)).then((data) => {
+        setReservation(data);
+      });
+    }
+  }, [id]);
 
-    get();
-  }, []);
+  useEffect(() => {
+    if (reservation) {
+      const get = async () => {
+        const data = await getEquipmentsByCommonAreaId(
+          reservation.idCommonArea
+        );
+
+        setEquipments(data);
+      };
+
+      get();
+    }
+  }, [reservation]);
+
+  useEffect(() => {
+    if (reservation) {
+      const get = async () => {
+        const data = await getCommonAreaById(
+          reservation.idCommonArea as number
+        );
+
+        setCommonArea(data);
+      };
+
+      get();
+    }
+  }, [reservation]);
 
   useEffect(() => {
     getResidents().then((data) => {
@@ -51,23 +82,6 @@ function ReportPage() {
         name: `${resident.nombre_residente} ${resident.apellidos_residente}`,
       }));
       setResidents(res);
-    });
-  }, []);
-
-  useEffect(() => {
-    const getCommonAreas = async () => {
-      const response = await fetch("http://localhost:8000/api/common-areas");
-      const data = await response.json();
-      return data;
-    };
-    getCommonAreas().then((response) => {
-      const { data } = response;
-      const { commonAreas } = data;
-      const commonAreasFormatted = commonAreas.map((area: CommonArea) => ({
-        id: area.id,
-        name: area.name,
-      }));
-      setCommonAreas(commonAreasFormatted);
     });
   }, []);
 
@@ -95,17 +109,6 @@ function ReportPage() {
           cantidadActual: equipment.cantidad,
         }));
       }
-    } else if (name === "idAreaComun") {
-      const nameCommonArea = commonAreas.find(
-        (commonArea) => commonArea.id === parseInt(value, 10)
-      )?.name;
-
-      const currentEquipments = equipments.filter(
-        (equipment) => equipment.area_comun_nombre === nameCommonArea
-      );
-
-      setSelectedEquipment(null);
-      setCurrentEquipments(currentEquipments);
     }
   };
 
@@ -117,7 +120,6 @@ function ReportPage() {
 
     if (
       !element.idUsuario ||
-      !element.idAreaComun ||
       !element.idProducto ||
       element.costoReponer === "0" ||
       element.cantidadReponer === "0" ||
@@ -132,8 +134,9 @@ function ReportPage() {
     }
 
     const report: ReportCreateDTO = {
+      Id_reservation: parseInt(id || "0", 10),
       Id_residente: parseInt(element.idUsuario.valueOf() as string, 10),
-      Id_areaComun: parseInt(element.idAreaComun.valueOf() as string, 10),
+      Id_areaComun: reservation?.idCommonArea as number,
       Id_equipment: parseInt(element.idProducto.valueOf() as string, 10),
       Costo_reponer: parseInt(element.costoReponer.valueOf() as string, 10),
       Cantidad_reponer: parseInt(
@@ -164,7 +167,6 @@ function ReportPage() {
   const resetForm = () => {
     setFormData({
       idUsuario: 0,
-      idAreaComun: 0,
       idProducto: 0,
       costo: 0,
       costoReponer: 0,
@@ -176,136 +178,130 @@ function ReportPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form-container">
+    <>
       <h2>Crear Reporte</h2>
-      <div className="form-group">
-        <label>Nombre Residente:</label>
-        <select
-          name="idUsuario"
-          value={formData.idUsuario}
-          onChange={handleChange}
-        >
-          <option value={0} disabled>
-            Seleccione un residente
-          </option>
-          {residents.map((resident) => {
-            return (
-              <option key={resident.id} value={resident.id}>
-                {resident.name}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "1rem",
-        }}
-      >
+      <form onSubmit={handleSubmit} className="form-container-detail">
         <div className="form-group">
-          <label>Nombre Área Común:</label>
+          <label>Nombre Residente:</label>
           <select
-            name="idAreaComun"
-            value={formData.idAreaComun}
+            name="idUsuario"
+            value={formData.idUsuario}
             onChange={handleChange}
           >
             <option value={0} disabled>
-              Seleccione un área común
+              Seleccione un residente
             </option>
-            {commonAreas.map((area, index) => (
-              <option key={index} value={area.id}>
-                {area.name}
-              </option>
-            ))}
+            {residents.map((resident) => {
+              return (
+                <option key={resident.id} value={resident.id}>
+                  {resident.name}
+                </option>
+              );
+            })}
           </select>
         </div>
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between",
+            gap: "1rem",
+          }}
+        >
+          <div className="form-group">
+            <label>Nombre Área Común:</label>
+            <p>{commonArea ? commonArea.name : ""}</p>
+          </div>
+          <div className="form-group">
+            <label>Nombre Producto:</label>
+            <select
+              name="idProducto"
+              value={formData.idProducto}
+              onChange={handleChange}
+            >
+              <option value={0} disabled>
+                Seleccione un producto
+              </option>
+              {equipments.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="form-group-in-line">
+          <label
+            style={{
+              fontWeight: "bold",
+            }}
+          >
+            Costo:
+          </label>
+          <span>{selectedEquipment ? selectedEquipment.costo : ""}</span>
+        </div>
+        <div className="form-group-in-line">
+          <label
+            style={{
+              fontWeight: "bold",
+            }}
+          >
+            Cantidad Actual:
+          </label>
+          <p>{selectedEquipment ? selectedEquipment.cantidad : ""}</p>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "1rem",
+          }}
+        >
+          <div className="form-group">
+            <label>Costo a Reponer:</label>
+            <input
+              type="number"
+              name="costoReponer"
+              value={formData.costoReponer}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Cantidad a Reponer:</label>
+            <input
+              type="number"
+              name="cantidadReponer"
+              value={formData.cantidadReponer}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
         <div className="form-group">
-          <label>Nombre Producto:</label>
+          <label>Situación:</label>
           <select
-            name="idProducto"
-            value={formData.idProducto}
+            name="situacion"
+            value={formData.situacion}
             onChange={handleChange}
           >
-            <option value={0} disabled>
-              Seleccione un producto
-            </option>
-            {currentEquipments.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.nombre}
-              </option>
-            ))}
+            <option value="roto">Roto</option>
+            <option value="perdido">Perdido</option>
           </select>
         </div>
-      </div>
-      <div className="form-group-in-line">
-        <label
-          style={{
-            fontWeight: "bold",
-          }}
-        >
-          Costo:
-        </label>
-        <span>{selectedEquipment ? selectedEquipment.costo : ""}</span>
-      </div>
-      <div className="form-group-in-line">
-        <label
-          style={{
-            fontWeight: "bold",
-          }}
-        >
-          Cantidad Actual:
-        </label>
-        <p>{selectedEquipment ? selectedEquipment.cantidad : ""}</p>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "1rem",
-        }}
-      >
+
         <div className="form-group">
-          <label>Costo a Reponer:</label>
-          <input
-            type="number"
-            name="costoReponer"
-            value={formData.costoReponer}
+          <label>Información Adicional:</label>
+          <textarea
+            name="informacionAdicional"
+            value={formData.informacionAdicional}
             onChange={handleChange}
           />
         </div>
-        <div className="form-group">
-          <label>Cantidad a Reponer:</label>
-          <input
-            type="number"
-            name="cantidadReponer"
-            value={formData.cantidadReponer}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      <div className="form-group">
-        <label>Situación:</label>
-        <select
-          name="situacion"
-          value={formData.situacion}
-          onChange={handleChange}
-        >
-          <option value="roto">Roto</option>
-          <option value="perdido">Perdido</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Información Adicional:</label>
-        <textarea
-          name="informacionAdicional"
-          value={formData.informacionAdicional}
-          onChange={handleChange}
-        />
-      </div>
-      <button type="submit">Reportar</button>
-    </form>
+        <button className="btn-submit__report-page" type="submit">
+          Reportar
+        </button>
+      </form>
+    </>
   );
 }
 

@@ -49,4 +49,9 @@ class BloqueController extends Controller
             'message' => 'Bloque eliminado'
         ]);
     }
+
+    public function getBloquesShort(){
+        $bloques = bloque::select('id', 'nombre_bloque')->get();
+        return $bloques;
+    }
 }

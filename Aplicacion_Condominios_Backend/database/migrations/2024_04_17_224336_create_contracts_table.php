@@ -30,6 +30,20 @@ class CreateContractsTable extends Migration
                 ->on('employees')
                 ->onDelete('cascade');
 
+            $table->unsignedBigInteger('edificio')->nullable();
+
+            $table->foreign('edificio')
+                ->references('id')
+                ->on('edificios')
+                ->onDelete('cascade');
+
+            $table->unsignedBigInteger('area_comun')->nullable();
+
+            $table->foreign('area_comun')
+                ->references('id_common_area')
+                ->on('common_areas')
+                ->onDelete('cascade');
+
             $table->timestamps();
         });
     }

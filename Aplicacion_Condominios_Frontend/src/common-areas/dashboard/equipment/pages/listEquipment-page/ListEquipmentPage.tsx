@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Equipment } from "../../interfaces/equipment";
 import Swal from "sweetalert2";
+import "./listEquipment-page.css";
 
 export interface ListElementProps {
   showForm: (product?: Equipment) => void;
@@ -36,19 +37,11 @@ export const ListEquipmentPage: React.FC<ListElementProps> = ({ showForm }) => {
   return (
     <>
       <h2 className="text-center mb-3"> Lista de elementos </h2>
-      <button
-        onClick={() => showForm()}
-        type="button"
-        className="btn btn-primary me-2 mb-4"
-      >
+      <button onClick={() => showForm()} type="button" className="btn-crear">
         {" "}
         Crear{" "}
       </button>
-      <button
-        onClick={fetchEquipment}
-        type="button"
-        className="btn btn-outline-primary me-2 mb-4"
-      >
+      <button onClick={fetchEquipment} type="button" className="btn-refrescar">
         {" "}
         Refrescar{" "}
       </button>
@@ -80,6 +73,10 @@ export const ListEquipmentPage: React.FC<ListElementProps> = ({ showForm }) => {
                   <button
                     onClick={() => showForm(equipments)}
                     type="button"
+                    style={{
+                      backgroundColor: "#1976a2",
+                      border: "none",
+                    }}
                     className="btn btn-primary btn-sm me-2"
                   >
                     Editar

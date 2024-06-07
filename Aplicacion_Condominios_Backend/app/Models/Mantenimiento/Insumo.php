@@ -14,7 +14,8 @@ class Insumo extends Model
     protected $fillable = [
         'idSolicitud', 
         'nombreInsumo', 
-        'precioInsumo'
+        'precioInsumo',
+        'cantidadInsumo'
     ];
     
     public function solicitud() {

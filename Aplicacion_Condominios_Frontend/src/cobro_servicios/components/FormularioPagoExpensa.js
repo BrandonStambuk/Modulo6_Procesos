@@ -13,9 +13,12 @@ const FormularioPagoExpensa = () => {
     const [monto, setMonto] = useState("");
     const [propietarioPagar, setPropietarioPagar] = useState("");
     const [servicioPagar,setServicioPagar] = useState("");
+    const [descripcionServicios,setDescServicios] = useState("");
     const [fechaPago,setFechaPago] = useState("")
+    const [idPropietario,setIdPropietario] = useState("");
     const [formaPago, setFormaPago] = useState("");
-    const [efectivo, setEfectivo] = useState(""); 
+    const [efectivo, setEfectivo] = useState("");
+    const [idExpensa,setIDExpensa] = useState("");
     const [errors, setErrors] = useState({});
     const [showQR, setShowQR] = useState(false);
     const [cambio, setCambio] = useState(0);
@@ -31,6 +34,9 @@ const FormularioPagoExpensa = () => {
                 setPropietarioPagar(expensaData.propietario_pagar);
                 setServicioPagar(expensaData.servicio_pagar);
                 setFechaPago(expensaData.fecha);
+                setIdPropietario(expensaData.id_propietarioPagar);
+                setDescServicios(expensaData.descripcion_servicios);
+                setIDExpensa(expensaData.id);
             } catch (error) {
                 console.error("Error fetching expensa data:", error);
             }
@@ -43,26 +49,43 @@ const FormularioPagoExpensa = () => {
         // Función para generar el PDF
         try {
             const doc = new jsPDF();
-            doc.text("Administracion", 20, 10);
-            doc.text("-------------------", 20, 20);
-            doc.text("Recibo de Pago de expensa", 20, 30);
-            doc.text("-------------------", 20, 40);
-            doc.text(`Propietario: ${propietarioPagar}`, 20, 50);
+            doc.text("Administracion: ProcesosA. Condominios", 20, 10);
+            doc.text("          --------------------------------------------------------------------------------", 20, 20);
+            doc.text("                             Recibo de Pago de expensa", 20, 30);
+            doc.text("          --------------------------------------------------------------------------------", 20, 40);
+            doc.text(`Propietario/Titular: ${propietarioPagar}`, 20, 50);
             doc.text(`Servicio a pagar: ${servicioPagar}`, 20, 60);
+            doc.text(`Descripcion del servicio: ${descripcionServicios}`, 20, 70);
+            doc.text(`Fecha del pago: ${fechaPago}`, 20,80 )
             // Insertar datos en el PDF
             if (monto) {
-                doc.text(`Monto: ${monto}`, 20, 70);
+                doc.text(`Monto: ${monto}`, 20, 90);
             }
             if (formaPago) {
-                doc.text(`Forma de Pago: ${formaPago}`, 20, 80);
+                doc.text(`Forma de Pago: ${formaPago}`, 20, 100);
             }
             if (formaPago === "efectivo" && efectivo) {
-                doc.text(`Efectivo: ${efectivo}`, 20, 90);
+                doc.text(`Efectivo: ${efectivo}`, 20, 110);
                 if (cambio > 0) {
-                    doc.text(`Cambio: ${cambio.toFixed(2)}`, 20, 100);
+                    doc.text(`Cambio: ${cambio.toFixed(2)}`, 20, 120);
                 }
             }
 
+
+            doc.text(" ----------------------", 20, 140);
+            doc.text(`Entregue conforme:${propietarioPagar}`, 20, 150);
+
+
+
+
+            doc.text(" ----------------------", 20, 160);
+            doc.text(`Recibi Conforme: Administrador`, 20, 170);
+
+
+
+            doc.text("         --------------------------------------------------------------------------------", 20, 180);
+            doc.text("                                                                                         ", 20, 190);
+            doc.text("         --------------------------------------------------------------------------------", 20, 200);
             // Guardar el PDF
             doc.save("recibo_pago_expensa.pdf");
         } catch (error) {
@@ -101,31 +124,36 @@ const FormularioPagoExpensa = () => {
         setErrors(validationErrors);
     
         if (Object.keys(validationErrors).length === 0) {
-            console.log("Monto:", monto);
-            console.log("Forma de pago:", formaPago);
             axios.put(`${endpoint}/expensas/${id}/pagarExpensa`)
-                .then(response => {
-                    console.log(response.data);
-                    setShowQR(formaPago === "qr");
-                    setPagoRealizado(true);
+
+            axios.post(`${endpoint}/pago-expensas`, {
+                residente_id: idPropietario,
+                monto: monto,
+                expensa_id:idExpensa
+            })
+            axios.post(`${endpoint}/disminuirMonto/${idPropietario}/${monto}`)
+            .then(response => {
+                console.log(response.data);
+                setShowQR(formaPago === "qr");
+                setPagoRealizado(true);
     
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Pago realizado con éxito!'
-                    }).then(() => {
-                        window.location.href = "/cobros/expensas";
-                    });
-    
-                })
-                .catch(error => {
-                    console.error('Error al pagar la expensa:', error);
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Pago realizado con éxito!'
+                }).then(() => {
+                    window.location.href = "/cobros/expensas";
                 });
+    
+            })
+            .catch(error => {
+                console.error('Error al pagar la expensa:', error);
+            });
     
             if (formaPago === "efectivo") {
                 const cambioCalculado = parseFloat(efectivo) - parseFloat(monto);
                 setCambio(cambioCalculado > 0 ? cambioCalculado : 0);
             }
-
+    
             generatePDF();
         }
     };
@@ -174,12 +202,12 @@ const FormularioPagoExpensa = () => {
                                 required
                             >
                                 <option value="">Seleccione una opción</option>
-                                <option value="efectivo">Efectivo</option>
-                                <option value="qr">Pago por QR</option>
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="QR">Pago por QR</option>
                             </Input>
                             {errors.formaPago && <span>{errors.formaPago}</span>}
                         </FormGroup>
-                        {formaPago === "efectivo" && ( 
+                        {formaPago === "Efectivo" && ( 
                             <FormGroup>
                                 <Label for="efectivo">Efectivo:</Label>
                                 <Input
@@ -195,14 +223,14 @@ const FormularioPagoExpensa = () => {
                         <Button type="submit" color="primary">
                             Pagar
                         </Button>
-                        {formaPago === "qr" && (
+                        {formaPago === "QR" && (
                             <Button color="info" onClick={handleGenerateQR}>Generar QR</Button>
                         )}
                     </Form>
                     {showQR && ( 
                         <div className="text-center mt-3">
                             <h3>Escanea el siguiente código QR para realizar el pago:</h3>
-                            <QRCode value={`Monto: ${monto}`} />
+                            <QRCode value={`Pago de Expensa - Monto: ${monto}`} />
                         </div>
                     )}
                     {formaPago === "efectivo" && cambio > 0 && ( 

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateAsistenciasTable extends Migration
 {
@@ -24,6 +25,17 @@ class CreateAsistenciasTable extends Migration
 
             $table->foreign('id_empleado')->references('id')->on('employees')->onDelete('cascade');
         });
+
+        DB::unprepared('
+            CREATE TRIGGER set_fecha_default
+            BEFORE INSERT ON asistencias
+            FOR EACH ROW
+            BEGIN
+                IF NEW.fecha IS NULL THEN
+                    SET NEW.fecha = CURDATE();
+                END IF;
+            END
+        ');
     }
 
     /**

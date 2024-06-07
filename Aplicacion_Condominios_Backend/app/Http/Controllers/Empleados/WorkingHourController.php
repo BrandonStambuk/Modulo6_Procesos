@@ -24,4 +24,14 @@ class WorkingHourController extends Controller
             'message' => 'Horario añadido exitosamente',
         ]);
     }
+
+    public function borrarTodosDadoEmpleado($id){
+        WorkingHour::where('empleado', $id)->delete();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Horarios eliminados exitosamente',
+        ]);
+    }
+
 }

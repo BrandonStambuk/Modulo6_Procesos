@@ -165,8 +165,14 @@ input[type='number'] {
 	border: 2px solid rgba(45, 96, 115, 1);
 	box-shadow: none;
 }
+.customInput.is-invalid.form-control:focus, .customInput.is-invalid.form-control:active{
+	box-shadow: none;
+}
 .customInput.form-select {
 	font-size: 0.9rem;
+}
+.customInput.form-select:focus, .customInput.form-select:active{
+	box-shadow: none;
 }
 input[type="date"].customInput{
 	font-size: 0.9rem;
@@ -224,6 +230,11 @@ td.celdaVisita{
 	vertical-align: middle;
 	text-align: center;
 }
-
+.buscadorDepa:hover{
+	border: 2px solid rgba(45, 96, 115, 1) !important;
+}
+.buscadorDepa:focus{
+	border: 2px solid rgba(45, 96, 115, 1) !important;
+}
 
 

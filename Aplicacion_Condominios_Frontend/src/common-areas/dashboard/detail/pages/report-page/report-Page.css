@@ -1,4 +1,4 @@
-.form-container {
+.form-container-detail {
   max-width: 600px;
   margin: auto;
   padding: 30px;
@@ -44,7 +44,7 @@
   resize: vertical;
 }
 
-button {
+.btn-submit__report-page {
   width: 100%;
   padding: 10px;
   background-color: #1976a2;
@@ -56,6 +56,6 @@ button {
   transition: all 0.3s ease;
 }
 
-button:hover {
+.btn-submit__report-page:hover {
   opacity: 0.9;
 }

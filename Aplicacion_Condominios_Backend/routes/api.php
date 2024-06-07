@@ -14,7 +14,12 @@ use App\Http\Controllers\Departamento\VisitaController;
 use App\Http\Controllers\Departamento\ParqueoController;
 
 use App\Http\Controllers\Empleados\EmployeeController;
-use App\Http\Controllers\Mantenimiento\CategoriaServicioController;
+use App\Http\Controllers\Empleados\ContractController;
+use App\Http\Controllers\Empleados\AreaController;
+use App\Http\Controllers\Empleados\BenefitController;
+use App\Http\Controllers\Empleados\PositionController;
+use App\Http\Controllers\Empleados\AtrasoController;
+
 use App\Http\Controllers\Notificaciones\PersonaController;
 use App\Http\Controllers\Notificaciones\AuthController;
 use App\Http\Controllers\Notificaciones\AvisosController;
@@ -25,14 +30,19 @@ use App\Http\Controllers\Cobro_Servicios\EquipamientosController;
 use App\Http\Controllers\Cobro_Servicios\PreAvisoController;
 use App\Http\Controllers\Cobro_Servicios\ExpensasController;
 use App\Http\Controllers\Cobro_Servicios\MultasController;
+use App\Http\Controllers\Cobro_Servicios\PagoExpensasController;
+
 use App\Models\Mantenimiento\CategoriaServicio;
+use App\Http\Controllers\Mantenimiento\CategoriaServicioController;
 use App\Http\Controllers\Mantenimiento\PersonalExternoController;
 use App\Http\Controllers\Mantenimiento\RegistroSolicitudController;
-use App\Http\Controllers\Empleados\WorkingHourController;
-
-use App\Http\Controllers\Empleados\ContractController;
 use App\Http\Controllers\Mantenimiento\EstadoController;
 use App\Http\Controllers\Mantenimiento\InsumoController;
+use App\Http\Controllers\Mantenimiento\ListaCompraController;
+use App\Http\Controllers\Empleados\WorkingHourController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +81,7 @@ Route::controller(BloqueController::class)->group(function(){
     Route::get('/bloque/{id}','show')->name('bloque.show');
     Route::post('/bloqueupd/{id}','update')->name('bloque.update');
     Route::delete('/bloque/{id}','destroy')->name('bloque.destroy');
+    Route::get('/bloques-short','getBloquesShort')->name('bloque.getBloquesShort');
 });
 
 Route::controller(EdificioController::class)->group(function(){
@@ -80,6 +91,8 @@ Route::controller(EdificioController::class)->group(function(){
     Route::post('/edificioupd/{id}','update')->name('edificio.update');
     Route::delete('/edificio/{id}','destroy')->name('edificio.destroy');
     Route::get('/edificios-by-bloques/{id}', 'getEdificiosByBloques')->name('edificio.getEdificiosByBloques');
+    Route::get('/edificios-short','getEdificiosShort')->name('edificio.getEdificiosShort');
+    Route::get('/edificio-short/{id}','getEdificioShort')->name('edificio.getEdificioShort');
 });
 Route::controller(ResidenteController::class)->group(function(){
     Route::get('/residentes','index')->name('residente.index');
@@ -144,11 +157,26 @@ Route::post('/update_employee/{id}', [EmployeeController::class, 'update']);
 Route::post('/updateContractStatus/{id}', [EmployeeController::class, 'updateContractStatus']);
 Route::get('/get_employee_with_contract', [EmployeeController::class, 'getEmployeeWithContract']);
 
+
 Route::post('/add_contract', [ContractController::class, 'store']);
 
 Route::post('/add_working_hour', [WorkingHourController::class, 'store']);
+Route::delete('/borrar_horarios_dado_empleado/{id}', [WorkingHourController::class, 'borrarTodosDadoEmpleado']);
 
 Route::post('marcar_hora_empleado',[EmployeeController::class, 'marcarHora']);
+Route::get('/obtener_atrasos',[AtrasoController::class, 'obtenerAtrasos']);
+Route::post('/actualizar_motivo/{id}',[AtrasoController::class, 'actualizarMotivo']);
+
+Route::post('/add_area', [AreaController::class, 'store']);
+Route::get('/get_all_areas', [AreaController::class, 'getAll']);
+
+Route::post('/add_benefit', [BenefitController::class, 'store']);
+Route::get('/get_all_benefits', [BenefitController::class, 'getAll']);
+
+Route::post('/add_position', [PositionController::class, 'store']);
+Route::get('/get_all_positions', [PositionController::class, 'getAll']);
+
+
 
 // MANTENIMIENTO
 Route::get('/CategoriaServicio', [CategoriaServicioController::class,'getCategoriaServicio']);
@@ -173,6 +201,8 @@ Route::get('/solicitudes-by-encargado/{id}', [RegistroSolicitudController::class
 
 Route::get('/insumo', [InsumoController::class,'getInsumo']);
 Route::get('/insumo/solicitud', [InsumoController::class,'getInsumoBySolicitud']);
+Route::get('/insumo/solicitud-all/{id}', [InsumoController::class,'getInsumosBySolicitudAll']);
+Route::get('/insumo/categoria/{id}', [InsumoController::class,'getInsumosByCategoria']);
 Route::get('/insumo/{id}', [InsumoController::class,'getInsumoId']);
 Route::post('/insumo/insert', [InsumoController::class,'insertInsumo']);
 Route::put('/insumo/update/{id}', [InsumoController::class,'updateInsumo']);
@@ -182,8 +212,14 @@ Route::delete('/insumo/delete/solicitud/{id}', [InsumoController::class,'deleteI
 Route::get('/estado-solicitud', [EstadoController::class,'getEstado']);
 Route::get('/estado-solicitud/{id}', [EstadoController::class,'getEstadoId']);
 
+Route::get('/lista-compra', [ListaCompraController::class,'getListaCompra']);
+Route::post('/lista-compra/insert', [ListaCompraController::class,'insertRegistroCompra']);
+Route::put('/lista-compra/update/{id}', [ListaCompraController::class,'updateRegistroCompra']);
+
 // COMMON AREAS
 Route::get('/common-areas/{id}/reservations', [CommonAreaController::class, 'reservations']);
+Route::get('/common-areas/reservations/{id}', [ReservationController::class, 'getReservationById']);
+Route::get('/common-areas/{id}/equipments', [CommonAreaController::class, 'equipments']);
 Route::apiResource('/common-areas/reservations', ReservationController::class);
 Route::apiResource('/common-areas', CommonAreaController::class);
 Route::apiResource('/equipments', EquipmentController::class);
@@ -196,7 +232,7 @@ Route::apiResource('/equipments', EquipmentController::class);
 
 Route::post('/reports', [CommonAreaController::class, 'createReport']);
 Route::get('/reports', [CommonAreaController::class, 'getReports']);
-
+Route::get('/reports/{idReserva}', [CommonAreaController::class, 'getReportsByReservationId']);
 
 //Cobro_Servicios
 Route::controller(EquipamientosController::class)->group(function(){
@@ -218,17 +254,20 @@ Route::controller(PreAvisoController::class)->group(function(){
     Route::get('/obtener-preavisos', [PreAvisoController::class, 'obtenerTodosPreAvisos']);
     //Route::get('/obtener-preaviso/{id}', [PreAvisoController::class, 'show']);
     //Route::put('/editar-preaviso/{id}', [PreAvisoController::class, 'update']);
-    //Route::delete('/eliminar-preaviso/{id}', [PreAvisoController::class, 'destroy']);
+    Route::delete('/eliminar-preaviso/{id}', [PreAvisoController::class, 'destroy']);
 
 });
 Route::controller(ExpensasController::class)->group(function(){
     Route::put('/expensas/{id}/pagarExpensa', [ExpensasController::class, 'pagar']);
-
+    Route::post('/pago-expensas', [PagoExpensasController::class, 'store']);
     Route::post('/generar-expensa', [ExpensasController::class, 'store']);
     Route::get('/obtener-expensas', [ExpensasController::class, 'index']);
     Route::get('/obtener-expensas/{id}', [ExpensasController::class, 'show']);
     Route::put('/editar-expensas/{id}', [ExpensasController::class, 'update']);
     Route::delete('/eliminar-expensas/{id}', [ExpensasController::class, 'destroy']);
+    Route::post('anotarMonto/{residente_id}/{monto}',[ExpensasController::class,'acumularMonto']);
+    Route::post('disminuirMonto/{residente_id}/{monto}',[ExpensasController::class,'decrementarMonto']);
+    Route::get('/obtener-pagos-residente/{id}', [PagoExpensasController::class, 'obtenerPagosPorResidente']);
 });
 
 Route::controller(MultasController::class)->group(function(){

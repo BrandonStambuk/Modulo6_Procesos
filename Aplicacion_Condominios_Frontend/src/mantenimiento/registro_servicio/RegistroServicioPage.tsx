@@ -395,7 +395,7 @@ export default function PersonalPage() {
               />
             </div>
             <button
-              className="block"
+              className="block_other  d-flex justify-content-center w-40"
               type="button"
               onClick={handleClickRegistrar}
             >

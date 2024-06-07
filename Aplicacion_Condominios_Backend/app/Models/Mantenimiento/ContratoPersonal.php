@@ -16,4 +16,8 @@ class ContratoPersonal extends Model
         'fechaInicio', 
         'salario'
     ];
+    
+    public function solicitud() {
+        return $this -> belongsTo(RegistroSolicitud::class, 'idSolicitud');
+    }
 }

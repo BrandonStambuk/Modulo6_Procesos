@@ -54,3 +54,7 @@
   color: #ffffff;
   padding: 8px 8px;
 }
+
+.block_button:hover{
+  background-color: #085a80;
+}

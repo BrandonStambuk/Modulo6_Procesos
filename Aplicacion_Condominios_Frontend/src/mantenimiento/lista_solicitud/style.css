@@ -19,9 +19,7 @@
 }
 
 
-.c-dark-blue {
-  color: #233044;
-}
+
 .d-column {
   flex-direction: column;
 }
@@ -29,21 +27,21 @@
 /*Estilo de button*/
 .actions-container {
   display: flex;
-  justify-content: space-between;
-  width: 60px;
+  justify-content: space-evenly;
+  /* width: 60px; */
 }
 
-.actions-container button {
+/* .actions-container button {
   padding: 6px;
-}
+} */
 
 /* Quita color de fondo y borde*/
 
-.actions-container button {
-  background-color: transparent;
-  border: none;
+/* .actions-container button { */
+  /* background-color: transparent; */
+  /* border: none;
   padding: 0;
-}
+} */
 
 /*  */
 
@@ -89,4 +87,62 @@
   padding: 20px;
   border: 1px solid #888;
   width: 40%;
+}
+
+.button_editt{
+  color: #ffffff;
+  background-color: #72BDAD;
+  /* width: 80px;
+  padding: 2px 15px;
+   */
+    padding: 1px 15px;
+   border-radius: 7px; 
+}
+
+.button_deletee{
+  color: #ffffff;
+  background-color: #DC3545;
+
+  padding: 1px 15px;
+  border-radius: 7px;
+}
+
+.center-button{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;  
+}
+
+
+/* Color de los botones */
+
+/* .color_1{
+  background: #505254;
+}
+.color_2{
+  background-color: #FF4764;
+}
+.color_3{
+  background-color: #26DAB0;
+} */
+
+.color_1 {
+  background-color: #6c757d; /* gris */
+  color: white;
+}
+
+.color_2 {
+  background-color: #dc3545; /* rojo */
+  color: white;
+}
+
+.color_3 {
+  background-color: #20c997; /* verde */
+  color: white;
+}
+
+.prueba_chip {
+  height: 30px;
+  font-size: 14px; 
+  max-width: 100%;
 }

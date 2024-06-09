@@ -25,6 +25,7 @@ class ParqueoController extends Controller
         $parqueo = new Parqueo();
         $validatedData = $request->validate([
             'nombre_parqueo' => 'required',
+            'direccion_parqueo' => 'required',
             'departamento_id' => 'required'
         ]);
         $parqueo->fill($validatedData);
@@ -58,6 +59,7 @@ class ParqueoController extends Controller
         $parqueo = Parqueo::find($idParqueo);
         $validatedData = $request->validate([
             'nombre_parqueo' => 'required',
+            'direccion_parqueo' => 'required',
             'departamento_id' => 'required'
         ]);
         $parqueo->fill($validatedData);

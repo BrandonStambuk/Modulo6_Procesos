@@ -15,7 +15,7 @@ class RegistroSolicitudController extends Controller
     }
     
     public function getRegistroSolicitudId($id) {
-        $registroSolicitud = RegistroSolicitud::find($id);
+        $registroSolicitud = RegistroSolicitud::with('categoria:id,catnombre')->find($id);
         
         if(is_null($registroSolicitud)) {
             $response = ["message" => "Registro no encontrado"];

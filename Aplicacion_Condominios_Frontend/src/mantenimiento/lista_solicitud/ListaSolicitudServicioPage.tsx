@@ -23,7 +23,7 @@ interface SolicitudServicioResponse {
   idRegistroSolicitud: number;
   idCategoria: number;
   idEstado: number;
-  idPersonalExterno:number;
+  idPersonalExterno: number;
   descripcion: string;
   nombrePropietario: string;
   ubicacion: string;
@@ -101,24 +101,24 @@ export default function PersonalPage() {
       const categoryService = await getAllCategories();
       console.log("🚀 ~ loadData ~ categoryService:", categoryService);
       setCategoryService(categoryService);
-     // const personal = await getPersonalByCategory(servicioActual.idCategoria);
-     // console.log("🚀 ~ loadData ~ personal:", personal)
+      // const personal = await getPersonalByCategory(servicioActual.idCategoria);
+      // console.log("🚀 ~ loadData ~ personal:", personal)
       // setPersonalExterno(personal);
       const estadoData = await getAllEstados();
       setEstados(estadoData);
-    } catch (error) {}
+    } catch (error) { }
   };
 
-  useEffect(()=>{
-    const allPersonalExterno =async()=>{
+  useEffect(() => {
+    const allPersonalExterno = async () => {
       const personal = await getPersonalByCategory(servicioActual.idCategoria);
       console.log("🚀 ~ allPersonalExterno ~ personal:", personal)
       setPersonalExterno(personal);
-    } 
+    }
     allPersonalExterno();
-  },[servicioActual])
+  }, [servicioActual])
 
-  
+
   const handleOpenModal = (solicitudServicio: SolicitudServicioResponse) => {
     if (solicitudServicio.idEstado == 3) {
       alert("Este servicio ya se ha finalizado y no se puede modificar");
@@ -175,6 +175,20 @@ export default function PersonalPage() {
     window.location.reload();
   };
 
+  // Cambio de color de registro de cotnrato
+  const getContratoStyle = (estado: string) => {
+    switch (estado) {
+      case "Pendiente":
+        return { backgroundColor: '#6c757d', color: 'white' };
+      case "Proceso":
+        return { backgroundColor: '#dc3545', color: 'white' };
+      case "Completado":
+        return { backgroundColor: '#20c997', color: 'white' };
+      default:
+        return {};
+    }
+  };
+
   return (
     <>
       <Box
@@ -197,6 +211,7 @@ export default function PersonalPage() {
                     <th className="left">Fecha de solicitud</th>
                     <th className="left">Encargado</th>
                     <th className="left">Fecha de finalización</th>
+                    <th className="left">Estado de contrato</th>
                     <th className="righ">Estado</th>
                     <th className="righ">Acciones</th>
                   </tr>
@@ -210,6 +225,16 @@ export default function PersonalPage() {
                         <td>{solicitud.fechaSolicitud}</td>
                         <td>{solicitud.encargado}</td>
                         <td>{solicitud.fechaFinalizado}</td>
+
+                        {/* Registro de contrato */}
+                        <td>
+                          <Stack direction="row" spacing={1}>
+                            <Chip className="prueba_chip"
+                              style={getContratoStyle(solicitud.estado.nombreEstado)}
+                              label={solicitud.estado.nombreEstado}
+                            />
+                          </Stack>
+                        </td>
                         <td>
                           <Stack direction="row" spacing={1}>
                             <Chip
@@ -223,16 +248,17 @@ export default function PersonalPage() {
                           </Stack>
                         </td>
                         <td className="actions-container">
-                          <button
+                          <button className="button_editt"
                             type="button"
                             onClick={() => handleOpenModal(solicitud)}
                           >
                             <CreateOutlinedIcon
-                              className="c-dark-blue"
-                              fontSize="large"
+                              className="c-dark-blue "
+                              fontSize="medium"
                             />
                           </button>
                           <button
+                            className="button_deletee"
                             type="button"
                             onClick={() =>
                               handleDelete(solicitud.idRegistroSolicitud)
@@ -240,7 +266,7 @@ export default function PersonalPage() {
                           >
                             <DeleteOutlinedIcon
                               className="c-dark-blue "
-                              fontSize="large"
+                              fontSize="medium"
                             />
                           </button>
                         </td>
@@ -417,14 +443,16 @@ export default function PersonalPage() {
                       />
                     </div>
                   </div>
+                  <div className="center-button">
+                    <button
+                      className="block_button block_button_personalize margin-x-auto-servicio"
+                      type="button"
+                      onClick={handleClickGuardar}
+                    >
+                      Guardar
+                    </button>
+                  </div>
 
-                  <button
-                    className="block margin-x-auto-servicio"
-                    type="button"
-                    onClick={handleClickGuardar}
-                  >
-                    Guardar
-                  </button>
                 </Box>
               </div>
             </div>

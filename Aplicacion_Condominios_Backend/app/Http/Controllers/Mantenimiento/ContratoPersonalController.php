@@ -35,7 +35,7 @@ class ContratoPersonalController extends Controller
         $contratoPersonal-> salario = $request -> salario;
         $contratoPersonal-> save();
         
-        $registroSolicitud = new RegistroSolicitud();
+        $registroSolicitud = RegistroSolicitud::find($request -> idSolicitud); 
         $registroSolicitud-> idEstadoContrato = 3;
         $registroSolicitud-> save();
     }

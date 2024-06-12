@@ -9,6 +9,16 @@ use App\Models\Mantenimiento\RegistroSolicitud;
 
 class ContratoPersonalController extends Controller
 {
+    public function getContratoPersonalController() {
+        $contratoPersonal = ContratoPersonal::with(['solicitud' => function ($query) {
+            $query->select('idRegistroSolicitud', 'idCategoria', 'ubicacion', 'encargado')
+                ->with(['categoria' => function ($query) {
+                    $query->select('id', 'catnombre');
+                }]);
+        }])->get();
+        return response()->json($contratoPersonal, 200);
+    }
+
     public function getContratoPersonalIdSolicitud($id) {
         $contratoPersonal = ContratoPersonal::with(['solicitud' => function ($query) {
             $query->select('idRegistroSolicitud', 'idCategoria', 'ubicacion', 'encargado')

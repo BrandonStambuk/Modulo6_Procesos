@@ -20,4 +20,8 @@ class ContratoPersonal extends Model
     public function solicitud() {
         return $this -> belongsTo(RegistroSolicitud::class, 'idSolicitud');
     }
+    
+    public function categoria() {
+        return $this -> belongsTo(CategoriaServicio::class, 'idCategoria');
+    }
 }

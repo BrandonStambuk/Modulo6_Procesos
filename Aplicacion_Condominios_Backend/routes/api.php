@@ -216,6 +216,7 @@ Route::get('/lista-compra', [ListaCompraController::class,'getListaCompra']);
 Route::post('/lista-compra/insert', [ListaCompraController::class,'insertRegistroCompra']);
 Route::put('/lista-compra/update/{id}', [ListaCompraController::class,'updateRegistroCompra']);
 
+Route::get('/contrato-personal', [ContratoPersonalController::class,'getContratoPersonalController']);
 Route::get('/contrato-personal/{id}', [ContratoPersonalController::class,'getContratoPersonalIdSolicitud']);
 Route::post('/contrato-personal/insert', [ContratoPersonalController::class,'insertContratoPersonal']);
 

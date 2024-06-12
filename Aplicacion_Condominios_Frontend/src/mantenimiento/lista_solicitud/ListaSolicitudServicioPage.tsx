@@ -21,7 +21,11 @@ import {
   getPersonalByCategory,
 } from "../services/maintenance/personalExternoService";
 import { getAllEstados } from "../services/maintenance/estadoService";
-import { getContratoPersonal } from "../services/maintenance/contratoService";
+import {
+  getAllContratoPersonal,
+  getContratoPersonal,
+} from "../services/maintenance/contratoService";
+import RegistroContratoPage from "../registro_contrato/RegistroContratoPage";
 
 interface SolicitudServicioResponse {
   idRegistroSolicitud: number;
@@ -94,7 +98,13 @@ export default function PersonalPage() {
   const [estados, setEstados] = useState<Estado[]>();
   const [estadoActual, setEstadoActual] = useState<number>(1);
 
-  const [estadoContrato, setEstadoContrato] = useState([]);
+  const [contratoList, setContratoList] = useState([]);
+
+  const [disabledEstado, setDisabledEstado] = useState(true);
+
+  const [showModalContrato, setShowModalContrato] = useState(false);
+
+  const [solicitudActual, setSolicitudActual] = useState(0);
 
   useEffect(() => {
     loadData();
@@ -103,25 +113,28 @@ export default function PersonalPage() {
   const loadData = async () => {
     try {
       const solicitudServicio = await getAllSolicitudServicio();
+      console.log("🚀 ~ loadData ~ solicitudServicio:", solicitudServicio);
       setSolicitudes(solicitudServicio);
       const categoryService = await getAllCategories();
-      console.log("🚀 ~ loadData ~ categoryService:", categoryService);
+      //console.log("🚀 ~ loadData ~ categoryService:", categoryService);
       setCategoryService(categoryService);
       // const personal = await getPersonalByCategory(servicioActual.idCategoria);
       // console.log("🚀 ~ loadData ~ personal:", personal)
       // setPersonalExterno(personal);
       const estadoData = await getAllEstados();
-      console.log("🚀 ~ loadData ~ estadoData:", estadoData);
+      //console.log("🚀 ~ loadData ~ estadoData:", estadoData);
       setEstados(estadoData);
 
-      //const responseContrato = await getContratoPersonal()
+      const responseContrato = await getAllContratoPersonal();
+      console.log("🚀 ~ loadData ~ responseContrato:", responseContrato);
+      setContratoList(responseContrato);
     } catch (error) {}
   };
 
   useEffect(() => {
     const allPersonalExterno = async () => {
       const personal = await getPersonalByCategory(servicioActual.idCategoria);
-      console.log("🚀 ~ allPersonalExterno ~ personal:", personal);
+      //console.log("🚀 ~ allPersonalExterno ~ personal:", personal);
       setPersonalExterno(personal);
     };
     allPersonalExterno();
@@ -133,12 +146,20 @@ export default function PersonalPage() {
     } else {
       setEstadoActual(solicitudServicio.idEstado);
       setServicioActual(solicitudServicio);
+
+      contratoList.filter((element: any) => {
+        if (element.idSolicitud == solicitudServicio.idRegistroSolicitud) {
+          setDisabledEstado(false);
+        }
+      });
+
       setShowModal(true);
     }
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setDisabledEstado(true);
   };
 
   const handleDelete = async (id: number) => {
@@ -201,8 +222,37 @@ export default function PersonalPage() {
     }
   };
 
+  const getContratoLabel = (estado: number) => {
+    switch (estado) {
+      case 1:
+        return "NO ASIGNADO";
+      case 2:
+        return "SIN CONTRATO";
+      case 3:
+        return "CONTRATADO";
+      default:
+        return "";
+    }
+  };
+
+  const clickContrato = () => {
+    console.log("contratado");
+  };
+
+  const handleShowModalContrato = (idSolicitud: number) => {
+    setSolicitudActual(idSolicitud);
+    console.log("Para contratar");
+    setShowModalContrato(true);
+  };
+
   return (
     <>
+      {showModalContrato && (
+        <RegistroContratoPage
+          setShowModalContrato={setShowModalContrato}
+          solicitudActual={solicitudActual}
+        />
+      )}
       <Box
         component="form"
         sx={{
@@ -244,10 +294,42 @@ export default function PersonalPage() {
                             <Chip
                               className="prueba_chip"
                               style={getContratoStyle(
-                                //
-                                1
+                                contratoList.some(
+                                  (element: any) =>
+                                    element.idSolicitud ===
+                                    solicitud.idRegistroSolicitud
+                                )
+                                  ? 3
+                                  : solicitud.encargado === null
+                                  ? 1
+                                  : 2
                               )}
-                              label={solicitud.estado?.nombreEstado}
+                              label={getContratoLabel(
+                                contratoList.some(
+                                  (element: any) =>
+                                    element.idSolicitud ===
+                                    solicitud.idRegistroSolicitud
+                                )
+                                  ? 3
+                                  : solicitud.encargado === null
+                                  ? 1
+                                  : 2
+                              )}
+                              onClick={
+                                contratoList.some(
+                                  (element: any) =>
+                                    element.idSolicitud ===
+                                    solicitud.idRegistroSolicitud
+                                )
+                                  ? clickContrato
+                                  : solicitud.encargado === null
+                                  ? () =>
+                                      alert("Primero debe asignar un personal")
+                                  : () =>
+                                      handleShowModalContrato(
+                                        solicitud.idRegistroSolicitud
+                                      )
+                              }
                             />
                           </Stack>
                         </td>
@@ -428,7 +510,7 @@ export default function PersonalPage() {
                       <TextField
                         id="outlined-select-currency"
                         value={estadoActual}
-                        disabled={true}
+                        disabled={disabledEstado}
                         onChange={(event) => {
                           setEstadoActual(parseInt(event.target.value));
                           setServicioActual({

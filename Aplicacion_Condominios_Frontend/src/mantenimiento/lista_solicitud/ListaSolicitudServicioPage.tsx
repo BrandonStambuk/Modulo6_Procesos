@@ -16,8 +16,12 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 import "./style.css";
 import { getAllCategories } from "../services/maintenance/categoryService";
-import { getAllPersonal, getPersonalByCategory } from "../services/maintenance/personalExternoService";
+import {
+  getAllPersonal,
+  getPersonalByCategory,
+} from "../services/maintenance/personalExternoService";
 import { getAllEstados } from "../services/maintenance/estadoService";
+import { getContratoPersonal } from "../services/maintenance/contratoService";
 
 interface SolicitudServicioResponse {
   idRegistroSolicitud: number;
@@ -90,6 +94,8 @@ export default function PersonalPage() {
   const [estados, setEstados] = useState<Estado[]>();
   const [estadoActual, setEstadoActual] = useState<number>(1);
 
+  const [estadoContrato, setEstadoContrato] = useState([]);
+
   useEffect(() => {
     loadData();
   }, []);
@@ -105,19 +111,21 @@ export default function PersonalPage() {
       // console.log("🚀 ~ loadData ~ personal:", personal)
       // setPersonalExterno(personal);
       const estadoData = await getAllEstados();
+      console.log("🚀 ~ loadData ~ estadoData:", estadoData);
       setEstados(estadoData);
-    } catch (error) { }
+
+      //const responseContrato = await getContratoPersonal()
+    } catch (error) {}
   };
 
   useEffect(() => {
     const allPersonalExterno = async () => {
       const personal = await getPersonalByCategory(servicioActual.idCategoria);
-      console.log("🚀 ~ allPersonalExterno ~ personal:", personal)
+      console.log("🚀 ~ allPersonalExterno ~ personal:", personal);
       setPersonalExterno(personal);
-    }
+    };
     allPersonalExterno();
-  }, [servicioActual])
-
+  }, [servicioActual]);
 
   const handleOpenModal = (solicitudServicio: SolicitudServicioResponse) => {
     if (solicitudServicio.idEstado == 3) {
@@ -150,7 +158,11 @@ export default function PersonalPage() {
       }
     });
     if (encargado !== undefined) {
-      setServicioActual({ ...servicioActual, encargado: encargado.nombre, idPersonalExterno: encargado.idPersonalExterno });
+      setServicioActual({
+        ...servicioActual,
+        encargado: encargado.nombre,
+        idPersonalExterno: encargado.idPersonalExterno,
+      });
     }
   };
 
@@ -176,14 +188,14 @@ export default function PersonalPage() {
   };
 
   // Cambio de color de registro de cotnrato
-  const getContratoStyle = (estado: string) => {
+  const getContratoStyle = (estado: number) => {
     switch (estado) {
-      case "Pendiente":
-        return { backgroundColor: '#6c757d', color: 'white' };
-      case "Proceso":
-        return { backgroundColor: '#dc3545', color: 'white' };
-      case "Completado":
-        return { backgroundColor: '#20c997', color: 'white' };
+      case 1:
+        return { backgroundColor: "#6c757d", color: "white" };
+      case 2:
+        return { backgroundColor: "#dc3545", color: "white" };
+      case 3:
+        return { backgroundColor: "#20c997", color: "white" };
       default:
         return {};
     }
@@ -229,9 +241,13 @@ export default function PersonalPage() {
                         {/* Registro de contrato */}
                         <td>
                           <Stack direction="row" spacing={1}>
-                            <Chip className="prueba_chip"
-                              style={getContratoStyle(solicitud.estado.nombreEstado)}
-                              label={solicitud.estado.nombreEstado}
+                            <Chip
+                              className="prueba_chip"
+                              style={getContratoStyle(
+                                //
+                                1
+                              )}
+                              label={solicitud.estado?.nombreEstado}
                             />
                           </Stack>
                         </td>
@@ -248,7 +264,8 @@ export default function PersonalPage() {
                           </Stack>
                         </td>
                         <td className="actions-container">
-                          <button className="button_editt"
+                          <button
+                            className="button_editt"
                             type="button"
                             onClick={() => handleOpenModal(solicitud)}
                           >
@@ -411,6 +428,7 @@ export default function PersonalPage() {
                       <TextField
                         id="outlined-select-currency"
                         value={estadoActual}
+                        disabled={true}
                         onChange={(event) => {
                           setEstadoActual(parseInt(event.target.value));
                           setServicioActual({
@@ -452,7 +470,6 @@ export default function PersonalPage() {
                       Guardar
                     </button>
                   </div>
-
                 </Box>
               </div>
             </div>

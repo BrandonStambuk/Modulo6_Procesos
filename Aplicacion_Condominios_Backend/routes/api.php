@@ -308,9 +308,13 @@ Route::put("/avisos/{id}",[AvisosController::class,"update"]);
 Route::delete("/avisos/{id}",[AvisosController::class,"destroy"]);
 Route::put('/avisos/aprobar/{id}', [AvisosController::class, 'approveNotice']);
 Route::put('/avisos/rechazar/{id}', [AvisosController::class, 'rejectNotice']);
+Route::get('/avisosRechazados2', [AvisosController::class, 'getAvisosRechazados']);
 
 Route::get('/obtener-equipamiento/{id}', [EquipamientosController::class, 'getEquipoById']);
     Route::delete('/eliminar-equipo/{id}', [EquipamientosController::class, 'delete']);
     Route::put('/editar-equipo/{id}', [EquipamientosController::class, 'edit']);
+
+
+Route::get('reservations/after-date/{date}/{common_area_name}', [ReservationController::class, 'getReservationsAfterDate']);
 
 

@@ -25,6 +25,8 @@ import RegistrarParqueo from "../departamento/components/RegistrarParqueo";
 import CrearEdificio from "../departamento/components/CrearEdificio";
 import VisualizarParqueos from "../departamento/components/VisualizarParqueos";
 import HistorialVisitas from "../departamento/components/HistorialVisitas";
+import VisualizarBloques from "../departamento/components/visualizar/VisualizarBloques";
+import CrearBloque from "../departamento/components/registrar/CrearBloque";
 
 import AgregarEquipo from "../cobro_servicios/components/AgregarEquipo.js";
 import PagoAreaComun from "../cobro_servicios/components/PagoAreaComun";
@@ -91,6 +93,7 @@ import FormularioPagoExpensa from "../cobro_servicios/components/FormularioPagoE
 import ListPageReservations from "../common-areas/dashboard/reservation/pages/list-page/ListPageReservations";
 import { NoticesSection } from "../notificaciones/pages/NoticesSection";
 
+
 const appRoutes: RouteType[] = [
   {
     index: true,
@@ -104,20 +107,28 @@ const appRoutes: RouteType[] = [
     state: "dashboard",
     sidebarProps: {
       displayText: "Departamentos",
-      icon: <ApartmentIcon />,
+      icon: <ApartmentIcon />
     },
     child: [
       {
         index: true,
         element: <DashboardIndex />,
-        state: "dashboard.index",
+        state: "dashboard.index"
+      },
+      {
+        path: "/dashboard/crearBloque",
+        element: <CrearBloque />,
+        state: "dashboard.crearBloque",
+        sidebarProps: {
+          displayText: "Registrar Bloque"
+        },
       },
       {
         path: "/dashboard/crearEdificio",
         element: <CrearEdificio />,
         state: "dashboard.crearEdificio",
         sidebarProps: {
-          displayText: "Registrar Edificio",
+          displayText: "Registrar Edificio"
         },
       },
       {
@@ -125,15 +136,20 @@ const appRoutes: RouteType[] = [
         element: <CrearDepa />,
         state: "dashboard.crearDepa",
         sidebarProps: {
-          displayText: "Registrar Departamento",
+          displayText: "Registrar Departamento"
         },
       },
       {
         path: "/dashboard/edificios",
         element: <MostrarEdificio />,
         state: "dashboard.edificios",
+      },
+      {
+        path: "/dashboard/visualizarBloques",
+        element: <VisualizarBloques />,
+        state: "dashboard.visualizarBloques",
         sidebarProps: {
-          displayText: "GestionarDepartamento",
+          displayText: "Gestionar Departamentos"
         },
       },
       {
@@ -146,7 +162,7 @@ const appRoutes: RouteType[] = [
         element: <RegistrarResidente />,
         state: "dashboard.regResidente",
         sidebarProps: {
-          displayText: "Registrar Residente",
+          displayText: "Registrar Residente"
         },
       },
       {
@@ -174,7 +190,7 @@ const appRoutes: RouteType[] = [
         element: <MostrarResidentes />,
         state: "dashboard.residentes",
         sidebarProps: {
-          displayText: "Residentes",
+          displayText: "Residentes"
         },
       },
       {
@@ -182,7 +198,7 @@ const appRoutes: RouteType[] = [
         element: <GestionVisitas />,
         state: "dashboard.visitas",
         sidebarProps: {
-          displayText: "Gestionar Visitas",
+          displayText: "Gestionar Visitas"
         },
       },
       {
@@ -195,7 +211,7 @@ const appRoutes: RouteType[] = [
         element: <HistorialVisitas />,
         state: "dashboard.historialVisitas",
         sidebarProps: {
-          displayText: "Historial de Visitas",
+          displayText: "Historial de Visitas"
         },
       },
       {
@@ -203,7 +219,7 @@ const appRoutes: RouteType[] = [
         element: <RegistrarParqueo />,
         state: "dashboard.parqueo",
         sidebarProps: {
-          displayText: "Gestionar Parqueos",
+          displayText: "Gestionar Parqueos"
         },
       },
       {
@@ -211,10 +227,11 @@ const appRoutes: RouteType[] = [
         element: <VisualizarParqueos />,
         state: "dashboard.visualizarParqueo",
         sidebarProps: {
-          displayText: "Visualizar Parqueos",
+          displayText: "Visualizar Parqueos"
         },
       },
-    ],
+      
+    ]
   },
 
   {

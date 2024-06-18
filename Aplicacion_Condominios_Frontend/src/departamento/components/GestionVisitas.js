@@ -6,7 +6,9 @@ import { Row, Col, Button, Container, Label, Table, InputGroup, Input } from 're
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
-import ModalCon from './ModalConfirm';
+import ModalCon from './modal/ModalConfirm';
+import { ClipLoader } from 'react-spinners';
+
 
 const endpoint = 'http://localhost:8000/api';
 // const endpointImg = 'http://localhost:8000';
@@ -18,6 +20,7 @@ const GestionVisitas = () => {
     const [idVisita, setIdVisita] = useState('');
     const [modalMarcarConf, setModalMarcarConf] = useState(false);
     const [horaSalida,setHoraSalida] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         getVisitas();
     }, []);
@@ -40,6 +43,8 @@ const GestionVisitas = () => {
 
         } catch (error) {
             console.error("Error al obtener las visitas:", error);
+        } finally {
+            setIsLoading(false);
         }
     }
     const toggleModalMarcarConf = () => {
@@ -117,6 +122,11 @@ const GestionVisitas = () => {
                                 <Button type="button" className="custom-button" onClick={registrarVisita}>Marcar Ingreso</Button>
                             </Col>
                         </Row>
+                        {isLoading ? (
+                            <div className="d-flex justify-content-center my-5">
+                                <ClipLoader color={'#5B9223'} loading={isLoading} size={50} />
+                            </div>
+                        ) : (
                         <Table striped responsive bordered className="mt-5">
                             <thead className="text-center" >
                                 <tr>
@@ -158,6 +168,7 @@ const GestionVisitas = () => {
                                 ))}
                             </tbody>
                         </Table>
+                        )}
                     </Col>
                 </Row>
             </Container>

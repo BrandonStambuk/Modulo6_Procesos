@@ -20,8 +20,11 @@ class ResidenteFactory extends Factory
         if (!\File::isDirectory($directory)) {
             \File::makeDirectory($directory, 0755, true, true);
         }
-        $imageName = $this->faker->image($directory, 512, 512, null, false);
-        $imagePath = $imageName ? $ruta . '/' . $imageName : 'departamento/images/residentes/residente_default.png';
+        $listaImagenes = ['departamento/images/residentes/residente_default.png','departamento/images/residentes/perfil (1).jpg','departamento/images/residentes/perfil (2).jpg','departamento/images/residentes/perfil (3).jpg','departamento/images/residentes/perfil (4).jpg','departamento/images/residentes/perfil (5).jpg','departamento/images/residentes/perfil (6).jpg','departamento/images/residentes/perfil (7).jpg'];
+        //$imageName = $this->faker->image($directory, 512, 512, null, false);
+        $imageName = null;
+        $obtenerImagen = $this->faker->randomElement($listaImagenes);
+        $imagePath = $imageName ? $ruta . '/' . $imageName : $obtenerImagen;
         $tipo_residente = $this->faker->randomElement(['Propietario', 'Residente','Titular']);
         return [
             //

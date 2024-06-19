@@ -27,6 +27,7 @@ function ContractRegister() {
     const [beneficios, setBeneficios] = useState([]);
     const [areas_comunes, setAreasComunes] = useState([]);
     const [edificios, setEdificios] = useState([]);
+    const [tipo_asignacion, setTipoAsignacion] = useState("Areas Comunes");
 
     const [beneficiosSelect, setBeneficiosSelect] = useState([]);
     const [beneficiosList, setBeneficiosList] = useState([]);
@@ -40,6 +41,7 @@ function ContractRegister() {
       obtenerAreasComunes()
       obtenerEdificios()
       marcarBotonesRadio()
+      establecerTipoContrato()
     }, []);
   
     const [values, setValues] = useState({
@@ -116,14 +118,26 @@ function ContractRegister() {
           data.append("salario", values.salario);
           data.append("empleado", empleado.id);
 
+          if(tipo_asignacion === "Areas Comunes"){
+            data.append("area_comun", values.asignacion);
+            data.append("edificio", '');
+          }
+          if(tipo_asignacion === "Edificios"){
+            data.append("area_comun", '');
+            data.append("edificio", values.asignacion);
+          }
+
           const res = await axios.post(
-            `http://127.0.0.1:8000/api/add_contract`,
+            `http://127.0.0.1:8000/api/add_contract_alt`,
             data
           );
 
           if (res.data.status === 200) {
             const data_contrato = new FormData();
+            data_contrato.append("estado_contrato", "Pendiente");
+            /* 
             data_contrato.append("estado_contrato", "Contratado");
+            */
             console.log(res);
             const respuesta_estado = await axios.post(
                 `http://127.0.0.1:8000/api/updateContractStatus/${empleado.id}`,
@@ -137,10 +151,11 @@ function ContractRegister() {
         }
     };
 
-    const manejarSelectArea = ()  => {
+    const manejarSelectArea = (e)  => {
+      console.log(e.target.value)
         setValues({
             ...values,
-            area:document.getElementById("select_area").value,
+            area: e.target.value,
         });
     };
 
@@ -168,7 +183,6 @@ function ContractRegister() {
         data: { commonAreas },
       } = await response.json();
       setAreasComunes(commonAreas)
-      console.log(commonAreas)
     };
 
     const obtenerEdificios = async ()  => {
@@ -182,13 +196,14 @@ function ContractRegister() {
       if (e.target.value === "Areas Comunes") {
         document.getElementById("areas_comunes").style.display = "block";
         document.getElementById("edificios").style.display = "none";
+        setTipoAsignacion("Areas Comunes")
       }
 
       if (e.target.value === "Edificios") {
         document.getElementById("areas_comunes").style.display = "none";
         document.getElementById("edificios").style.display = "block";
+        setTipoAsignacion("Edificios")
       } 
-
     };
 
     const manejarSelectAsignacion = (e)  => {
@@ -235,6 +250,13 @@ function ContractRegister() {
     const marcarBotonesRadio = () => {
       document.getElementById("inlineRadio1").checked = true;
       document.getElementById("areas_comunes_boton").checked = true;
+    }
+
+    const establecerTipoContrato = () => {
+      setValues({
+        ...values,
+        tipo_contrato: "Fijo",
+      });
     }
 
     return (
@@ -360,12 +382,10 @@ function ContractRegister() {
                   </MDBRow>
 
                   <MDBRow
-                    className="align-items-center pt-4 pb-3"
+                    className="align-items-center pt-4 pb-3 ps-5"
                     id="areas_comunes"
                   >
-                    <MDBCol md="3" className="ps-5">
-                      <h6 className="mb-0">Asignacion</h6>
-                    </MDBCol>
+                    
                     <MDBCol md="9" className="pe-5">
                       <Form.Select
                         aria-label="Default select example"
@@ -395,13 +415,10 @@ function ContractRegister() {
                   </MDBRow>
 
                   <MDBRow
-                    className="align-items-center pt-4 pb-3"
+                    className="align-items-center pt-4 pb-3 ps-5"
                     style={{ display: "none" }}
                     id="edificios"
                   >
-                    <MDBCol md="3" className="ps-5">
-                      <h6 className="mb-0">Asignacion</h6>
-                    </MDBCol>
                     <MDBCol md="9" className="justify-content-md-center pe-5">
                       <Form.Select
                         aria-label="Default select example"
@@ -435,7 +452,7 @@ function ContractRegister() {
                     <MDBCol md="9" className="pe-5">
                       <Form.Select
                         aria-label="Default select example"
-                        id="select_area"
+                        id="select_area_alt"
                         onChange={manejarSelectArea}
                       >
                         <option disabled selected>

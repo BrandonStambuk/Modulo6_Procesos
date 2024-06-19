@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Empleados;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Empleados\Contract;
-class ContractController extends Controller
+use App\Models\Empleados\ContractAlt;
+
+class ContractAltController extends Controller
 {
     public function store(Request $request){
 
-        $contrato = new Contract();
+        $contrato = new ContractAlt();
 
         $contrato-> tipo_contrato = $request -> tipo_contrato;
         $contrato-> fecha_inicio = $request -> fecha_inicio;
@@ -26,10 +27,7 @@ class ContractController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Contrato añadido exitosamente',
+            'message' => 'Contrato Alt añadido exitosamente',
         ]);
     }
-    
-
-
 }

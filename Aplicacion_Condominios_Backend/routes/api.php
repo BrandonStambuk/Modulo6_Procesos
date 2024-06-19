@@ -19,6 +19,8 @@ use App\Http\Controllers\Empleados\AreaController;
 use App\Http\Controllers\Empleados\BenefitController;
 use App\Http\Controllers\Empleados\PositionController;
 use App\Http\Controllers\Empleados\AtrasoController;
+use App\Http\Controllers\Empleados\AusenciaController;
+use App\Http\Controllers\Empleados\ContractAltController;
 
 use App\Http\Controllers\Notificaciones\PersonaController;
 use App\Http\Controllers\Notificaciones\AuthController;
@@ -152,6 +154,7 @@ Route::controller(ParqueoController::class)->group(function(){
 // EMPLEADOS
 Route::post('/add_employee', [EmployeeController::class, 'store']);
 Route::get('/get_all_employees', [EmployeeController::class, 'getAll']);
+Route::get('/get_all_employees_alt', [EmployeeController::class, 'getAllAlt']);
 Route::delete('/delete_employee/{id}', [EmployeeController::class, 'delete']);
 Route::get('/get_employee/{id}', [EmployeeController::class, 'getById']);
 Route::post('/update_employee/{id}', [EmployeeController::class, 'update']);
@@ -160,6 +163,7 @@ Route::get('/get_employee_with_contract', [EmployeeController::class, 'getEmploy
 
 
 Route::post('/add_contract', [ContractController::class, 'store']);
+Route::post('/add_contract_alt', [ContractAltController::class, 'store']);
 
 Route::post('/add_working_hour', [WorkingHourController::class, 'store']);
 Route::delete('/borrar_horarios_dado_empleado/{id}', [WorkingHourController::class, 'borrarTodosDadoEmpleado']);
@@ -170,6 +174,7 @@ Route::post('/actualizar_motivo/{id}',[AtrasoController::class, 'actualizarMotiv
 
 Route::post('/add_area', [AreaController::class, 'store']);
 Route::get('/get_all_areas', [AreaController::class, 'getAll']);
+Route::get('/get_area_id/{id}', [AreaController::class, 'getById']);
 
 Route::post('/add_benefit', [BenefitController::class, 'store']);
 Route::get('/get_all_benefits', [BenefitController::class, 'getAll']);
@@ -177,6 +182,8 @@ Route::get('/get_all_benefits', [BenefitController::class, 'getAll']);
 Route::post('/add_position', [PositionController::class, 'store']);
 Route::get('/get_all_positions', [PositionController::class, 'getAll']);
 
+Route::post('/actualizar_motivo_ausencia/{id}',[AusenciaController::class, 'actualizarMotivoAusencia']);
+Route::get('obtener_ausencias',[AusenciaController::class,'obtenerAusencias']);
 
 
 // MANTENIMIENTO

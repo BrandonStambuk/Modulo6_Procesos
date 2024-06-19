@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Imprimir from "./Imprimir";
-import { MailOutlined, PrintOutlined, DeleteOutlined, WhatsApp } from "@mui/icons-material";
+import { MailOutlined, PrintOutlined, DeleteOutlined, WhatsApp, Telegram } from "@mui/icons-material";
 
 export const NotificationsList = () => {
   const [notices, setNotices] = useState([]);
@@ -12,6 +12,7 @@ export const NotificationsList = () => {
   const [noticeToPrint, setNoticeToPrint] = useState(null);
 
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showTelegramModal, setShowTelegramModal] = useState(false);
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
   const [selectedNotice, setSelectedNotice] = useState({
     titulo: "",
@@ -56,6 +57,9 @@ export const NotificationsList = () => {
 
     await axios.post('http://127.0.0.1:8000/api/telegram/notification/channel', {
       text: text,
+    }).then((res) => {
+      alert('Aviso enviado al canal de Telegram');
+      setShowTelegramModal(false);
     });
   }
 
@@ -69,8 +73,13 @@ export const NotificationsList = () => {
     setShowWhatsAppModal(true);
   };
 
+  const handleSendTelegram = (notice) => {
+    setSelectedNotice(notice);
+    setShowTelegramModal(true);
+  };
+
   const sendEmail = async () => {
-    sendTelegramNotification();
+    // sendTelegramNotification();
 
     const url = "http://127.0.0.1:8000/api";
     const data = await axios.get(`${url}/notificacion-general`);
@@ -155,6 +164,18 @@ export const NotificationsList = () => {
                     <MailOutlined fontSize="small" />
                   </Button>
                   <Button
+                    style={{ width: "auto", backgroundColor: "#3465A4", borderColor: "#3465A4" }}
+                    onClick={() => handleSendTelegram(notice)}
+                  >
+                    <Telegram fontSize="small" />
+                  </Button>
+                  <Button
+                    style={{ width: "auto", backgroundColor: "#25D366", borderColor: "#25D366" }}
+                    onClick={() => handleSendWhatsApp(notice)}
+                  >
+                    <WhatsApp fontSize="small" />
+                  </Button>
+                  <Button
                     style={{ width: "auto", backgroundColor: "#1B325F", borderColor: "#1B325F" }}
                     onClick={() => handlePrintNotice(notice)}
                   >
@@ -166,12 +187,6 @@ export const NotificationsList = () => {
                     onClick={() => handleDeleteNotice(notice.id)}
                   >
                     <DeleteOutlined fontSize="small" />
-                  </Button>
-                  <Button
-                    style={{ width: "auto", backgroundColor: "#25D366", borderColor: "#25D366" }}
-                    onClick={() => handleSendWhatsApp(notice)}
-                  >
-                    <WhatsApp fontSize="small" />
                   </Button>
                 </div>
               </td>
@@ -197,6 +212,28 @@ export const NotificationsList = () => {
             Enviar
           </Button>
           <Button style={{ width: "auto" }} variant='danger' onClick={() => setShowEmailModal(false)}>
+            Cancelar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showTelegramModal} onHide={() => setShowTelegramModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Vista Previa</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedNotice && (
+            <p>
+              <b>Titulo:</b><br/>{selectedNotice.titulo} <br/>
+              <b>Descripcion:</b><br/>{selectedNotice.descripcion}
+            </p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button style={{ width: "auto" }} variant='success' onClick={sendTelegramNotification}>
+            Enviar
+          </Button>
+          <Button style={{ width: "auto" }} variant='danger' onClick={() => setShowTelegramModal(false)}>
             Cancelar
           </Button>
         </Modal.Footer>

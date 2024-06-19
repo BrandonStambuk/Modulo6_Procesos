@@ -42,7 +42,7 @@ use App\Http\Controllers\Mantenimiento\ListaCompraController;
 use App\Http\Controllers\Empleados\WorkingHourController;
 
 
-
+use App\Http\Controllers\Notificaciones\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -293,6 +293,8 @@ Route::controller(PersonaController::class)->group(function() {
 Route::post('/email', [AuthController::class, 'enviarCorreo']);
 //emails de preavisso
 Route::post('/cobrar-servicio', [CorreoController::class, 'enviarCorreo']);
+
+Route::post('/send-message', [MessageController::class, 'sendMessage']);
 
 Route::controller(TelegramNotificationController::class)->group(function() {
     Route::post('/telegram/notification', 'sendNoticeToOne');

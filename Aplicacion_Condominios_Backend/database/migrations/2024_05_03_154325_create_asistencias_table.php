@@ -17,7 +17,7 @@ class CreateAsistenciasTable extends Migration
         Schema::create('asistencias', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_empleado');
-            $table->date('fecha');
+            $table->date('fecha')->default(now());
             $table->time('hora_entrada');
             $table->time('hora_salida')->nullable();
             $table->timestamps();
@@ -25,7 +25,6 @@ class CreateAsistenciasTable extends Migration
             $table->foreign('id_empleado')->references('id')->on('employees')->onDelete('cascade');
         });
 
-        DB::statement('ALTER TABLE asistencias MODIFY fecha DATE DEFAULT (CURRENT_DATE)');
     }
 
     /**

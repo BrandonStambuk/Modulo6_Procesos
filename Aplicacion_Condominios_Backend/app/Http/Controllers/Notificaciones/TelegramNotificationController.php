@@ -68,4 +68,16 @@ class TelegramNotificationController extends Controller
             ], 500);
         }
     }
+
+    public function getTelegramChannelUrl()
+    {
+        try {
+            return response()->json([
+                'channel_url' => env('TELEGRAM_CHANNEL_URL')], 200);
+        } catch (\Exception $err) {
+            return response()->json([
+                'message' => $err->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -36,4 +36,6 @@ export interface ReportCreateDTO {
   Situacion: string;
   Info: string;
   Id_reservation: number;
+  disableReason: string;
+  disable: boolean;
 }

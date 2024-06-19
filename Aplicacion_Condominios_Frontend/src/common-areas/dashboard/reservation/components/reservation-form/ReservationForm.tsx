@@ -40,6 +40,7 @@ export default function ReservationForm({
         `http://localhost:8000/api/common-areas/${idCommonArea}/disable-reasons`
       );
       const data = await response.json();
+      console.log(data);
       setDisableReasons(data.map((reason: any) => reason.reason));
     };
 

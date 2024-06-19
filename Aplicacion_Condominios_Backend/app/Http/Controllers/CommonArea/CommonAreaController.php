@@ -330,17 +330,20 @@ class CommonAreaController extends Controller
             'id_reservation'=>$request->Id_reservation
         ]);
 
-        if(isset($request->disable) && isset($request->disableReason)) {
+        if(isset($request->disableReason)) {
             $disableReason = new DisableReasonCommonArea();
-            $disableReason->id_common_area = $request->Id_areaCommun;
-            $disableReason->active = true;
+            $disableReason->id_common_area = $request->Id_areaComun;
             $disableReason->reason = $request->disableReason;
+            $disableReason->active = true;
             $disableReason->save();
+        }
+
+        if(isset($request->disable)) {
             if($request->disable) {
                 $commonArea = CommonArea::find($request->Id_areaComun);
-                $commonArea->available = false;
+                $commonArea->available = !$request->disable;
                 $commonArea->save();
-                $this->cancelReservationsNext5Days($request->idCommonArea);
+                $this->cancelReservationsNext5Days($request->Id_areaComun);
             }
         }
 

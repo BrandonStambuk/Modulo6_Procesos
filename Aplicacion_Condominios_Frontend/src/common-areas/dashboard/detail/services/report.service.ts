@@ -10,7 +10,7 @@ const API_URL = "http://localhost:8000/api/";
 export async function getReports(): Promise<ReportReadDTO[]> {
   const response = await fetch(`${API_URL}reports`);
   const data: ReportsResponseAPI = await response.json();
-  const reports = data.data;
+  const reports: ReportReadDTO[] = data.data;
 
   if (!response.ok) {
     throw data;

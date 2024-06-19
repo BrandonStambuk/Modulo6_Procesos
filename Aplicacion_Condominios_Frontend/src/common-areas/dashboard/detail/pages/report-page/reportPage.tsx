@@ -157,6 +157,8 @@ function ReportPage() {
       ),
       Situacion: element.situacion as string,
       Info: element.informacionAdicional as string,
+      disable: element.disable as unknown as boolean,
+      disableReason: element.disableReason as unknown as string,
     };
 
     try {
@@ -344,17 +346,23 @@ function ReportPage() {
             />
           </div>
 
-          {formData.disable && (
-            <div>
-              <textarea
-                name="disableReason"
-                placeholder="Motivo..."
-                id="disableReason"
-                value={formData.disableReason}
-                onChange={handleChange}
-              ></textarea>
-            </div>
-          )}
+          <div>
+            <label
+              style={{
+                fontWeight: "bold",
+              }}
+              htmlFor="disabledReason"
+            >
+              Observaciones
+            </label>
+            <textarea
+              name="disableReason"
+              placeholder="Motivo..."
+              id="disableReason"
+              value={formData.disableReason}
+              onChange={handleChange}
+            ></textarea>
+          </div>
         </div>
 
         <button className="btn-submit__report-page" type="submit">

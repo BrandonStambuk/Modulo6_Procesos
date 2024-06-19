@@ -10,21 +10,21 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import Aviso from "../notificaciones/pages/Aviso";
 
-import CrearDepa from "../departamento/components/CrearDepartamento.js";
-import Depa from "../departamento/components/MostrarDep.js";
-import EditarDep from "../departamento/components/EditarDep.js";
-import RegistrarResidente from "../departamento/components/CrearResidente";
-import CrearContrato from "../departamento/components/CrearContrato";
-import MostrarResidentes from "../departamento/components/MostrarResidentes";
+import CrearDepa from "../departamento/components/registrar/CrearDepartamento.js";
+import Depa from "../departamento/components/visualizar/MostrarDep.js"
+import EditarDep from "../departamento/components/editar/EditarDep.js"
+import RegistrarResidente from "../departamento/components/registrar/CrearResidente"
+import CrearContrato from "../departamento/components/registrar/CrearContrato";
+import MostrarResidentes from "../departamento/components/visualizar/MostrarResidentes";
 import InfoDepartamento from "../departamento/components/InfoDepartamento";
 import GestionVisitas from "../departamento/components/GestionVisitas";
-import RegistrarVisita from "../departamento/components/RegistrarVisita";
-import EditarContrato from "../departamento/components/EditarContrato";
-import MostrarEdificio from "../departamento/components/MostrarEdificios";
-import RegistrarParqueo from "../departamento/components/RegistrarParqueo";
-import CrearEdificio from "../departamento/components/CrearEdificio";
-import VisualizarParqueos from "../departamento/components/VisualizarParqueos";
+import RegistrarVisita from "../departamento/components/registrar/RegistrarVisita";
+import EditarContrato from "../departamento/components/editar/EditarContrato";
+import MostrarEdificio from "../departamento/components/visualizar/MostrarEdificios";
+import RegistrarParqueo from "../departamento/components/registrar/RegistrarParqueo";
+import CrearEdificio from "../departamento/components/registrar/CrearEdificio";
 import HistorialVisitas from "../departamento/components/HistorialVisitas";
+import VisualizarParqueos from "../departamento/components/visualizar/VisualizarParqueos";
 import VisualizarBloques from "../departamento/components/visualizar/VisualizarBloques";
 import CrearBloque from "../departamento/components/registrar/CrearBloque";
 

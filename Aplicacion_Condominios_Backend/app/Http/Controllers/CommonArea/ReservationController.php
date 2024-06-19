@@ -11,6 +11,7 @@ use App\Models\CommonArea\Reservation;
 use App\Models\GestDepartamento\Residente;
 use App\Services\CommonArea\CommonAreaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ReservationController extends Controller
 {
@@ -85,7 +86,25 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Reservación creada correctamente'], 201);
     }
 
+    public function cancelReservationsNext5Days(Request $request)
+    {
+        $today = Carbon::now()->toDateString();
+        $fiveDaysLater = Carbon::now()->addDays(5)->toDateString();
 
+        $reservationsToCancel = Reservation::whereBetween('reserved_date', [$today, $fiveDaysLater])
+            ->where('cancelled', false)
+            ->get();
+
+        foreach ($reservationsToCancel as $reservation) {
+            $reservation->cancelled = true;
+            $reservation->save();
+        }
+
+        return response()->json([
+            'message' => 'Reservations cancelled successfully for the next 5 days.',
+            'cancelled_reservations' => $reservationsToCancel,
+        ], 200);
+    }
 
 
 

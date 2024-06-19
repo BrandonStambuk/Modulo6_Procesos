@@ -17,7 +17,7 @@ class CreateAtrasosTable extends Migration
         Schema::create('atrasos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_empleado');
-            $table->date('fecha');// Sin valor predeterminado
+            $table->date('fecha')->default(now());
             $table->time('hora_entrada');
             $table->time('tiempo_demora');
             $table->text('motivo')->nullable();
@@ -25,8 +25,6 @@ class CreateAtrasosTable extends Migration
 
             $table->foreign('id_empleado')->references('id')->on('employees')->onDelete('cascade');
         });
-        DB::statement('ALTER TABLE atrasos MODIFY fecha DATE DEFAULT (CURRENT_DATE)');
-
     }
 
     /**

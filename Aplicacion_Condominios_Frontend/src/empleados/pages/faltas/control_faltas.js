@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Cookies from 'universal-cookie';
 import '../../css/contract_register_style.css'
+import AddIcon from '@mui/icons-material/Add';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -26,21 +27,38 @@ function ControlFaltas() {
 
   const getEmpleados = async () => {
 
-    const respuesta = await axios.get(`http://127.0.0.1:8000/api/get_employee_with_contract`);
+    const respuesta = await axios.get(`http://127.0.0.1:8000/api/obtener_ausencias`);
 
-    console.log(respuesta.data.empleados)
+    console.log(respuesta.data.ausencias);
 
-    
-    for (let i = 0; i < respuesta.data.empleados.length; i++) {
-      let fecha = new Date(respuesta.data.empleados[i].contracts[0].fecha_inicio);
-      
-      let dia = fecha.getDate() + 1;
-      let mes = fecha.getMonth() + 1;
-      let format4 = dia + "-" + mes + "-" + fecha.getFullYear();
-      respuesta.data.empleados[i]["fecha_convertida"] = format4
+    let empleadosConAusencias = [];
+
+    for (let i = 0; i < respuesta.data.ausencias.length; i++) {
+      let empleado = respuesta.data.ausencias[i];
+      for(let j = 0; j < empleado.ausencias.length; j++){
+          let nombre = empleado.nombre;
+          let apellido = empleado.apellido;
+          let ci = empleado.ci;
+          let area = empleado.contracts[0].area;
+          let cargo = empleado.contracts[0].cargo;
+          let fechaInicio = empleado.contracts[0].fecha_inicio;
+          let fechaFinal = empleado.contracts[0].fecha_final;
+
+          let fechaAusencia = empleado.ausencias[j].fecha;
+          var mydate = new Date(fechaAusencia);
+          let dia = mydate.getDate() + 1;
+          let mes = mydate.getMonth() + 1;
+          let format4 = dia + "-" + mes + "-" + mydate.getFullYear();
+          
+          let idAusencia = empleado.ausencias[j].id
+          let motivo = empleado.ausencias[j].motivo
+          let datos = {nombre: nombre, apellido: apellido, ci: ci, area: area, cargo:cargo ,fecha_inicio:fechaInicio, fecha_final:fechaFinal, fecha: format4, id_ausencia: idAusencia, motivo: motivo, fecha_ausencia_original:fechaAusencia };
+          empleadosConAusencias.push(datos);
+      }
     }
-
-    setEmpleados(respuesta.data.empleados)
+    console.log(empleadosConAusencias);
+    setEmpleados(empleadosConAusencias);
+    console.log(empleados);
   }
 
   const manejarBuscador = (e) => {
@@ -316,15 +334,9 @@ function ControlFaltas() {
                   <td className="empleado_nombre">{empleado.nombre}</td>
                   <td>{empleado.apellido}</td>
                   <td className="empleado_area">
-                    {empleado.contracts[0].area}
+                    {empleado.area}
                   </td>
-                  <td>{empleado.fecha_convertida}</td>
-                  <td
-                    className="empleado_fecha_inicio"
-                    style={{ display: "none" }}
-                  >
-                    {empleado.contracts[0].fecha_inicio}
-                  </td>
+                  <td>{empleado.fecha}</td>
                   <td>
                   <Button
                       variant="info"

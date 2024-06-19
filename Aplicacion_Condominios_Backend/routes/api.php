@@ -19,6 +19,8 @@ use App\Http\Controllers\Empleados\AreaController;
 use App\Http\Controllers\Empleados\BenefitController;
 use App\Http\Controllers\Empleados\PositionController;
 use App\Http\Controllers\Empleados\AtrasoController;
+use App\Http\Controllers\Empleados\AusenciaController;
+use App\Http\Controllers\Empleados\ContractAltController;
 
 use App\Http\Controllers\Notificaciones\PersonaController;
 use App\Http\Controllers\Notificaciones\AuthController;
@@ -32,13 +34,13 @@ use App\Http\Controllers\Cobro_Servicios\ExpensasController;
 use App\Http\Controllers\Cobro_Servicios\MultasController;
 use App\Http\Controllers\Cobro_Servicios\PagoExpensasController;
 
-use App\Models\Mantenimiento\CategoriaServicio;
 use App\Http\Controllers\Mantenimiento\CategoriaServicioController;
 use App\Http\Controllers\Mantenimiento\PersonalExternoController;
 use App\Http\Controllers\Mantenimiento\RegistroSolicitudController;
 use App\Http\Controllers\Mantenimiento\EstadoController;
 use App\Http\Controllers\Mantenimiento\InsumoController;
 use App\Http\Controllers\Mantenimiento\ListaCompraController;
+use App\Http\Controllers\Mantenimiento\ContratoPersonalController;
 use App\Http\Controllers\Empleados\WorkingHourController;
 
 
@@ -144,13 +146,15 @@ Route::controller(ParqueoController::class)->group(function(){
     Route::post('/parqueo','store')->name('parqueo.store');
     Route::get('/parqueo/{id}','show')->name('parqueo.show');
     Route::put('/parqueoupd/{id}','update')->name('parqueo.update');
+    Route::put('/parqueo-unassign/{id}','desasignar')->name('parqueo.desasignar');
     Route::delete('/parqueo/{id}','destroy')->name('parqueo.destroy');
-    Route::get('/parqueo-by-departamento/{id}', 'getParqueosByDepartamento')->name('parqueo.getParqueosByDepartamento');
+    Route::get('/parqueo-by-departamento/{id}','getParqueosByDepartamento')->name('parqueo.getParqueosByDepartamento');
 });
 
 // EMPLEADOS
 Route::post('/add_employee', [EmployeeController::class, 'store']);
 Route::get('/get_all_employees', [EmployeeController::class, 'getAll']);
+Route::get('/get_all_employees_alt', [EmployeeController::class, 'getAllAlt']);
 Route::delete('/delete_employee/{id}', [EmployeeController::class, 'delete']);
 Route::get('/get_employee/{id}', [EmployeeController::class, 'getById']);
 Route::post('/update_employee/{id}', [EmployeeController::class, 'update']);
@@ -159,6 +163,7 @@ Route::get('/get_employee_with_contract', [EmployeeController::class, 'getEmploy
 
 
 Route::post('/add_contract', [ContractController::class, 'store']);
+Route::post('/add_contract_alt', [ContractAltController::class, 'store']);
 
 Route::post('/add_working_hour', [WorkingHourController::class, 'store']);
 Route::delete('/borrar_horarios_dado_empleado/{id}', [WorkingHourController::class, 'borrarTodosDadoEmpleado']);
@@ -169,6 +174,7 @@ Route::post('/actualizar_motivo/{id}',[AtrasoController::class, 'actualizarMotiv
 
 Route::post('/add_area', [AreaController::class, 'store']);
 Route::get('/get_all_areas', [AreaController::class, 'getAll']);
+Route::get('/get_area_id/{id}', [AreaController::class, 'getById']);
 
 Route::post('/add_benefit', [BenefitController::class, 'store']);
 Route::get('/get_all_benefits', [BenefitController::class, 'getAll']);
@@ -176,6 +182,8 @@ Route::get('/get_all_benefits', [BenefitController::class, 'getAll']);
 Route::post('/add_position', [PositionController::class, 'store']);
 Route::get('/get_all_positions', [PositionController::class, 'getAll']);
 
+Route::post('/actualizar_motivo_ausencia/{id}',[AusenciaController::class, 'actualizarMotivoAusencia']);
+Route::get('obtener_ausencias',[AusenciaController::class,'obtenerAusencias']);
 
 
 // MANTENIMIENTO
@@ -216,6 +224,10 @@ Route::get('/lista-compra', [ListaCompraController::class,'getListaCompra']);
 Route::post('/lista-compra/insert', [ListaCompraController::class,'insertRegistroCompra']);
 Route::put('/lista-compra/update/{id}', [ListaCompraController::class,'updateRegistroCompra']);
 
+Route::get('/contrato-personal', [ContratoPersonalController::class,'getContratoPersonalController']);
+Route::get('/contrato-personal/{id}', [ContratoPersonalController::class,'getContratoPersonalIdSolicitud']);
+Route::post('/contrato-personal/insert', [ContratoPersonalController::class,'insertContratoPersonal']);
+
 // COMMON AREAS
 Route::get('/common-areas/{id}/reservations', [CommonAreaController::class, 'reservations']);
 Route::get('/common-areas/reservations/{id}', [ReservationController::class, 'getReservationById']);
@@ -223,6 +235,8 @@ Route::get('/common-areas/{id}/equipments', [CommonAreaController::class, 'equip
 Route::apiResource('/common-areas/reservations', ReservationController::class);
 Route::apiResource('/common-areas', CommonAreaController::class);
 Route::apiResource('/equipments', EquipmentController::class);
+// Route::post('/reservations/cancel-next-5-days', [ReservationController::class, 'cancelReservationsNext5Days']);
+Route::get('/common-areas/{id}/disable-reasons', [ReservationController::class, "disableReasonCommonArea"]);
 
 // Route::get('/equipments', [CommonAreaController::class, 'indexEquipment']);
 // Route::post('/equipments', [CommonAreaController::class, 'storeEquipment']);

@@ -11,6 +11,7 @@ use App\Models\CommonArea\Reservation;
 use App\Models\GestDepartamento\Residente;
 use App\Services\CommonArea\CommonAreaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ReservationController extends Controller
 {
@@ -84,7 +85,22 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Reservación creada correctamente'], 201);
     }
 
+    public function cancelReservationsNext5Days($idCommonArea)
+    {
+        $today = Carbon::now()->toDateString();
+        $fiveDaysLater = Carbon::now()->addDays(5)->toDateString();
 
+        $reservationsToCancel = Reservation::whereBetween('reserved_date', [$today, $fiveDaysLater])
+            ->where('cancelled', false)
+            ->get();
+
+        foreach ($reservationsToCancel as $reservation) {
+            if($reservation->id_common_area === $idCommonArea) {
+                $reservation->cancelled = true;
+                $reservation->save();
+            }
+        }
+    }
 
 
 
@@ -141,5 +157,15 @@ class ReservationController extends Controller
         });
 
         return response()->json($formattedReservations, 200);
+    }
+
+    public function disableReasonCommonArea($idCommonArea) {
+        $commonArea = CommonArea::find($idCommonArea);
+        $disableReasons = $commonArea->disableReasons()->get();
+        $disableReasons = collect($disableReasons)->filter(function($reason) {
+            return $reason->active;
+        })->values()->toArray();
+
+        return response()->json($disableReasons, 200);
     }
 }

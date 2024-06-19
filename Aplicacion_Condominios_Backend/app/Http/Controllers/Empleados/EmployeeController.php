@@ -33,6 +33,32 @@ class EmployeeController extends Controller
 
     public function getAll(){
         $empleados = Employee::all();
+        foreach($empleados as $empleado){ 
+            if($empleado['estado_contrato'] === "Contratado" || $empleado['estado_contrato'] === 'Renovar'){
+                $numContratos = count($empleado->contracts);
+                $ultimoIndice = $numContratos - 1;
+                $ultimoContratoEmpleado = $empleado->contracts[$ultimoIndice];
+                $ultimoContratoColeccion = collect([$ultimoContratoEmpleado]);
+                $empleado->setRelation('contracts', $ultimoContratoColeccion);
+                if($ultimoContratoEmpleado['tipo_contrato'] === "Temporal" && $empleado['estado_contrato'] === 'Contratado'){
+                    $fechaFinalContrato = $ultimoContratoEmpleado['fecha_final'];
+                    date_default_timezone_set('America/La_Paz');
+                    $fechaActual = date('Y-m-d');
+                    if(strtotime($fechaActual) > strtotime($fechaFinalContrato)){
+                        $empleado -> estado_contrato = "Renovar"; 
+                        $empleado -> save(); 
+                    }
+                }
+            }
+        }
+        return response()->json([
+            'status' => 200,
+            'empleados' => $empleados,
+        ]);
+    }
+
+    public function getAllAlt(){
+        $empleados = Employee::all();
         return response()->json([
             'status' => 200,
             'empleados' => $empleados,
@@ -51,7 +77,7 @@ class EmployeeController extends Controller
         $empleado = Employee::find($id);
         return response()->json([
             'status' => 200,
-            'message' =>'Empleado eliminado exitosamente',
+            'message' =>'Empleado encontrado exitosamente',
             'empleado' => $empleado]);
     }
 
@@ -88,6 +114,12 @@ class EmployeeController extends Controller
 
         $empleadosConContrato = Employee::has('contracts')->get();
 
+        foreach ($empleadosConContrato as $key => $empleado) {
+            if($empleado['estado_contrato'] === 'Renovar'){
+                unset($empleadosConContrato[$key]); // Elimina el elemento si el nombre es 'María'
+            }
+        }
+
         return response()->json([
             'status' => 200,
             'message' =>'Empleados con contrato obtenidos exitosamente',
@@ -100,6 +132,7 @@ class EmployeeController extends Controller
         
         $empleadoId = Employee::select('id')
                               ->where('ci',$ci)
+                              ->where('estado_contrato','Contratado')
                               ->first();
         if($empleadoId){
             $id = $empleadoId -> id;

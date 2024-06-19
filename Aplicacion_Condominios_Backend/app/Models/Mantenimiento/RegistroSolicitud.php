@@ -15,6 +15,7 @@ class RegistroSolicitud extends Model
         'idCategoria', 
         'idEstado', 
         'idPersonalExterno',
+        'idEstadoContrato',
         'descripcion', 
         'nombrePropietario', 
         'ubicacion', 

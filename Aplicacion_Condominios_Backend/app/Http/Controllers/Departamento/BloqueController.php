@@ -20,9 +20,30 @@ class BloqueController extends Controller
         $bloque-> nombre_bloque = $request -> nombre_bloque;
         $bloque-> direccion_bloque = $request -> direccion_bloque;
         $bloque-> descripcion_bloque = $request -> descripcion_bloque;
-        $bloque-> imagen_bloque = $request -> imagen_bloque;
 
-        $bloque->save();
+        if($request -> hasFile ('imagen_bloque')){
+            $image = $request->file('imagen_bloque');
+            $name = time().'.'.$image->getClientOriginalExtension();
+            $image->move('departamento/images/bloques/', $name);
+
+            $bloque-> imagen_bloque = "departamento/images/bloques/${name}";
+            $bloque-> save();
+
+            return response()->json([
+                'status' => 200,
+                'message' =>'Bloque añadido exitosamente',
+            ]);
+
+        }
+        if(!$request->hasFile('imagen_bloque') || !$bloque->imagen_bloque){
+            $imagenPredeterminada = 'departamento/images/bloques/bloque_defecto.jpg';
+            $bloque->imagen_bloque = $imagenPredeterminada;
+            $bloque->save();
+            return response()->json([
+                'status' => 200,
+                'message' =>'Bloque añadido exitosamente con imagen predeterminada',
+            ]);
+        }
     }
 
     public function show($id)
@@ -37,9 +58,31 @@ class BloqueController extends Controller
         $bloque-> nombre_bloque = $request -> nombre_bloque;
         $bloque-> direccion_bloque = $request -> direccion_bloque;
         $bloque-> descripcion_bloque = $request -> descripcion_bloque;
-        $bloque-> imagen_bloque = $request -> imagen_bloque;
 
-        $bloque->save();
+        if($request -> hasFile ('imagen_bloque')){
+            $image = $request->file('imagen_bloque');
+            $name = time().'.'.$image->getClientOriginalExtension();
+            $image->move('departamento/images/bloques/', $name);
+
+            $bloque-> imagen_bloque = "departamento/images/bloques/${name}";
+            $bloque-> save();
+
+            return response()->json([
+                'status' => 200,
+                'message' =>'Bloque actualizado exitosamente',
+            ]);
+
+        }
+        if(!$request->hasFile('imagen_bloque') || !$bloque->imagen_bloque){
+            $imagenPredeterminada = 'departamento/images/bloques/bloque_defecto.jpg';
+            $bloque->imagen_bloque = $imagenPredeterminada;
+
+            $bloque->save();
+            return response()->json([
+                'status' => 200,
+                'message' =>'Bloque actualizado exitosamente con imagen predeterminada',
+            ]);
+        }
     }
 
     public function destroy($id)
@@ -53,5 +96,10 @@ class BloqueController extends Controller
     public function getBloquesShort(){
         $bloques = bloque::select('id', 'nombre_bloque')->get();
         return $bloques;
+    }
+
+    public function cantEdificiosByBloque($id){
+        $cantEdificios = bloque::find($id)->edificios->count();
+        return $cantEdificios;
     }
 }

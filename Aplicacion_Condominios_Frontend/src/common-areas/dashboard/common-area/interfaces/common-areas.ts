@@ -8,6 +8,7 @@ export interface CommonArea {
   policies: string[];
   created_at: Date;
   updated_at: Date;
+  available: boolean;
 }
 
 export interface Schedule {

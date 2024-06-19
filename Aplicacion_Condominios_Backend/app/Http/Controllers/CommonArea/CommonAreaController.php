@@ -10,9 +10,11 @@ use App\Http\Resources\CommonArea\CommonAreaCollection;
 use App\Http\Resources\CommonArea\CommonAreaResource;
 use App\Http\Resources\CommonArea\ReservationCollection;
 use App\Models\CommonArea\CommonArea;
+use App\Models\CommonArea\DisableReasonCommonArea;
 use App\Models\CommonArea\Policy;
 use App\Models\CommonArea\Reservation;
 use App\Models\CommonArea\Schedule;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Cobro_Servicios\EquipamientosModel;
 use App\Models\Reporte;
@@ -90,6 +92,7 @@ class CommonAreaController extends Controller
         if(!$commonArea){
             return response()->json(['message' => 'Area comun no encontrada'], 404);
         }
+
         return response()->json(['data' => [
             'commonArea' => new CommonAreaResource($commonArea)
         ]], 200);
@@ -286,6 +289,23 @@ class CommonAreaController extends Controller
         return response()->json(['data' => $equipment], 200);
     }
 
+    public function cancelReservationsNext5Days($idCommonArea)
+    {
+        $today = Carbon::now()->toDateString();
+        $fiveDaysLater = Carbon::now()->addDays(5)->toDateString();
+
+        $reservationsToCancel = Reservation::whereBetween('reserved_date', [$today, $fiveDaysLater])
+            ->where('cancelled', false)
+            ->get();
+
+        foreach ($reservationsToCancel as $reservation) {
+            if($reservation->id_common_area === $idCommonArea) {
+                $reservation->cancelled = true;
+                $reservation->save();
+            }
+        }
+    }
+
     public function createReport(Request $request)
     {
         $request->validate([
@@ -309,6 +329,20 @@ class CommonAreaController extends Controller
             'info' => $request->Info,
             'id_reservation'=>$request->Id_reservation
         ]);
+
+        if(isset($request->disable) && isset($request->disableReason)) {
+            $disableReason = new DisableReasonCommonArea();
+            $disableReason->id_common_area = $request->Id_areaCommun;
+            $disableReason->active = true;
+            $disableReason->reason = $request->disableReason;
+            $disableReason->save();
+            if($request->disable) {
+                $commonArea = CommonArea::find($request->Id_areaComun);
+                $commonArea->available = false;
+                $commonArea->save();
+                $this->cancelReservationsNext5Days($request->idCommonArea);
+            }
+        }
 
         return response()->json($reporte, 201);
     }

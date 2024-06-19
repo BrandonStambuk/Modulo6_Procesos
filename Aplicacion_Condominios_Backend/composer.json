@@ -11,7 +11,8 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "skrtdev/novagram": "^1.10"
+        "skrtdev/novagram": "^1.10",
+        "twilio/sdk": "^8.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

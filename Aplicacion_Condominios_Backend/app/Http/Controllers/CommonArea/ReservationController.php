@@ -86,7 +86,7 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Reservación creada correctamente'], 201);
     }
 
-    public function cancelReservationsNext5Days(Request $request)
+    public function cancelReservationsNext5Days($idCommonArea)
     {
         $today = Carbon::now()->toDateString();
         $fiveDaysLater = Carbon::now()->addDays(5)->toDateString();
@@ -96,14 +96,11 @@ class ReservationController extends Controller
             ->get();
 
         foreach ($reservationsToCancel as $reservation) {
-            $reservation->cancelled = true;
-            $reservation->save();
+            if($reservation->id_common_area === $idCommonArea) {
+                $reservation->cancelled = true;
+                $reservation->save();
+            }
         }
-
-        return response()->json([
-            'message' => 'Reservations cancelled successfully for the next 5 days.',
-            'cancelled_reservations' => $reservationsToCancel,
-        ], 200);
     }
 
 
@@ -133,5 +130,15 @@ class ReservationController extends Controller
         }
 
         return response()->json(new ReservationResource($reservation), 200);
+    }
+
+    public function disableReasonCommonArea($idCommonArea) {
+        $commonArea = CommonArea::find($idCommonArea);
+        $disableReasons = $commonArea->disableReasons()->get();
+        $disableReasons = collect($disableReasons)->filter(function($reason) {
+            return $reason->active;
+        })->values()->toArray();
+
+        return response()->json($disableReasons, 200);
     }
 }

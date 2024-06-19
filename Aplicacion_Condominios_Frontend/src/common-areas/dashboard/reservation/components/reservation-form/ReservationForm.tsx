@@ -1,6 +1,7 @@
 import useCreateReservation from "../../hooks/useCreateReservation";
 import Loader from "../../../../components/Loader/Loader";
 import "./reservation-form.css";
+import { useEffect, useState } from "react";
 
 interface ReservationFormProps {
   idCommonArea: number;
@@ -30,6 +31,20 @@ export default function ReservationForm({
     onSubmit,
     submitting,
   } = useCreateReservation({ idCommonArea });
+
+  const [disableReasons, setDisableReasons] = useState<string[]>([]);
+
+  useEffect(() => {
+    const get = async () => {
+      const response = await fetch(
+        `http://localhost:8000/api/common-areas/${idCommonArea}/disable-reasons`
+      );
+      const data = await response.json();
+      setDisableReasons(data.map((reason: any) => reason.reason));
+    };
+
+    get();
+  }, [idCommonArea]);
 
   return (
     <form onSubmit={onSubmit} className="form">
@@ -148,6 +163,15 @@ export default function ReservationForm({
             })}
           </ul>
         </div>
+      )}
+
+      {disableReasons.length > 0 && (
+        <ul>
+          <h4>Observaciones</h4>
+          {disableReasons.map((reason, index) => {
+            return <li key={index}>{`🔴 ${reason}`}</li>;
+          })}
+        </ul>
       )}
 
       <button className="btn" type="submit">

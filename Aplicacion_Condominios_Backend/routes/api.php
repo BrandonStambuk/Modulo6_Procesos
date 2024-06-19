@@ -235,7 +235,8 @@ Route::get('/common-areas/{id}/equipments', [CommonAreaController::class, 'equip
 Route::apiResource('/common-areas/reservations', ReservationController::class);
 Route::apiResource('/common-areas', CommonAreaController::class);
 Route::apiResource('/equipments', EquipmentController::class);
-Route::post('/reservations/cancel-next-5-days', [ReservationController::class, 'cancelReservationsNext5Days']);
+// Route::post('/reservations/cancel-next-5-days', [ReservationController::class, 'cancelReservationsNext5Days']);
+Route::get('/common-areas/{id}/disable-reasons', [ReservationController::class, "disableReasonCommonArea"]);
 
 // Route::get('/equipments', [CommonAreaController::class, 'indexEquipment']);
 // Route::post('/equipments', [CommonAreaController::class, 'storeEquipment']);

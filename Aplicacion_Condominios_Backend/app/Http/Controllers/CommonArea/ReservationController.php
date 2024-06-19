@@ -20,8 +20,7 @@ class ReservationController extends Controller
 
     public function __construct(
         CommonAreaService $commonAreaService
-    )
-    {
+    ) {
         $this->commonAreaService = $commonAreaService;
     }
 
@@ -47,19 +46,19 @@ class ReservationController extends Controller
 
         $isValidate = $this->commonAreaService->validateTimeReservation($id_common_area, $reserved_date, $start_time, $end_time);
 
-        if(!$isValidate){
-            return response()->json(['message' => 'El horario no esta disponible.',"errors" => []], 400);
+        if (!$isValidate) {
+            return response()->json(['message' => 'El horario no esta disponible.', "errors" => []], 400);
         }
 
         $commonArea = CommonArea::find($id_common_area);
         $resident = Residente::find($id_resident);
 
-        if(!$commonArea){
-            return response()->json(['message' => 'Area comun no encontrada',"errors" => []], 404);
+        if (!$commonArea) {
+            return response()->json(['message' => 'Area comun no encontrada', "errors" => []], 404);
         }
 
-        if(!$resident){
-            return response()->json(['message' => 'Residente no encontrado',"errors" => []], 404);
+        if (!$resident) {
+            return response()->json(['message' => 'Residente no encontrado', "errors" => []], 404);
         }
 
         try {
@@ -74,10 +73,7 @@ class ReservationController extends Controller
                 'id_common_area' => $id_common_area,
                 'id_resident' => $id_resident
             ]);
-            // $commonArea->update([
-            //     'available' => false
-            // ]);
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error al crear la reservacion.',"errors" => [
                 $e->getMessage()
             ]], 500);
@@ -107,11 +103,39 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::find($id);
 
-        if(!$reservation){
-            return response()->json(['message' => 'Reservación no encontrada',"errors" => []], 404);
+        if (!$reservation) {
+            return response()->json(['message' => 'Reservación no encontrada', "errors" => []], 404);
         }
 
         return response()->json(new ReservationResource($reservation), 200);
+    }
+
+    public function getReservationsAfterDate($date, $common_area_name)
+    {
+        $commonArea = CommonArea::where('common_area_name', $common_area_name)->first();
+
+        if (!$commonArea) {
+            return response()->json(['message' => 'Área común no encontrada', 'errors' => []], 404);
+        }
+
+        $reservations = Reservation::where('id_common_area', $commonArea->id_common_area)
+            ->where('reserved_date', '>=', $date)
+            ->with('resident')
+            ->get();
+
+        $formattedReservations = $reservations->map(function ($reservation) {
+            return [
+                'id' => $reservation->id,
+                'reserved_date' => $reservation->reserved_date,
+                'reason' => $reservation->reason,
+                'title' => $reservation->title,
+                'reserva_pagada' => $reservation->reserva_pagada,
+                'resident_name' => $reservation->resident->nombre_residente,
+                'resident_email' => $reservation->resident->email_residente,
+            ];
+        });
+
+        return response()->json($formattedReservations, 200);
     }
 
     public function disableReasonCommonArea($idCommonArea) {

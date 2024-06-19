@@ -29,35 +29,20 @@ return [
     | mailers below. You are free to add additional mailers as required.
     |
     | Supported: "smtp", "sendmail", "mailgun", "ses",
-    |            "postmark", "log", "array", "failover"
+    |            "postmark", "log", "array"
     |
     */
 
     'mailers' => [
-        'mailers' => [
-            'smtp' => [
-                'transport' => 'smtp',
-                'host' => env('MAIL_HOST'),
-                'port' => env('MAIL_PORT'),
-                'encryption' => env('MAIL_ENCRYPTION'),
-                'username' => env('MAIL_USERNAME'),
-                'password' => env('MAIL_PASSWORD'),
-                'timeout' => null,
-                'auth_mode' => null,
-            ],
-        ],
-    
-        'from' => [
-            'address' => env('MAIL_FROM_ADDRESS', 'gerenciaa65@gmail.com'),
-            'name' => env('MAIL_FROM_NAME', 'Example'),
-        ],
-    
-        'markdown' => [
-            'theme' => 'default',
-    
-            'paths' => [
-                resource_path('views/vendor/mail'),
-            ],
+        'smtp' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
+            'timeout' => null,
+            'auth_mode' => null,
         ],
 
         'ses' => [
@@ -74,7 +59,7 @@ return [
 
         'sendmail' => [
             'transport' => 'sendmail',
-            'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -t -i'),
+            'path' => '/usr/sbin/sendmail -bs',
         ],
 
         'log' => [
@@ -84,14 +69,6 @@ return [
 
         'array' => [
             'transport' => 'array',
-        ],
-
-        'failover' => [
-            'transport' => 'failover',
-            'mailers' => [
-                'smtp',
-                'log',
-            ],
         ],
     ],
 

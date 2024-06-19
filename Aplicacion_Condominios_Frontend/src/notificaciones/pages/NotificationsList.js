@@ -72,11 +72,11 @@ export const NotificationsList = () => {
   const sendEmail = async () => {
     sendTelegramNotification();
 
-    /*const url = "http://127.0.0.1:8000/api";
+    const url = "http://127.0.0.1:8000/api";
     const data = await axios.get(`${url}/notificacion-general`);
     const residentes = data.data.residentes;
 
-    sendNotificationsToResidents(residentes);*/
+    sendNotificationsToResidents(residentes);
   };
 
   const sendNotificationsToResidents = async (residentes) => {

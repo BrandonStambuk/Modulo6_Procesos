@@ -447,7 +447,7 @@ const appRoutes: RouteType[] = [
       {
         path: "/changelog/registrar_insumo",
         element: <RegistrarInsumoPage />,
-        state: "changelog.solicitud",
+        state: "changelog.insumo",
         // sidebarProps: {
         //   displayText: "Registrar insumo",
         // },
@@ -456,7 +456,7 @@ const appRoutes: RouteType[] = [
       {
         path: "/changelog/lista_insumo",
         element: <ListaInsumoPage />,
-        state: "changelog.solicitud",
+        state: "changelog.lista_insumo",
         sidebarProps: {
           displayText: "Insumos",
         },
@@ -465,7 +465,7 @@ const appRoutes: RouteType[] = [
       {
         path: "/changelog/lista_compras",
         element: <ListaComprasPage />,
-        state: "changelog.solicitud",
+        state: "changelog.lista_compras",
         sidebarProps: {
           displayText: "Lista de Compras",
         },
@@ -474,7 +474,7 @@ const appRoutes: RouteType[] = [
       {
         path: "/changelog/registro_compras",
         element: <RegistroComprasPage />,
-        state: "changelog.solicitud",
+        state: "changelog.registro_compras",
         // sidebarProps: {
         //   displayText: "Lista de Compras",
         // },

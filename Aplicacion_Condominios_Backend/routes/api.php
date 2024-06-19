@@ -34,13 +34,13 @@ use App\Http\Controllers\Cobro_Servicios\ExpensasController;
 use App\Http\Controllers\Cobro_Servicios\MultasController;
 use App\Http\Controllers\Cobro_Servicios\PagoExpensasController;
 
-use App\Models\Mantenimiento\CategoriaServicio;
 use App\Http\Controllers\Mantenimiento\CategoriaServicioController;
 use App\Http\Controllers\Mantenimiento\PersonalExternoController;
 use App\Http\Controllers\Mantenimiento\RegistroSolicitudController;
 use App\Http\Controllers\Mantenimiento\EstadoController;
 use App\Http\Controllers\Mantenimiento\InsumoController;
 use App\Http\Controllers\Mantenimiento\ListaCompraController;
+use App\Http\Controllers\Mantenimiento\ContratoPersonalController;
 use App\Http\Controllers\Empleados\WorkingHourController;
 
 
@@ -223,6 +223,10 @@ Route::get('/estado-solicitud/{id}', [EstadoController::class,'getEstadoId']);
 Route::get('/lista-compra', [ListaCompraController::class,'getListaCompra']);
 Route::post('/lista-compra/insert', [ListaCompraController::class,'insertRegistroCompra']);
 Route::put('/lista-compra/update/{id}', [ListaCompraController::class,'updateRegistroCompra']);
+
+Route::get('/contrato-personal', [ContratoPersonalController::class,'getContratoPersonalController']);
+Route::get('/contrato-personal/{id}', [ContratoPersonalController::class,'getContratoPersonalIdSolicitud']);
+Route::post('/contrato-personal/insert', [ContratoPersonalController::class,'insertContratoPersonal']);
 
 // COMMON AREAS
 Route::get('/common-areas/{id}/reservations', [CommonAreaController::class, 'reservations']);

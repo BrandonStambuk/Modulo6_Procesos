@@ -47,7 +47,7 @@ export default function RegistroCompras() {
   }, [insumosList]);
 
   const allCategories = async () => {
-    const response = await getAllCategories();
+    const response = await getAllPersonal();
     //console.log("🚀 ~ allEncargados ~ response:", response);
     setCategoryList(response);
   };
@@ -126,9 +126,9 @@ export default function RegistroCompras() {
         idSolicitud: idSolicitud,
         totalCompra: totalCompra,
       };
-      //const response: any = await newListaCompra(dataToSend);
+      const response: any = await newListaCompra(dataToSend);
       // console.log("🚀 ~ handleRegister ~ response:", response);
-      // window.location.reload();
+      window.location.reload();
     } else {
       alert("Existen campos vacios");
     }
@@ -144,15 +144,18 @@ export default function RegistroCompras() {
         <Box component="form" className="form-container" noValidate>
           <div className="form-row">
             <div className="form-item">
-              <label htmlFor="outlined-select-currency1">Categoría</label>
+              <label htmlFor="outlined-select-currency1">Encargado</label>
               <TextField
                 id="outlined-select-currency1"
                 onChange={(event) => handleChangeCategoria(event.target.value)}
                 select
               >
                 {categoryList.map((element: any) => (
-                  <MenuItem key={element.id} value={element.id}>
-                    {element.catnombre}
+                  <MenuItem
+                    key={element.idPersonalExterno}
+                    value={element.idPersonalExterno}
+                  >
+                    {element.nombre}
                   </MenuItem>
                 ))}
               </TextField>

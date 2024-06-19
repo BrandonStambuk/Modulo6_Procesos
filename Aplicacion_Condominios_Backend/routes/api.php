@@ -40,6 +40,8 @@ use App\Http\Controllers\Mantenimiento\EstadoController;
 use App\Http\Controllers\Mantenimiento\InsumoController;
 use App\Http\Controllers\Mantenimiento\ListaCompraController;
 use App\Http\Controllers\Empleados\WorkingHourController;
+
+
 use App\Http\Controllers\Notificaciones\MessageController;
 
 /*

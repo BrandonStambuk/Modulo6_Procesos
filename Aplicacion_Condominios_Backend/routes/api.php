@@ -299,6 +299,7 @@ Route::post('/send-message', [MessageController::class, 'sendMessage']);
 Route::controller(TelegramNotificationController::class)->group(function() {
     Route::post('/telegram/notification', 'sendNoticeToOne');
     Route::post('/telegram/notifications', 'sendNoticeToMany');
+    Route::post('/telegram/notification/channel', 'sendNoticeToChannel');
 });Route::get('/obtener-equipamientos', [EquipamientosController::class, 'getAllEquipamientos']);
 
 Route::get("/avisos",[AvisosController::class,"index"]);

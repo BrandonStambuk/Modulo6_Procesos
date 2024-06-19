@@ -44,7 +44,7 @@ use App\Http\Controllers\Mantenimiento\ContratoPersonalController;
 use App\Http\Controllers\Empleados\WorkingHourController;
 
 
-
+use App\Http\Controllers\Notificaciones\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -308,9 +308,13 @@ Route::post('/email', [AuthController::class, 'enviarCorreo']);
 //emails de preavisso
 Route::post('/cobrar-servicio', [CorreoController::class, 'enviarCorreo']);
 
+Route::post('/send-message', [MessageController::class, 'sendMessage']);
+
 Route::controller(TelegramNotificationController::class)->group(function() {
     Route::post('/telegram/notification', 'sendNoticeToOne');
     Route::post('/telegram/notifications', 'sendNoticeToMany');
+    Route::post('/telegram/notification/channel', 'sendNoticeToChannel');
+    Route::get('/telegram/channel/get-url', 'getTelegramChannelUrl');
 });Route::get('/obtener-equipamientos', [EquipamientosController::class, 'getAllEquipamientos']);
 
 Route::get("/avisos",[AvisosController::class,"index"]);
@@ -322,9 +326,13 @@ Route::put("/avisos/{id}",[AvisosController::class,"update"]);
 Route::delete("/avisos/{id}",[AvisosController::class,"destroy"]);
 Route::put('/avisos/aprobar/{id}', [AvisosController::class, 'approveNotice']);
 Route::put('/avisos/rechazar/{id}', [AvisosController::class, 'rejectNotice']);
+Route::get('/avisosRechazados2', [AvisosController::class, 'getAvisosRechazados']);
 
 Route::get('/obtener-equipamiento/{id}', [EquipamientosController::class, 'getEquipoById']);
     Route::delete('/eliminar-equipo/{id}', [EquipamientosController::class, 'delete']);
     Route::put('/editar-equipo/{id}', [EquipamientosController::class, 'edit']);
+
+
+Route::get('reservations/after-date/{date}/{common_area_name}', [ReservationController::class, 'getReservationsAfterDate']);
 
 

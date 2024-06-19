@@ -92,6 +92,7 @@ import FormularioPagoExpensa from "../cobro_servicios/components/FormularioPagoE
 
 import ListPageReservations from "../common-areas/dashboard/reservation/pages/list-page/ListPageReservations";
 import { NoticesSection } from "../notificaciones/pages/NoticesSection";
+import { Rechzados } from "../notificaciones/pages/Rechzados";
 
 
 const appRoutes: RouteType[] = [
@@ -537,6 +538,14 @@ const appRoutes: RouteType[] = [
         state: "notificacion.email",
         sidebarProps: {
           displayText: "Enviar email",
+        },
+      },
+      {
+        path: "/notifications/avisos/rechazados",
+        element: <Rechzados />,
+        state: "notificacion.rechazados",
+        sidebarProps: {
+          displayText: "Avisos Rechazados",
         },
       },
       /*{

@@ -56,15 +56,26 @@ export const NotificationsList = () => {
     descripcion: "",
   });
 
+  const sendTelegramNotification = async () => {
+    const text = selectedNotice.titulo + '\n\n' + selectedNotice.descripcion;
+
+    await axios.post('http://127.0.0.1:8000/api/telegram/notification/channel', {
+      text: text,
+    });
+  }
+
   const handleSendEmail = (notice) => {
     setSelectedNotice(notice);
     handleShow();
   };
 
   const sendEmail = async () => {
+    sendTelegramNotification();
+
     const url = "http://127.0.0.1:8000/api";
     const data = await axios.get(`${url}/notificacion-general`);
     const residentes = data.data.residentes;
+
     sendNotificationsToResidents(residentes);
   };
 

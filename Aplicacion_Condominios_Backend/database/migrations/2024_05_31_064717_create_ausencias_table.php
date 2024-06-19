@@ -3,9 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
-class CreateAsistenciasTable extends Migration
+class CreateAusenciasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,17 +13,15 @@ class CreateAsistenciasTable extends Migration
      */
     public function up()
     {
-        Schema::create('asistencias', function (Blueprint $table) {
+        Schema::create('ausencias', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_empleado');
-            $table->date('fecha')->default(now());
-            $table->time('hora_entrada');
-            $table->time('hora_salida')->nullable();
+            $table->date('fecha');
+            $table->text('motivo')->nullable();
             $table->timestamps();
 
             $table->foreign('id_empleado')->references('id')->on('employees')->onDelete('cascade');
         });
-
     }
 
     /**
@@ -34,8 +31,6 @@ class CreateAsistenciasTable extends Migration
      */
     public function down()
     {
-        // Eliminar el trigger primero
-        DB::unprepared('DROP TRIGGER IF EXISTS set_fecha_default');
-        Schema::dropIfExists('asistencias');
+        Schema::dropIfExists('ausencias');
     }
 }

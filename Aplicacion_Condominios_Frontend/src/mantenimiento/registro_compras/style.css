@@ -45,4 +45,16 @@
   background-color: #DC3545;
   width: 80px;
   padding: 4px 4px;
+  border-radius: 7px;
+}
+
+.block_button{
+  background-color: #1976A2;
+  border-radius: 7px;
+  color: #ffffff;
+  padding: 8px 8px;
+}
+
+.block_button:hover{
+  background-color: #085a80;
 }

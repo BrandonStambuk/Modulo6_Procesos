@@ -36,17 +36,6 @@ function ControlReportes() {
     console.log(respuesta.data.empleados)
   }
 
-  const eliminarEmpleado = (id) => {
-    console.log(id);
-
-    const url = `http://127.0.0.1:8000/api/delete_employee/${id}`;
-    axios.delete(url).then((respuesta) => {
-      if (respuesta.data.status === 200) {
-        window.location.reload();
-      }
-    });
-  }
-
   const manejarBuscador = (e) => {
     let tipo_contrato_seleccionado_valor = document.querySelector("#desplegable-tipo_contrato").value;
 
@@ -119,8 +108,9 @@ function ControlReportes() {
     }
   }
   
-  const verReporteEmpleado = (id)  => {
+  const verReporteEmpleado = (id, empleado)  => {
     cookies.set("id_empleado_seleccionado", id, { path: "/" });
+    cookies.set("empleado_seleccionado", empleado, { path: "/" });
     window.location.href = "./ver_reporte";
   }
 
@@ -175,7 +165,7 @@ function ControlReportes() {
                   <td>
                     <Button
                       variant="info"
-                      onClick={() => verReporteEmpleado(empleado.id)}
+                      onClick={() => verReporteEmpleado(empleado.id, empleado)}
                       style={{
                         backgroundColor: "#65B8A6",
                         borderColor: "#65B8A6",

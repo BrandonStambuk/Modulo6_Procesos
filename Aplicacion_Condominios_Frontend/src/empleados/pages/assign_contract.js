@@ -6,42 +6,105 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Cookies from 'universal-cookie';
 import '../css/contract_register_style.css'
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import Modal from 'react-bootstrap/Modal';
+
 const cookies = new Cookies();
 
 function AssignContract() {
 
   const [empleados, setEmpleados] = useState([]);
+  const [modalPendiente, setModalPendiente] = useState(false);
+  const [contratoAlt, setContratoAlt] = useState(false);
+  const [empleado_id, setEmpleadoId] = useState(false);
+  const [longitud, setLongitud] = useState(0);
   
   useEffect(()=>{
     getEmpleados();
   }, []);
 
+  const [values, setValues] = useState({
+    tipo_contrato: "",
+    fecha_inicio : "",
+    fecha_final : "",
+    asignacion: "",
+    area : "",
+    cargo : "",
+    beneficios : "",
+    salario : "",
+  });
+
   const getEmpleados = async () => {
 
     const respuesta = await axios.get(`http://127.0.0.1:8000/api/get_all_employees`);
     setEmpleados(respuesta.data.empleados)
-  }
-
-  const eliminarEmpleado = (id) => {
-    console.log(id);
-
-    const url = `http://127.0.0.1:8000/api/delete_employee/${id}`; 
-      axios.delete(url).then(respuesta => {
-        if(respuesta.data.status === 200){
-          console.log(respuesta);
-          window.location.reload();
-        }
-    })
+    console.log(respuesta.data.empleados)
   }
 
   const firmarContrato = (id)  => {
     cookies.set("id_empleado_seleccionado", id, { path: "/" });
     window.location.href = "./contractRegister";
   }
+
+  const handleSubmit =  async () => {
+
+    console.log(longitud)
+
+
+
+    console.log((contratoAlt.length))
+    const data = new FormData();
+
+    data.append("tipo_contrato", contratoAlt[(contratoAlt.length -1)].tipo_contrato);
+    data.append("fecha_inicio", contratoAlt[(contratoAlt.length -1)].fecha_inicio);
+
+    if(contratoAlt[0].fecha_final === null){
+      data.append("fecha_final", "");
+    }else{
+      data.append("fecha_final", contratoAlt[(contratoAlt.length -1)].fecha_final);
+    }
+    
+    data.append("area", contratoAlt[(contratoAlt.length -1)].area);
+    data.append("cargo", contratoAlt[(contratoAlt.length -1)].cargo);
+    data.append("beneficios", contratoAlt[(contratoAlt.length -1)].beneficios);
+    data.append("salario", contratoAlt[(contratoAlt.length -1)].salario);
+    data.append("salario", contratoAlt[(contratoAlt.length -1)].salario);
+    data.append("salario", contratoAlt[(contratoAlt.length -1)].salario);
+    if(contratoAlt[(contratoAlt.length -1)].area_comun){
+      data.append("area_comun",contratoAlt[(contratoAlt.length -1)].area_comun);
+      data.append("edificio", '');
+    }
+    if(contratoAlt[(contratoAlt.length -1)].edificio){
+      data.append("area_comun", '');
+      data.append("edificio", contratoAlt[(contratoAlt.length -1)].edificio);
+    }
+    data.append("empleado", empleado_id);
+
+    const res = await axios.post(
+      `http://127.0.0.1:8000/api/add_contract`,
+      data
+    );
+
+    if (res.data.status === 200) {
+      const data_contrato = new FormData();
+      
+      data_contrato.append("estado_contrato", "Contratado");
+      
+      console.log(res);
+      const respuesta_estado = await axios.post(
+          `http://127.0.0.1:8000/api/updateContractStatus/${empleado_id}`,
+          data_contrato
+      );
+      if (respuesta_estado.data.status === 200) {
+          console.log(respuesta_estado);
+      }
+      window.location.reload();
+    }
+      
+  };
 
   const manejarBuscador = (e) => {
     let tipo_contrato_seleccionado_valor = document.querySelector("#desplegable-tipo_contrato").value;
@@ -115,8 +178,42 @@ function AssignContract() {
     }
   }
 
+  const abrirModalPendiente = (empleado)  => {
+    setModalPendiente(true);
+    setLongitud(empleado.contracts_alt.length)
+    setContratoAlt(empleado.contracts_alt);
+    setEmpleadoId(empleado.id);
+  }
+
   return (
     <>
+    <Modal
+        show={modalPendiente}
+        onHide={() => setModalPendiente(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmacion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="mb-3">
+            <h3>Desea confirmar este contrato?</h3>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+
+          <Button variant="primary" onClick={handleSubmit} style={{ backgroundColor: '#65B8A6', borderColor: '#65B8A6' }}>
+            Si
+          </Button>
+
+
+          <Button variant="secondary" onClick={handleSubmit}>
+            No
+          </Button>
+
+        </Modal.Footer>
+      </Modal>
+
     <Row className="d-flex align-items-center justify-content-center">
         <Col className="d-flex align-items-center justify-content-center">
           <h2>Asignacion de Contratos</h2>
@@ -165,11 +262,19 @@ function AssignContract() {
                   <td className="tipo_contrato">{empleado.estado_contrato}</td>
                   <td>
 
-                  {empleado.estado_contrato === "Contratado" ? (
-                          <div> Contrato {empleado.contracts[0].tipo_contrato}</div>
+                  {empleado.estado_contrato === "Pendiente" ? (
+                          <Button onClick={() => abrirModalPendiente(empleado)} style={{ backgroundColor: '#65B8A6', borderColor: '#65B8A6' }}><QuestionMarkIcon/></Button>
+                          
                         ) : (
-                            <Button variant="danger" onClick={() => firmarContrato(empleado)} style={{ backgroundColor: '#65B8A6', borderColor: '#65B8A6' }}><AddIcon/></Button>
-                        )}
+                          <>
+                          {empleado.estado_contrato === "Contratado" ? (
+                            <div> Contrato {empleado.contracts[0].tipo_contrato}</div>
+                          ) : (
+                              <Button variant="danger" onClick={() => firmarContrato(empleado)} style={{ backgroundColor: '#65B8A6', borderColor: '#65B8A6' }}><AddIcon/></Button>
+                          )}
+                          </>
+                  )}
+
                   </td>
                 </tr>
               );
@@ -177,7 +282,6 @@ function AssignContract() {
           </tbody>
         </Table>
       </Container>
-      
     </>
   );
 }

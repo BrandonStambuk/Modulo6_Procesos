@@ -1,0 +1,29 @@
+#modalContratoPersonal .modal-content {
+    padding: 10px 15px;
+    left:45px;
+    top: 60px;
+    width: 700px;
+    
+}
+.text__coloregPers{
+    font-weight: bold;
+    color: #274c77;
+}
+
+.button__regPersonal {
+    padding-left: 35px;
+    background-color: #1976A2;
+    max-width: 150px;
+    border-radius: 7px;
+    width: 100%;
+    
+  }
+  .button__regPersonal:hover{
+    background-color:#2E82AA ;
+  }
+
+.modal-footerCenter {
+display: flex;
+justify-content: center; /* Centra horizontalmente */
+align-items: center; /* Centra verticalmente */
+}

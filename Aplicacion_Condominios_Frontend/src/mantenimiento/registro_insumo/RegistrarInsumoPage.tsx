@@ -306,7 +306,7 @@ export default function RegistroInsumo() {
                   ))}
                 </table>
                 <button
-                  className=" d-flex justify-content-center block_butt margin-x-auto w-40"
+                  className="block_button d-flex justify-content-center block_butt margin-x-auto w-40"
                   type="button"
                   onClick={handleRegisterInsumos}
                 >

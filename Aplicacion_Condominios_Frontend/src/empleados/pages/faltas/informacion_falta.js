@@ -13,15 +13,21 @@ import {
 
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import '../../css/contract_register_style.css'
+import '../../css/contract_register_style.css';
+import Swal from 'sweetalert2';
+
 const cookies = new Cookies();
 function InformacionFalta() {
 
     const empleado = cookies.get('empleado_seleccionado');
 
     const [errors, setErrors] = useState({});
+    const [motivo, setMotivo] = useState("");
 
-    useEffect(()=>{
+    useEffect(() => {
+
+      verificarMotivo()
+      console.log(empleado)
 
     }, []);
 
@@ -33,14 +39,35 @@ function InformacionFalta() {
 
         if (Object.keys(validationErrors).length === 0) {
 
-          //window.location.href = "./assignTurn";
+          const data = new FormData();
+
+          data.append("motivo", motivo);
+
+          const res = await axios.post(
+            `http://127.0.0.1:8000/api/actualizar_motivo_ausencia/${empleado.id_ausencia}`,
+            data
+          );
+    
+          if (res.data.status === 200) {
+            Swal.fire(
+              "Se registro el motivo correctamente",
+              "",
+              "success"
+            );
+          }
         }
     };
 
-    const cambiarMotivoFalta = ()  => {
+    const cambiarMotivoAusencia = (event)  => {
+      setMotivo(event.target.value);
+    }
 
-      
-  
+    const verificarMotivo = ()  => {
+      if(empleado.motivo === null){
+        setMotivo("")
+      }else{
+        setMotivo(empleado.motivo)
+      }
     }
     
     return (
@@ -103,7 +130,7 @@ function InformacionFalta() {
                           Fecha de inicio de contrato:
                         </strong>
                         <p className="mb-0">
-                          {empleado.contracts[0].fecha_inicio}
+                          {empleado.fecha_inicio}
                         </p>
                       </div>
                       <div
@@ -118,9 +145,9 @@ function InformacionFalta() {
                           Fecha de fin de contrato:
                         </strong>
                         <p className="mb-0">
-                          {empleado.contracts[0].fecha_final === null
+                          {empleado.fecha_final === null
                             ? "Indefinido"
-                            : empleado.contracts[0].fecha_final}
+                            : empleado.fecha_final}
                         </p>
                       </div>
                       <div
@@ -132,7 +159,7 @@ function InformacionFalta() {
                         }}
                       >
                         <strong className="mb-0">Area:</strong>
-                        <p className="mb-0">{empleado.contracts[0].area}</p>
+                        <p className="mb-0">{empleado.area}</p>
                       </div>
                       <div
                         style={{
@@ -143,7 +170,7 @@ function InformacionFalta() {
                         }}
                       >
                         <strong className="mb-0">Cargo:</strong>
-                        <p className="mb-0">{empleado.contracts[0].cargo}</p>
+                        <p className="mb-0">{empleado.cargo}</p>
                       </div>
                     </div>
                   </div>
@@ -174,7 +201,7 @@ function InformacionFalta() {
                           >
                             <strong className="mb-0">Fecha de la falta:</strong>
                             <p className="mb-0">
-                              {empleado.nombre} {empleado.apellido}
+                              {empleado.fecha}
                             </p>
                           </div>
                         </div>
@@ -189,7 +216,7 @@ function InformacionFalta() {
                       <h4 className="mb-3">Motivo de la falta</h4>
                       <div className="d-flex flex-start w-100">
                             
-                            <MDBTextArea onChange={cambiarMotivoFalta} id='textAreaExample' rows={4} style={{ backgroundColor: '#fff' }} wrapperClass="w-100" />
+                            <MDBTextArea onChange={cambiarMotivoAusencia} id='textAreaExample' rows={4} style={{ backgroundColor: '#fff' }} wrapperClass="w-100" value={motivo} />
                           </div>
                     </MDBCol>
                   </MDBRow>

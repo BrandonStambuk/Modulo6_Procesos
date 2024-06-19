@@ -447,7 +447,7 @@ const appRoutes: RouteType[] = [
       {
         path: "/changelog/registrar_insumo",
         element: <RegistrarInsumoPage />,
-        state: "changelog.solicitud",
+        state: "changelog.insumo",
         // sidebarProps: {
         //   displayText: "Registrar insumo",
         // },
@@ -456,7 +456,7 @@ const appRoutes: RouteType[] = [
       {
         path: "/changelog/lista_insumo",
         element: <ListaInsumoPage />,
-        state: "changelog.solicitud",
+        state: "changelog.lista_insumo",
         sidebarProps: {
           displayText: "Insumos",
         },
@@ -465,7 +465,7 @@ const appRoutes: RouteType[] = [
       {
         path: "/changelog/lista_compras",
         element: <ListaComprasPage />,
-        state: "changelog.solicitud",
+        state: "changelog.lista_compras",
         sidebarProps: {
           displayText: "Lista de Compras",
         },
@@ -474,7 +474,7 @@ const appRoutes: RouteType[] = [
       {
         path: "/changelog/registro_compras",
         element: <RegistroComprasPage />,
-        state: "changelog.solicitud",
+        state: "changelog.registro_compras",
         // sidebarProps: {
         //   displayText: "Lista de Compras",
         // },
@@ -561,20 +561,13 @@ const appRoutes: RouteType[] = [
         element: <EmployeHomePage />,
         state: "employee.index",
       },
+
       {
-        path: "/employees/default",
-        element: <EmployeHomePage />,
-        state: "employee.default",
-        sidebarProps: {
-          displayText: "Pagina Principal",
-        },
-      },
-      {
-        path: "/employees/employeeRegister",
-        element: <EmployeeRegister />,
+        path: "/employees/ver_areas",
+        element: <VerAreas />,
         state: "employee.analytics",
         sidebarProps: {
-          displayText: "Registro",
+          displayText: "Areas",
         },
       },
 
@@ -597,11 +590,11 @@ const appRoutes: RouteType[] = [
       },
 
       {
-        path: "/employees/marcar_hora",
-        element: <MarcarHora />,
+        path: "/employees/ver_beneficios",
+        element: <VerBeneficios />,
         state: "employee.analytics",
         sidebarProps: {
-          displayText: "Marcar Hora",
+          displayText: "Beneficios",
         },
       },
 
@@ -624,20 +617,28 @@ const appRoutes: RouteType[] = [
       },
 
       {
-        path: "/employees/ver_areas",
-        element: <VerAreas />,
+        path: "/employees/marcar_hora",
+        element: <MarcarHora />,
         state: "employee.analytics",
         sidebarProps: {
-          displayText: "Areas",
+          displayText: "Marcar Hora",
         },
       },
 
       {
-        path: "/employees/ver_beneficios",
-        element: <VerBeneficios />,
+        path: "/employees/default",
+        element: <EmployeHomePage />,
+        state: "employee.default",
+        sidebarProps: {
+          displayText: "Pagina Principal",
+        },
+      },
+      {
+        path: "/employees/employeeRegister",
+        element: <EmployeeRegister />,
         state: "employee.analytics",
         sidebarProps: {
-          displayText: "Beneficios",
+          displayText: "Registro",
         },
       },
 

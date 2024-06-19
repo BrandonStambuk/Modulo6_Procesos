@@ -23,6 +23,8 @@ export interface ReportFormData {
   cantidadReponer: number;
   situacion: string;
   informacionAdicional: string;
+  disable: boolean;
+  disableReason?: string;
 }
 
 export interface ReportCreateDTO {

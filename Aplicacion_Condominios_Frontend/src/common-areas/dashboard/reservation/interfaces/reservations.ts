@@ -16,6 +16,7 @@ export interface Reservation {
   numberPeople: number;
   title: string;
   reserva_pagada: number;
+  cancelled: boolean;
 }
 
 export interface CreateReservationDTO {

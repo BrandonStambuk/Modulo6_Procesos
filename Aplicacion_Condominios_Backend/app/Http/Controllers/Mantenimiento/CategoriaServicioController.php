@@ -11,6 +11,7 @@ class CategoriaServicioController extends Controller
     public function getCategoriaServicio(){
         return response()->json(CategoriaServicio::all(), 200);
     }
+    
     public function getCategoriaId($id){
         $categoria = CategoriaServicio::find($id);
         if(is_null($categoria)){
@@ -18,6 +19,7 @@ class CategoriaServicioController extends Controller
         }
         return response()->json($categoria, 200);
     }
+    
     public function insertarCategoria(Request $request){
         $categoria = CategoriaServicio::create($request->all());
         if(is_null($categoria)){
@@ -25,7 +27,7 @@ class CategoriaServicioController extends Controller
         }
         return response()->json($categoria,200);
     }
-
+    
     public function updateCategoria(Request $request, $id){
         $categoria = CategoriaServicio::find($id); 
         if(is_null($categoria)){
@@ -34,9 +36,7 @@ class CategoriaServicioController extends Controller
         $categoria->update($request->all());
         return response()->json($categoria,200);
     }
-
-    //delete
-
+    
     public function deleteCategoria($id){
         $categoria = CategoriaServicio::find($id); 
         if(is_null($categoria)){

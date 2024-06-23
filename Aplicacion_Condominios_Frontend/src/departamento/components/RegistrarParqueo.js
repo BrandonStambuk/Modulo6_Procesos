@@ -17,7 +17,8 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import "./customs.css";
 import ModalCon from "./ModalConfirm";
 import ModalPar from "./ModalParqueo";
-import { Form } from "react-router-dom";
+//import { Form } from "react-router-dom";
+import { ClipLoader } from 'react-spinners';
 
 const endpoint = "http://localhost:8000/api";
 
@@ -40,7 +41,9 @@ class RegistrarParqueo extends Component {
       parqueos: [],
       estadoModal: false,
       estadoModalPar: false,
+      estadoModalUns: false,
       idParqueo: "",
+      isloading: true,
     };
   }
 
@@ -57,16 +60,17 @@ class RegistrarParqueo extends Component {
         const departamento = this.state.departamentosAll.find(
           (departamento) => departamento.id === parqueo.departamento_id
         );
+        
         return {
           ...parqueo,
-          nombreDepa: departamento.id
-            ? departamento.nombre_departamento
-            : "N/A",
+          nombreDepa: departamento ? departamento.nombre_departamento : "N/A",
         };
       });
       this.setState({ parqueos: parqueos });
     } catch (error) {
       console.error(error);
+    } finally {
+      this.setState({ isloading: false });
     }
   }
   handleInput = (event) => {
@@ -90,13 +94,15 @@ class RegistrarParqueo extends Component {
   handleBloqueSeleccionado = (event) => {
     const idBloque = event.target.value;
     this.setState({ bloqueSeleccionado: idBloque });
-
+    this.setState({ edificioSeleccionado: "" });
+    this.setState({ departamento_seleccionado: "" });
     this.cargarOpcionesDependientes(idBloque);
   };
 
   handleEdificioSeleccionado = (e) => {
     const edificio = e.target.value;
     this.setState({ edificioSeleccionado: edificio });
+    this.setState({ departamento_seleccionado: "" });
     this.cargarDepartamentos(edificio);
   };
 
@@ -151,15 +157,6 @@ class RegistrarParqueo extends Component {
       validationErrors.direccion_parqueo =
         "El nombre del parqueo debe contener solo letras y numeros.";
     }
-    if (!bloque_seleccionado.trim()) {
-      validationErrors.bloque_seleccionado = "Este campo es obligatorio";
-    }
-    if (!edificio_seleccionado.trim()) {
-      validationErrors.edificio_seleccionado = "Este campo es obligatorio";
-    }
-    if (!departamento_seleccionado.trim()) {
-      validationErrors.departamento_seleccionado = "Este campo es obligatorio";
-    }
     this.setState({ errors: validationErrors });
   };
 
@@ -188,12 +185,23 @@ class RegistrarParqueo extends Component {
     await axios.delete(`${endpoint}/parqueo/${id}`);
     window.location.reload();
   };
+  desasignarParqueo = async (id) => {
+    await axios.put(`${endpoint}/parqueo-unassign/${id}`);
+    window.location.reload();
+  };
   confirmDelete = () => {
     this.deleteParqueo(this.state.idParqueo);
     this.handleModalConfPar();
   };
+  confirmUnassign = () => {
+    this.desasignarParqueo(this.state.idParqueo);
+    this.handleModalConfUns();
+  };
   handleModalConfPar = () => {
     this.setState({ estadoModalPar: !this.state.estadoModalPar });
+  };
+  handleModalConfUns = () => {
+    this.setState({ estadoModalUns: !this.state.estadoModalUns });
   };
   setIdParqueo = (id) => {
     this.setState({ idParqueo: id });
@@ -230,6 +238,12 @@ class RegistrarParqueo extends Component {
           toggle={this.handleModalConfPar}
           confirm={this.confirmDelete}
           message="¿Está seguro que desea eliminar el parqueo?"
+        />
+        <ModalCon
+          isOpen={this.state.estadoModalUns}
+          toggle={this.handleModalConfUns}
+          confirm={this.confirmUnassign}
+          message="¿Está seguro que desea desasignar el parqueo?"
         />
 
         <ModalPar
@@ -299,11 +313,12 @@ class RegistrarParqueo extends Component {
                       name="bloque_id"
                       id="bloque_id"
                       onChange={this.handleBloqueSeleccionado}
+                      value={this.state.bloqueSeleccionado}
                       invalid={
                         this.state.errors.bloque_seleccionado ? true : false
                       }
                     >
-                      <option disabled selected>
+                      <option disabled value="">
                         {" "}
                         Seleccionar bloque
                       </option>
@@ -313,9 +328,6 @@ class RegistrarParqueo extends Component {
                         </option>
                       ))}
                     </Input>
-                    <FormFeedback>
-                      {this.state.errors.bloque_seleccionado}
-                    </FormFeedback>
                   </Col>
                   <Col md={4}>
                     <Label className="label-custom">Edificio</Label>
@@ -325,11 +337,12 @@ class RegistrarParqueo extends Component {
                       name="edificio_id"
                       id="edificio_id"
                       onChange={this.handleEdificioSeleccionado}
+                      value={this.state.edificioSeleccionado}
                       invalid={
                         this.state.errors.edificio_seleccionado ? true : false
                       }
                     >
-                      <option disabled selected>
+                      <option disabled value="">
                         {" "}
                         Seleccionar edificio
                       </option>
@@ -339,9 +352,6 @@ class RegistrarParqueo extends Component {
                         </option>
                       ))}
                     </Input>
-                    <FormFeedback>
-                      {this.state.errors.edificio_seleccionado}
-                    </FormFeedback>
                   </Col>
                   <Col md={4}>
                     <Label
@@ -356,12 +366,12 @@ class RegistrarParqueo extends Component {
                       name="departamento_seleccionado"
                       id="departamento_seleccionado"
                       onChange={this.handleSelect}
+                      value={this.state.departamento_seleccionado}
                       invalid={
                         this.state.errors.departamento_seleccionado
                           ? true
                           : false
                       }
-                      value={this.state.departamento_seleccionado}
                     >
                       <option disabled value="">
                         Seleccione un departamento
@@ -372,9 +382,6 @@ class RegistrarParqueo extends Component {
                         </option>
                       ))}
                     </Input>
-                    <FormFeedback>
-                      {this.state.errors.departamento_seleccionado}
-                    </FormFeedback>
                   </Col>
                 </Row>
               </FormGroup>
@@ -391,62 +398,83 @@ class RegistrarParqueo extends Component {
                   </Button>
                 </Col>
               </Row>
-
-              <Table striped bordered responsive className="mt-4">
-                <thead className="text-center">
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Departamento</th>
-                    <th>Dirección</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="visitasTabla">
-                  {this.state.parqueos.map((parqueo) => (
-                    <tr key={parqueo.id}>
-                      <td className="celdaVisita">{parqueo.nombre_parqueo}</td>
-                      <td className="celdaVisita">{parqueo.nombreDepa}</td>
-                      <td className="celdaVisita">
-                        {parqueo.direccion_parqueo}
-                      </td>
-                      <td>
-                        <Row className="w-100">
-                          <Col className="d-flex justify-content-end">
-                            <div
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                this.setIdParqueo(parqueo.id);
-                                this.handleModalPar();
-                              }}
-                            >
-                              {" "}
-                              <FontAwesomeIcon
-                                icon={faEdit}
-                                className="iconVisita"
-                              />{" "}
-                            </div>
-                          </Col>
-                          <Col>
-                            <div
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                this.setIdParqueo(parqueo.id);
-                                this.handleModalConfPar();
-                              }}
-                            >
-                              {" "}
-                              <FontAwesomeIcon
-                                icon={faTrashAlt}
-                                className="iconVisita"
-                              />{" "}
-                            </div>
-                          </Col>
-                        </Row>
-                      </td>
+              {this.state.isloading ? (
+                <div className="d-flex justify-content-center ">
+                  <ClipLoader color={"#5B9223"} loading={this.state.isloading} size={50} />
+                </div>
+              ) : (
+                <Table striped bordered responsive className="mt-4">
+                  <thead className="text-center">
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Departamento</th>
+                      <th>Dirección</th>
+                      <th>Acciones</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
+                  </thead>
+
+                  <tbody className="visitasTabla">
+                    {this.state.parqueos.map((parqueo) => (
+                      <tr key={parqueo.id}>
+                        <td className="celdaVisita">{parqueo.nombre_parqueo}</td>
+                        <td className="celdaVisita">{parqueo.nombreDepa}</td>
+                        <td className="celdaVisita">
+                          {parqueo.direccion_parqueo}
+                        </td>
+                        <td>
+                          <Row className="w-100">
+                            <Col className="d-flex justify-content-end">
+                              <div
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  this.setIdParqueo(parqueo.id);
+                                  this.handleModalPar();
+                                }}
+                              >
+                                {" "}
+                                <FontAwesomeIcon
+                                  icon={faEdit}
+                                  className="iconVisita"
+                                />{" "}
+                              </div>
+                            </Col>
+                            <Col>
+                              <div
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  this.setIdParqueo(parqueo.id);
+                                  this.handleModalConfPar();
+                                }}
+                              >
+                                {" "}
+                                <FontAwesomeIcon
+                                  icon={faTrashAlt}
+                                  className="iconVisita"
+                                />{" "}
+                              </div>
+                            </Col>
+                            <Col>
+                              <div
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  this.setIdParqueo(parqueo.id);
+                                  this.handleModalConfUns();
+                                }}
+                              >
+                                {" "}
+                                <FontAwesomeIcon
+                                  icon={faTrashAlt}
+                                  className="iconVisita"
+                                />{" "}
+                              </div>
+                            </Col>
+                          </Row>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
             </Col>
           </Row>
         </Container>

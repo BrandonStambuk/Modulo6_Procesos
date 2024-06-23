@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import './AñadirResidenteCss.css';
+import '../AñadirResidenteCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 

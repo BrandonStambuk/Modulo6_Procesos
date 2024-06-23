@@ -4,8 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import {
     Input, FormGroup, Label, Col, Row, Button, Container, FormFeedback
 } from "reactstrap";
-import ModalConfirm from "./ModalConfirm";
-import "./customs.css";
+import ModalConfirm from "../modal/ModalConfirm";
+import "../customs.css";
 
 const endpoint = "http://localhost:8000/api";
 class RegistrarVisita extends Component {
@@ -61,14 +61,13 @@ class RegistrarVisita extends Component {
 
     handleBloqueSeleccionado = (event) => {
         const idBloque = event.target.value;
-        this.setState({ bloqueSeleccionado: idBloque });
-
+        this.setState({ bloqueSeleccionado: idBloque, edificioSeleccionado: "", departamentoSeleccionado: "" });
         this.cargarOpcionesDependientes(idBloque);
     };
 
     handleEdificioSeleccionado = (e) => {
         const edificio = e.target.value;
-        this.setState({ edificioSeleccionado: edificio });
+        this.setState({ edificioSeleccionado: edificio, departamentoSeleccionado: "" });
         this.cargarDepartamentos(edificio);
     };
 
@@ -280,9 +279,10 @@ class RegistrarVisita extends Component {
                                                 name="bloque_id"
                                                 id="bloque_id"
                                                 onChange={this.handleBloqueSeleccionado}
+                                                value={this.state.bloqueSeleccionado}
                                                 invalid={this.state.errors.bloqueSeleccionado ? true : false}
                                             >
-                                                <option disabled selected >
+                                                <option disabled value="" >
                                                     {" "}Seleccionar bloque</option>
                                                 {this.state.bloques.map(bloque => (
                                                     <option key={bloque.id} value={bloque.id}>{bloque.nombre_bloque}</option>
@@ -302,9 +302,10 @@ class RegistrarVisita extends Component {
                                                 name="edificio_id"
                                                 id="edificio_id"
                                                 onChange={this.handleEdificioSeleccionado}
+                                                value={this.state.edificioSeleccionado}
                                                 invalid={this.state.errors.edificioSeleccionado ? true : false}
                                             >
-                                                <option disabled selected>
+                                                <option disabled value="">
                                                     {" "}Seleccionar edificio</option>
                                                 {this.state.edificios.map(edificio => (
                                                     <option key={edificio.id} value={edificio.id}>{edificio.nombre_edificio}</option>
@@ -329,10 +330,10 @@ class RegistrarVisita extends Component {
                                                     name="departamento_id"
                                                     id="departamento_id"
                                                     onChange={this.handleDepartamentoSeleccionado}
+                                                    value = {this.state.departamentoSeleccionado}
                                                     invalid={this.state.errors.departamentoSeleccionado ? true : false}
                                                 >
-                                                    <option disabled selected >
-                                                        {" "}Seleccionar departamento</option>
+                                                    <option disabled value="" >Seleccionar departamento</option>
                                                     {this.state.departamentos.map(departamento => (
                                                         <option key={departamento.id} value={departamento.id}>{departamento.nombre_departamento}</option>
                                                     ))}

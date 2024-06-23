@@ -6,6 +6,8 @@ import Cookies from 'universal-cookie';
 import "./Fondo.css";
 import "./InfoDep.css";
 import { Card } from 'reactstrap';
+import { ClipLoader } from 'react-spinners';
+
 const endpoint = "http://localhost:8000/api";
 const endpointImg = "http://localhost:8000";
 const cookies = new Cookies();
@@ -16,6 +18,7 @@ const InfoDepartamento = () => {
     const [bloques, setBloques] = useState ([]);
     const [contratos, setContratos] = useState ([]);
     const [residentes, setResidentes] = useState ([]);
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         const idDep = cookies.get('idDepa');
         cookies.remove('idContrato');
@@ -69,11 +72,18 @@ const InfoDepartamento = () => {
 
             } catch (error) {
                 console.error('Error al obtener datos del departamento:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
         return (
             <div>
             <div className="background-image"></div>
+            {isLoading ? (
+                <div className="d-flex justify-content-center my-5">
+                    <ClipLoader color={'#5B9223'} loading={isLoading} size={50} />
+                </div>
+            ) : (
             <div className="contenedor">
                 <div className= "info-departamento">
                     <div className= "infoText-departamento">
@@ -142,7 +152,9 @@ const InfoDepartamento = () => {
                         <img src={`${endpointImg}/${departamentos.imagen_departamento}`} alt="Imagen del departamento" />
                     </div>
             </div>
+            
         </div>
+        )}
         </div>
     );
 }

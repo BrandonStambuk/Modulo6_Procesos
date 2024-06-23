@@ -39,4 +39,8 @@ class CommonArea extends Model
     {
         return $this->hasMany(Reservation::class, 'id_common_area');
     }
+
+    public function disableReasons() {
+        return $this->hasMany(DisableReasonCommonArea::class, 'id_common_area');
+    }
 }

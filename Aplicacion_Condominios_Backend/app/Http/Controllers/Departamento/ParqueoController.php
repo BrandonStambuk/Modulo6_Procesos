@@ -25,7 +25,8 @@ class ParqueoController extends Controller
         $parqueo = new Parqueo();
         $validatedData = $request->validate([
             'nombre_parqueo' => 'required',
-            'departamento_id' => 'required'
+            'direccion_parqueo' => 'required',
+            'departamento_id' => 'nullable'
         ]);
         $parqueo->fill($validatedData);
         try{
@@ -58,7 +59,8 @@ class ParqueoController extends Controller
         $parqueo = Parqueo::find($idParqueo);
         $validatedData = $request->validate([
             'nombre_parqueo' => 'required',
-            'departamento_id' => 'required'
+            'direccion_parqueo' => 'required',
+            'departamento_id' => 'nullable'
         ]);
         $parqueo->fill($validatedData);
         try{
@@ -97,5 +99,14 @@ class ParqueoController extends Controller
         $parqueos = Parqueo::where('departamento_id', $idDepartamento)->get();
         return $parqueos;
     }
+    public function desasignar($idParqueo)
+    {
+        //
+        $parqueo = Parqueo::find($idParqueo);
+        $parqueo->departamento_id = null;
+        $parqueo->save();
 
+        return response()->json(['mensaje' => 'Atributo actualizado correctamente']);
+        
+    }
 }

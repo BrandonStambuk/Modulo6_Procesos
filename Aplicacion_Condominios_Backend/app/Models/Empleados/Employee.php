@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Empleados\Contract;
 use App\Models\Empleados\WorkingHour;
 use App\Models\Empleados\Atraso;
-
+use App\Models\Empleados\Ausencia;
+use App\Models\Empleados\ContractAlt;
 
 class Employee extends Model
 {
@@ -22,11 +23,17 @@ class Employee extends Model
         'ci'
     ];
 
-    protected $with = ['contracts', 'working_hours','atrasos'];
+    protected $with = ['contracts', 'working_hours','atrasos', 'ausencias', 'contracts_alt'];
 
     public function contracts(){
 
         return $this->hasMany(Contract::class, 'empleado', 'id');
+
+    }
+
+    public function contracts_alt(){
+
+        return $this->hasMany(ContractAlt::class, 'empleado', 'id');
 
     }
 
@@ -42,5 +49,9 @@ class Employee extends Model
 
     public function atrasos(){
         return $this->hasMany(Atraso::class, 'id_empleado', 'id');
+    }
+
+    public function ausencias(){
+        return $this->hasMany(Ausencia::class, 'id_empleado','id');
     }
 }

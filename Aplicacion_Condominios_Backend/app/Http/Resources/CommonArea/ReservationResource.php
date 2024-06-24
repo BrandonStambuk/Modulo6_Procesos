@@ -21,6 +21,7 @@ class ReservationResource extends JsonResource
             "reason" => $this->reason,
             "numberPeople" => $this->number_of_people,
             'reserva_pagada' => $this->reserva_pagada,
+            "cancelled" => $this->cancelled
         ];
     }
 }

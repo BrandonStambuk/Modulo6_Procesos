@@ -21,6 +21,7 @@ class ReservationCollection extends ResourceCollection
                 "reason" => $reservation->reason,
                 "numberPeople" => $reservation->number_of_people,
                 'reserva_pagada' => $reservation->reserva_pagada,
+                "cancelled" => $reservation->cancelled
             ];
         });
     }

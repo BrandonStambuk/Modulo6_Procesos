@@ -73,4 +73,15 @@ class EdificioController extends Controller
         $edificios = edificio::where('bloque_id', $id)->get();
         return $edificios;
     }  
+    
+    public function getEdificiosShort()
+    {
+        $edificios = edificio::select('id', 'nombre_edificio', 'bloque_id')->get();
+        return $edificios;
+    }
+    
+    public function getEdificioShort($idEdif){
+        $edificio = edificio::select('id', 'nombre_edificio', 'bloque_id')->where('id', $idEdif)->get()->first();
+        return $edificio;
+    }
 }

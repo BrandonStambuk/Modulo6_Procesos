@@ -32,6 +32,7 @@ class CommonAreaResource extends JsonResource
             }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'available' => !($this->available === 0)
         ];
     }
 }

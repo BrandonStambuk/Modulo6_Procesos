@@ -16,8 +16,8 @@ class AvisosController extends Controller
     public function index()
     {
         $avisos = Aviso::all();
-        return response() ->json([
-            "avisos"=> $avisos
+        return response()->json([
+            "avisos" => $avisos
         ]);
     }
 
@@ -64,22 +64,29 @@ class AvisosController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $aviso = Aviso::find($id);
+{
+    $aviso = Aviso::find($id);
 
-        if (!$aviso) {
-            return response()->json(['message' => 'Aviso no encontrado'], 404);
-        }
-
-        $request->validate([
-            'titulo' => 'string',
-            'descripcion' => 'string',
-        ]);
-
-        $aviso->update($request->all());
-
-        return response()->json($aviso);
+    if (!$aviso) {
+        return response()->json(['message' => 'Aviso no encontrado'], 404);
     }
+
+    $request->validate([
+        'titulo' => 'string',
+        'descripcion' => 'string',
+    ]);
+
+    $aviso->titulo = $request->titulo;
+    $aviso->descripcion = $request->descripcion;
+    $aviso->revisado = 0;
+    $aviso->aprobado = 0;
+
+    $aviso->save();
+
+    return response()->json($aviso);
+}
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -149,6 +156,13 @@ class AvisosController extends Controller
         $avisos = Aviso::where('aprobado', '=', 1)
             ->where('revisado', '=', 1)
             ->orderBy('created_at')->get();
+
+        return response()->json($avisos, 200);
+    }
+    public function getAvisosRechazados()
+    {
+        $avisos = Aviso::where('aprobado', '=', 0)
+            ->where('revisado', '=', 1)->get();
 
         return response()->json($avisos, 200);
     }

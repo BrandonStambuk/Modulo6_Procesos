@@ -10,8 +10,6 @@ class VisitaController extends Controller
 {
     public function index()
     {
-        //mostrar todos los residentes
-        
         $visitas = Visita::all();
         return $visitas;
     }
@@ -54,8 +52,6 @@ class VisitaController extends Controller
     public function desactivarVisita(Request $request, $id)
     {
         $visita = Visita::findOrFail($id);
-
-        // Actualiza el atributo específico
         $visita->activo_visita = $request->input('activo_visita');
         $visita->save();
 

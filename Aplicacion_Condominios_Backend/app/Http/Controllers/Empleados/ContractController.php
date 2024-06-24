@@ -19,6 +19,8 @@ class ContractController extends Controller
         $contrato-> beneficios = $request -> beneficios;
         $contrato-> salario = $request -> salario;
         $contrato-> empleado = $request -> empleado;
+        $contrato-> area_comun = $request -> area_comun;
+        $contrato-> edificio = $request -> edificio;
 
         $contrato -> save();
 

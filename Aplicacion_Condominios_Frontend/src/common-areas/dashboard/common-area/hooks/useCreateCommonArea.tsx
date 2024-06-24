@@ -266,6 +266,7 @@ export default function useCreateCommonArea(
     enableEdit,
     file,
     urlImage,
+    oldData,
     setName: handleNameChange,
     setDescription: handleDescriptionChange,
     setCapacity: handleCapacityChange,

@@ -14,7 +14,7 @@ import {
   FormFeedback,
 } from "reactstrap";
 import axios from "axios";
-import "./customs.css";
+import "../customs.css";
 
 const endpoint = "http://localhost:8000/api";
 

@@ -2,14 +2,7 @@ import { Link } from "react-router-dom";
 import { CommonArea } from "../../interfaces/common-areas";
 
 import "./card-common-area.css";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardSubtitle,
-  CardText,
-  CardTitle,
-} from "reactstrap";
+import { Card, CardBody, CardSubtitle, CardText, CardTitle } from "reactstrap";
 
 const baseImageUrl = "http://localhost:8000";
 

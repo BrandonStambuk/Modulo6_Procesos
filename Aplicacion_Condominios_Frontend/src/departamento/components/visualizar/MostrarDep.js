@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import './DepartamentosCss.css';
+import '../DepartamentosCss.css';
 
 import Cookies from 'universal-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, CardImg, CardBody, CardTitle , Button} from 'reactstrap';
-import ModalConfirm from "./ModalConfirm";
-import ModalDisponible from "./PopUPSelectOferta";
+import ModalConfirm from "../modal/ModalConfirm";
+import ModalDisponible from "../PopUPSelectOferta";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare , faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { ClipLoader } from 'react-spinners';
 
 const endpoint = 'http://localhost:8000/api';
 const endpointImg = 'http://localhost:8000';
@@ -20,7 +21,7 @@ const MostrarDep = () => {
     const [isOpenModal1, setIsOpenModal1] = useState(false);
     const [isOpenModal2, setIsOpenModal2] = useState(false);
     const [estadoIdDepa, setEstadoIdDepa] = useState('');
-
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         cookies.remove('idDepa');
@@ -102,6 +103,8 @@ const MostrarDep = () => {
             setDepartamentos(departamentos);
         } catch (error) {
             console.error("Error al obtener departamentos:", error);
+        } finally {
+            setIsLoading(false);
         }
     }
     
@@ -160,6 +163,11 @@ const MostrarDep = () => {
             )}
             
             <h1 className="title">Departamentos del edificio: {edificioSel.nombre_edificio}</h1>
+            {isLoading ? (
+                <div className="d-flex justify-content-center my-5">
+                    <ClipLoader color={'#5B9223'} loading={isLoading} size={50} />
+                </div>
+            ) : (
             <div className= "row">
                 {departamentos.map((departamento) => (
                     <div className="col-sm-12 col-md-12 col-lg-6 col-xl-4" key={departamento.id}>
@@ -222,6 +230,7 @@ const MostrarDep = () => {
                     </div>
                 ))}
             </div>
+            )}
         </div>
     )
 }

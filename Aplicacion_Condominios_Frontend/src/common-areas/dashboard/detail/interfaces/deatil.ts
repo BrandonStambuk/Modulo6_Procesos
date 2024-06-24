@@ -23,6 +23,8 @@ export interface ReportFormData {
   cantidadReponer: number;
   situacion: string;
   informacionAdicional: string;
+  disable: boolean;
+  disableReason?: string;
 }
 
 export interface ReportCreateDTO {
@@ -34,4 +36,6 @@ export interface ReportCreateDTO {
   Situacion: string;
   Info: string;
   Id_reservation: number;
+  disableReason: string;
+  disable: boolean;
 }

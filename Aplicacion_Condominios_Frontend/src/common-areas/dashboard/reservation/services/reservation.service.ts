@@ -11,12 +11,14 @@ export async function getAllReservations(): Promise<Reservation[]> {
 
   const data: Reservation[] = await response.json();
 
-  const formattedData = data.map((reservation) => {
-    return {
-      ...reservation,
-      reservationDate: new Date(reservation.reservationDate),
-    };
-  });
+  const formattedData = data
+    .filter((reservation) => !reservation.cancelled)
+    .map((reservation) => {
+      return {
+        ...reservation,
+        reservationDate: new Date(reservation.reservationDate),
+      };
+    });
 
   return formattedData;
 }
@@ -30,7 +32,7 @@ export async function getReservationsByCommonAreaId(
 
   const data: APIResponseReservations = await response.json();
 
-  return data.data.reservations;
+  return data.data.reservations.filter((reservation) => !reservation.cancelled);
 }
 
 export async function createReservation(reservation: CreateReservationDTO) {

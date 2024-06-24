@@ -50,6 +50,7 @@ export default function CommonAreaForm({
     setData,
     setOldData,
     deletePolicy,
+    // setAvailable,
   } = useCreateCommonArea({ isEditing, id });
 
   useEffect(() => {

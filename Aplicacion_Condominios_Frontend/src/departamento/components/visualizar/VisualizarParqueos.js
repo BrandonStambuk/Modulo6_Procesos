@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./customs.css";
+import "../customs.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { ClipLoader } from 'react-spinners';
 import {
 	Row,
 	Col,
@@ -14,7 +15,7 @@ import {
 
 const VisualizarParqueos = () => {
 	const [parqueos, setParqueos] = useState([]);
-
+	const [isLoading, setIsLoading] = useState(true);
 	const [busqueda, setBusqueda] = useState("");
 
 	useEffect(() => {
@@ -61,6 +62,8 @@ const VisualizarParqueos = () => {
 			setParqueos(parqueos);
 		} catch (error) {
 			console.error("Error al obtener los parqueos:", error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 	const manejarBusqueda = async (e) => {
@@ -92,51 +95,57 @@ const VisualizarParqueos = () => {
 						</InputGroup>
 					</Col>
 				</Row>
-				<Table striped responsive bordered className="mt-5">
-					<thead className="text-center">
-						<tr>
-							<th>Nombre</th>
-							<th>Bloque</th>
-							<th>Edificio</th>
-							<th>Departamento</th>
-							<th>Dirección</th>
-						</tr>
-					</thead>
-					<tbody className="visitasTabla">
-						{parqueos
-							.filter((parqueo) => {
-								if (busqueda === "") {
-									return parqueo;
-								} else if (
-									parqueo.nombre_parqueo
-										.toLowerCase()
-										.includes(busqueda.toLowerCase()) ||
-									parqueo.direccion_parqueo
-										.toLowerCase()
-										.includes(busqueda.toLowerCase()) ||
-									parqueo.departamento_parqueo
-										.toLowerCase()
-										.includes(busqueda.toLowerCase()) ||
-									parqueo.edificio_parqueo.toLowerCase().includes(busqueda.toLowerCase()) ||
-									parqueo.bloque_parqueo.toLowerCase().includes(busqueda.toLowerCase())
-								) {
-									return parqueo;
-								}
-								return false;
-							})
-							.map((parqueo) => (
-								<tr key={parqueo.id}>
-									<td className="celdaVisita">{parqueo.nombre_parqueo}</td>
-									<td className="celdaVisita">{parqueo.bloque_parqueo}</td>
-									<td className="celdaVisita">{parqueo.edificio_parqueo}</td>
-									<td className="celdaVisita">
-										{parqueo.departamento_parqueo}
-									</td>
-									<td className="celdaVisita">{parqueo.direccion_parqueo}</td>
-								</tr>
-							))}
-					</tbody>
-				</Table>
+				{isLoading ? (
+					<div className="d-flex justify-content-center my-5">
+						<ClipLoader color={'#5B9223'} loading={isLoading} size={50} />
+					</div>
+				) : (
+					<Table striped responsive bordered className="mt-5">
+						<thead className="text-center">
+							<tr>
+								<th>Nombre</th>
+								<th>Bloque</th>
+								<th>Edificio</th>
+								<th>Departamento</th>
+								<th>Dirección</th>
+							</tr>
+						</thead>
+						<tbody className="visitasTabla">
+							{parqueos
+								.filter((parqueo) => {
+									if (busqueda === "") {
+										return parqueo;
+									} else if (
+										parqueo.nombre_parqueo
+											.toLowerCase()
+											.includes(busqueda.toLowerCase()) ||
+										parqueo.direccion_parqueo
+											.toLowerCase()
+											.includes(busqueda.toLowerCase()) ||
+										parqueo.departamento_parqueo
+											.toLowerCase()
+											.includes(busqueda.toLowerCase()) ||
+										parqueo.edificio_parqueo.toLowerCase().includes(busqueda.toLowerCase()) ||
+										parqueo.bloque_parqueo.toLowerCase().includes(busqueda.toLowerCase())
+									) {
+										return parqueo;
+									}
+									return false;
+								})
+								.map((parqueo) => (
+									<tr key={parqueo.id}>
+										<td className="celdaVisita">{parqueo.nombre_parqueo}</td>
+										<td className="celdaVisita">{parqueo.bloque_parqueo}</td>
+										<td className="celdaVisita">{parqueo.edificio_parqueo}</td>
+										<td className="celdaVisita">
+											{parqueo.departamento_parqueo}
+										</td>
+										<td className="celdaVisita">{parqueo.direccion_parqueo}</td>
+									</tr>
+								))}
+						</tbody>
+					</Table>
+				)}
 			</Container>
 		</>
 	);

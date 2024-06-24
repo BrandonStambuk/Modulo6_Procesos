@@ -16,6 +16,7 @@ class PreAvisoModel extends Model
         'propietario_pagar',
         'fecha',
         'descripcion_servicios',
+        'periodo',
         'servicio_pagar',
         'monto',
         'id_propietarioPagar'

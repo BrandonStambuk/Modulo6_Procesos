@@ -18,6 +18,7 @@ class ExpensaModel extends Model
         'propietario_pagar',
         'fecha',
         'descripcion_servicios',
+        'periodo',
         'servicio_pagar',
         'monto',
         'pagado',

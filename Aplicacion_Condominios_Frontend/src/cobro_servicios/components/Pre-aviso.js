@@ -21,6 +21,7 @@ const PreAviso = () => {
   const { departamento_id } = useParams();
   const [fecha, setFecha] = useState("");
   const [descripcion_servicios, setDescripcionServicios] = useState("");
+  const [periodo, setPeriodoServ] = useState("");
   const [monto, setMonto] = useState("");
   const [errors, setErrors] = useState({});
   const [tipoServicio, setTipoServicio] = useState("");
@@ -121,6 +122,9 @@ const PreAviso = () => {
       case "descripcion_servicios":
         setDescripcionServicios(value);
         break;
+      case "periodo":
+        setPeriodoServ(value);
+        break;
       case "monto":
         setMonto(value);
         break;
@@ -165,6 +169,7 @@ const PreAviso = () => {
         fecha,
         propietario_pagar: propietarioSeleccionado,
         descripcion_servicios,
+        periodo,
         monto: totalMonto.toString(), // Convertir el total a string antes de enviarlo
         servicio_pagar: servicioPagar,
         id_propietarioPagar: propietarioSeleccionadoID,
@@ -265,7 +270,31 @@ const PreAviso = () => {
                 <span>{errors.descripcion_servicios}</span>
               )}
             </FormGroup>
-
+            <FormGroup className="mb-4">
+  <Label className="label-custom">
+    Periodo del servicio
+  </Label>
+  <Input
+    type="select"
+    name="periodo"
+    onChange={handleInput}
+    value={periodo}
+  >
+    <option value="" disabled>Seleccione el mes</option>
+    <option value="Enero">Enero</option>
+    <option value="Febrero">Febrero</option>
+    <option value="Marzo">Marzo</option>
+    <option value="Abril">Abril</option>
+    <option value="Mayo">Mayo</option>
+    <option value="Junio">Junio</option>
+    <option value="Julio">Julio</option>
+    <option value="Agosto">Agosto</option>
+    <option value="Septiembre">Septiembre</option>
+    <option value="Octubre">Octubre</option>
+    <option value="Noviembre">Noviembre</option>
+    <option value="Diciembre">Diciembre</option>
+  </Input>
+</FormGroup>
             <FormGroup className="mb-4">
               <Label className="label-custom">Servicio a pagar</Label>
               <Input

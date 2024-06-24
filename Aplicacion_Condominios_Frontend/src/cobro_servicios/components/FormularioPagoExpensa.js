@@ -14,6 +14,7 @@ const FormularioPagoExpensa = () => {
     const [propietarioPagar, setPropietarioPagar] = useState("");
     const [servicioPagar,setServicioPagar] = useState("");
     const [descripcionServicios,setDescServicios] = useState("");
+    const [periodoServ,setPeriodoServ] = useState("");
     const [fechaPago,setFechaPago] = useState("")
     const [idPropietario,setIdPropietario] = useState("");
     const [formaPago, setFormaPago] = useState("");
@@ -36,6 +37,7 @@ const FormularioPagoExpensa = () => {
                 setFechaPago(expensaData.fecha);
                 setIdPropietario(expensaData.id_propietarioPagar);
                 setDescServicios(expensaData.descripcion_servicios);
+                setPeriodoServ(expensaData.periodo);
                 setIDExpensa(expensaData.id);
             } catch (error) {
                 console.error("Error fetching expensa data:", error);
@@ -56,18 +58,19 @@ const FormularioPagoExpensa = () => {
             doc.text(`Propietario/Titular: ${propietarioPagar}`, 20, 50);
             doc.text(`Servicio a pagar: ${servicioPagar}`, 20, 60);
             doc.text(`Descripcion del servicio: ${descripcionServicios}`, 20, 70);
-            doc.text(`Fecha del pago: ${fechaPago}`, 20,80 )
+            doc.text(`Periodo del servicio: ${periodoServ}`, 20, 80);
+            doc.text(`Fecha del pago: ${fechaPago}`, 20,90 )
             // Insertar datos en el PDF
             if (monto) {
-                doc.text(`Monto: ${monto}`, 20, 90);
+                doc.text(`Monto: ${monto}`, 20, 100);
             }
             if (formaPago) {
-                doc.text(`Forma de Pago: ${formaPago}`, 20, 100);
+                doc.text(`Forma de Pago: ${formaPago}`, 20, 110);
             }
             if (formaPago === "efectivo" && efectivo) {
-                doc.text(`Efectivo: ${efectivo}`, 20, 110);
+                doc.text(`Efectivo: ${efectivo}`, 20, 120);
                 if (cambio > 0) {
-                    doc.text(`Cambio: ${cambio.toFixed(2)}`, 20, 120);
+                    doc.text(`Cambio: ${cambio.toFixed(2)}`, 20, 130);
                 }
             }
 

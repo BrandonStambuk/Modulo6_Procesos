@@ -20,6 +20,7 @@ class CreateExpensasTable extends Migration
         $table->text('propietario_pagar');
         $table->date('fecha'); 
         $table->text('descripcion_servicios'); 
+        $table->text('periodo'); 
         $table->text('servicio_pagar'); 
         $table->decimal('monto', 10, 2);
         $table->boolean('pagado')->nullable();

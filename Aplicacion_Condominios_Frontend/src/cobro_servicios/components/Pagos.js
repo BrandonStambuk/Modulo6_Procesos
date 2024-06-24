@@ -45,10 +45,11 @@ const Pagos = () => {
             doc.text(`Propietario/Titular: ${expensaData.propietario_pagar}`, 20, 50);
             doc.text(`Servicio a pagar: ${expensaData.servicio_pagar}`, 20, 60);
             doc.text(`Descripcion del servicio: ${expensaData.descripcion_servicios}`, 20, 70);
-            doc.text(`Fecha del pago: ${expensaData.fecha}`, 20, 80 )
+            doc.text(`Periodo del servicio: ${expensaData.periodo}`, 20, 80);
+            doc.text(`Fecha del pago: ${expensaData.fecha}`, 20, 90 )
             // Insertar datos en el PDF
             if (expensaData.monto) {
-                doc.text(`Monto cancelado: ${expensaData.monto}`, 20, 90);
+                doc.text(`Monto cancelado: ${expensaData.monto}`, 20, 100);
             }
          
             // Guardar el PDF

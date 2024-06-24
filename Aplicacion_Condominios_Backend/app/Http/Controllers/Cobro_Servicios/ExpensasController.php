@@ -34,6 +34,7 @@ class ExpensasController extends Controller
         $expensa->fecha = $preaviso->fecha;
         $expensa->propietario_pagar = $preaviso->propietario_pagar;
         $expensa->descripcion_servicios = $preaviso->descripcion_servicios;
+        $expensa->periodo = $preaviso->periodo;
         $expensa->servicio_pagar = $preaviso->servicio_pagar;
         $expensa->monto = $preaviso->monto;
         $expensa->id_propietarioPagar = $preaviso ->id_propietarioPagar;
@@ -61,6 +62,7 @@ class ExpensasController extends Controller
             'fecha' => 'required|date',
             'propietario_pagar' => 'required|string',
             'descripcion_servicios' => 'required|string',
+            'periodo' => 'required|string',
             'servicio_pagar' => 'required|string',
             'monto' => 'required|numeric',
         ]);
@@ -70,6 +72,7 @@ class ExpensasController extends Controller
         $expensa->fecha = $request->fecha;
         $expensa->propietario_pagar = $request->propietario_pagar;
         $expensa->descripcion_servicios = $request->descripcion_servicios;
+        $expensa->periodo = $request->periodo;
         $expensa->servicio_pagar = $request->servicio_pagar;
         $expensa->monto = $request->monto;
         $expensa->pagado = $preaviso->pagado;

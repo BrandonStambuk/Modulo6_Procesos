@@ -33,6 +33,7 @@ class PreAvisoController extends Controller
         $preavisos->fecha = $request->fecha;
         $preavisos->propietario_pagar = $request->propietario_pagar; // Agregar punto y coma aquí
         $preavisos->descripcion_servicios = $request->descripcion_servicios;
+        $preavisos->periodo = $request->periodo;
         $preavisos->servicio_pagar = $request->servicio_pagar; // Agregar punto y coma aquí
         $preavisos->monto = $request->monto;
         $preavisos->id_propietarioPagar = $request ->id_propietarioPagar;

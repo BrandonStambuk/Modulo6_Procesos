@@ -33,4 +33,12 @@ class AreaController extends Controller
             'areas' => $areas,
         ]);
     }
+
+    public function getById($id){
+        $area = Area::find($id);
+        return response()->json([
+            'status' => 200,
+            'message' =>'Area encontrada exitosamente',
+            'area' => $area]);
+    }
 }

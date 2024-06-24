@@ -24,6 +24,8 @@ function ReportPage() {
     cantidadReponer: 0,
     situacion: "",
     informacionAdicional: "",
+    disable: false,
+    disableReason: "",
   });
 
   const [residents, setResidents] = useState<
@@ -109,6 +111,16 @@ function ReportPage() {
           cantidadActual: equipment.cantidad,
         }));
       }
+    } else if (name === "disable") {
+      setFormData((prevState) => ({
+        ...prevState,
+        disable: !formData.disable,
+      }));
+    } else if (name === "disableReason") {
+      setFormData((prevState) => ({
+        ...prevState,
+        disableReason: value,
+      }));
     }
   };
 
@@ -145,6 +157,8 @@ function ReportPage() {
       ),
       Situacion: element.situacion as string,
       Info: element.informacionAdicional as string,
+      disable: element.disable as unknown as boolean,
+      disableReason: element.disableReason as unknown as string,
     };
 
     try {
@@ -174,6 +188,8 @@ function ReportPage() {
       cantidadReponer: 0,
       situacion: "",
       informacionAdicional: "",
+      disable: false,
+      disableReason: "",
     });
   };
 
@@ -297,6 +313,58 @@ function ReportPage() {
             onChange={handleChange}
           />
         </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: ".5rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              gap: "1rem",
+            }}
+          >
+            <label
+              htmlFor="available"
+              style={{
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              ¿Deshabilitar Area Común?
+            </label>
+            <input
+              type="checkbox"
+              id="available"
+              name="disable"
+              checked={formData.disable}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label
+              style={{
+                fontWeight: "bold",
+              }}
+              htmlFor="disabledReason"
+            >
+              Observaciones
+            </label>
+            <textarea
+              name="disableReason"
+              placeholder="Motivo..."
+              id="disableReason"
+              value={formData.disableReason}
+              onChange={handleChange}
+            ></textarea>
+          </div>
+        </div>
+
         <button className="btn-submit__report-page" type="submit">
           Reportar
         </button>

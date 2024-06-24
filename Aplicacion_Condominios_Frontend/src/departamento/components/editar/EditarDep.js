@@ -5,9 +5,9 @@ import {
     Input, FormGroup, Label, Col, Row, Button, Container,
     FormFeedback, CardImg
 } from "reactstrap";
-import "./customs.css";
+import "../customs.css";
 import Cookies from 'universal-cookie';
-import ModalConfirm from "./ModalConfirm";
+import ModalConfirm from "../modal/ModalConfirm";
 import { Form } from "react-router-dom";
 
 const endpoint = "http://localhost:8000/api";

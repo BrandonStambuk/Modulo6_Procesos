@@ -4,6 +4,7 @@ import './customs.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Button, Container, Label, Table, InputGroup, Input } from 'reactstrap';
 import moment from 'moment';
+import { ClipLoader } from 'react-spinners';
 
 const endpoint = 'http://localhost:8000/api';
 
@@ -13,7 +14,7 @@ const HistorialVisitas = () => {
     const [filtroDesde, setFiltroDesde] = useState('');
     const [filtroHasta, setFiltroHasta] = useState('');
     const [filtrar, setFiltrar] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         getVisitas();
     }, []);
@@ -35,6 +36,8 @@ const HistorialVisitas = () => {
 
         } catch (error) {
             console.error("Error al obtener las visitas:", error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -152,6 +155,11 @@ const HistorialVisitas = () => {
                             </Col>
                             
                         </Row>
+                        {isLoading ? (
+                            <div className="d-flex justify-content-center my-5">
+                                <ClipLoader color={'#5B9223'} loading={isLoading} size={50} />
+                            </div>
+                        ) : (
                         <Table striped responsive bordered className="mt-5">
                             <thead className="text-center" >
                                 <tr>
@@ -178,6 +186,7 @@ const HistorialVisitas = () => {
                             ))}
                             </tbody>
                         </Table>
+                        )}
                     </Col>
                 </Row>
             </Container>

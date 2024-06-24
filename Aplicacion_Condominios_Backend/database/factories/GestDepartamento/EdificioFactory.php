@@ -20,8 +20,10 @@ class EdificioFactory extends Factory
         if (!\File::isDirectory($directory)) {
             \File::makeDirectory($directory, 0755, true, true);
         }
-        $imageName = $this->faker->image($directory, 500, 512, null, false);
-        $imagePath = $imageName ? $ruta . '/' . $imageName : 'departamento/images/edificios/edificio_default.jpg';
+        $imageName = null; //$this->faker->image($directory, 500, 512, null, false);
+        $listaImagenes = ['departamento/images/edificios/edificio_default.jpg', 'departamento/images/edificios/edificio (1).jpg', 'departamento/images/edificios/edificio (2).jpg', 'departamento/images/edificios/edificio (3).jpg', 'departamento/images/edificios/edificio (4).jpg', 'departamento/images/edificios/edificio (5).jpg', 'departamento/images/edificios/edificio (6).jpg'];
+        $obtenerImagen = $this->faker->randomElement($listaImagenes);
+        $imagePath = $imageName ? $ruta . '/' . $imageName : $obtenerImagen;
         return [
             //
             'nombre_edificio' => $this->faker->name,

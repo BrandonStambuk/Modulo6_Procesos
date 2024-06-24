@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Button, Form, FormGroup, Label, Input, CardImg, Container, Row, Col, FormFeedback } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ModalConfirm from "./ModalConfirm";
-import "./customs.css";
+import ModalConfirm from "../modal/ModalConfirm";
+import "../customs.css";
 
 const endpoint = "http://localhost:8000/api";
 class CrearEdificio extends Component {

@@ -11,6 +11,7 @@ use App\Models\CommonArea\Reservation;
 use App\Models\GestDepartamento\Residente;
 use App\Services\CommonArea\CommonAreaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ReservationController extends Controller
 {
@@ -72,11 +73,8 @@ class ReservationController extends Controller
                 'id_common_area' => $id_common_area,
                 'id_resident' => $id_resident
             ]);
-            $commonArea->update([
-                'available' => false
-            ]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al crear la reservacion.', "errors" => [
+            return response()->json(['message' => 'Error al crear la reservacion.',"errors" => [
                 $e->getMessage()
             ]], 500);
         }
@@ -84,24 +82,21 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Reservación creada correctamente'], 201);
     }
 
-
-
-
-
-
-    public function show(Reservation $reservation)
+    public function cancelReservationsNext5Days($idCommonArea)
     {
-        //
-    }
+        $today = Carbon::now()->toDateString();
+        $fiveDaysLater = Carbon::now()->addDays(5)->toDateString();
 
-    public function update(Request $request, Reservation $reservation)
-    {
-        //
-    }
+        $reservationsToCancel = Reservation::whereBetween('reserved_date', [$today, $fiveDaysLater])
+            ->where('cancelled', false)
+            ->get();
 
-    public function destroy(Reservation $reservation)
-    {
-        //
+        foreach ($reservationsToCancel as $reservation) {
+            if($reservation->id_common_area === $idCommonArea) {
+                $reservation->cancelled = true;
+                $reservation->save();
+            }
+        }
     }
 
     public function getReservationById($id)
@@ -141,5 +136,15 @@ class ReservationController extends Controller
         });
 
         return response()->json($formattedReservations, 200);
+    }
+
+    public function disableReasonCommonArea($idCommonArea) {
+        $commonArea = CommonArea::find($idCommonArea);
+        $disableReasons = $commonArea->disableReasons()->get();
+        $disableReasons = collect($disableReasons)->filter(function($reason) {
+            return $reason->active;
+        })->values()->toArray();
+
+        return response()->json($disableReasons, 200);
     }
 }

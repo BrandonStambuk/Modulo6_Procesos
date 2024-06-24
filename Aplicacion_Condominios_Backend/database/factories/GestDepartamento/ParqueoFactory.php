@@ -17,6 +17,7 @@ class ParqueoFactory extends Factory
         return [
             'nombre_parqueo' => $this->faker->name,
             //quiero que se asignen a un departamento que ya exista
+            'direccion_parqueo' => $this->faker->address,
             'departamento_id' => departamento::all()->random()->id
         ];
     }

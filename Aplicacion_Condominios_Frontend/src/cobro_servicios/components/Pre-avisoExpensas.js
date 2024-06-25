@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaEye, FaPen } from 'react-icons/fa';
+import { FaEye, FaPen, FaEnvelope } from 'react-icons/fa';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaEnvelope } from 'react-icons/fa';
 
 const GestionCobro = () => {
     const endpoint = "http://localhost:8000/api";
@@ -148,7 +147,6 @@ const GestionCobro = () => {
         }
         setIsModalOpen(!isModalOpen);
     };
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -176,7 +174,10 @@ const GestionCobro = () => {
             toast.error('Error al enviar el email');
         }
     };
-    
+
+    const handleMultasAreasComunes = () => {
+        window.location.href = `/cobros/multas-areas-comunes`; // Redirige a la página de multas de áreas comunes
+    };
 
     return (
         <div className="container">
@@ -185,6 +186,10 @@ const GestionCobro = () => {
                     color: red;
                 }`}
             </style>
+            <h2>Gestión de Cobro</h2>
+            <button className="btn btn-primary mb-3" onClick={handleMultasAreasComunes}>
+                Multas Áreas Comunes
+            </button>
             <h2>Pre-aviso de expensas con multas</h2>
             <table className="table">
                 <thead>
@@ -220,8 +225,6 @@ const GestionCobro = () => {
                             <td style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => handleVerMultas(preaviso.id)}>
                                 <FaEye />
                             </td>
-                            <td style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => handleGenerarExpensa(preaviso.id)}></td>
-                                <FaPen /> {/* Icono de lápiz */}
                             <td style={{ textAlign: 'center', cursor: 'pointer' }}>
                                 <FaPen onClick={() => handleGenerarExpensa(preaviso.id)} disabled={!generarExpensaHabilitado} />
                             </td>
@@ -231,9 +234,8 @@ const GestionCobro = () => {
                         </tr>
                     ))}
                 </tbody>
-
             </table>
-            <h2> Pre-aviso de expensas sin multas</h2>
+            <h2>Pre-aviso de expensas sin multas</h2>
             <table className="table">
                 <thead>
                     <tr>
@@ -270,9 +272,7 @@ const GestionCobro = () => {
                         </tr>
                     ))}
                 </tbody>
-
             </table>
-
 
            {/* Modal para enviar correo */}
             <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
@@ -308,13 +308,9 @@ const GestionCobro = () => {
                 </Modal.Body>
             </Modal>
 
-
-
             <ToastContainer /> {/* Componente para mostrar notificaciones */}
-
         </div>
     );
 }
 
 export default GestionCobro;
-

@@ -9,7 +9,7 @@ import NotificationPage from "../pages/notifications/NotificationPage";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import Aviso from "../notificaciones/pages/Aviso";
-
+import TablaMultasAreas from "../cobro_servicios/components/tabla-multas-areas";
 import CrearDepa from "../departamento/components/registrar/CrearDepartamento.js";
 import Depa from "../departamento/components/visualizar/MostrarDep.js"
 import EditarDep from "../departamento/components/editar/EditarDep.js"
@@ -311,6 +311,11 @@ const appRoutes: RouteType[] = [
         path: "/cobros/pagar-reserva/:id",
         element: <TablaReservas />,
         state: "cobros.tabla.reservas",
+      },
+      {
+        path: "/cobros/multas-areas-comunes/",
+        element: <TablaMultasAreas />,
+        state: "cobros.tabla.multas.areas",
       },
       {
         path: "/cobros/pagar-expensa/:id",

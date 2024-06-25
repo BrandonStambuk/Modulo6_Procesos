@@ -280,7 +280,7 @@ const PreAviso = () => {
     onChange={handleInput}
     value={periodo}
   >
-    <option value="" disabled>Seleccione el mes</option>
+    <option value="" disabled>Seleccionar mes</option>
     <option value="Enero">Enero</option>
     <option value="Febrero">Febrero</option>
     <option value="Marzo">Marzo</option>

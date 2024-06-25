@@ -194,6 +194,7 @@ const GestionCobro = () => {
                         <th>Propietario</th>
                         <th>Fecha</th>
                         <th>Servicio</th>
+                        <th>Periodo del Servicio</th>
                         <th>Servicio a Pagar</th>
                         <th>Monto Total</th>
                         <th>Monto Multa</th>
@@ -211,6 +212,7 @@ const GestionCobro = () => {
                             <td>{preaviso.propietario_pagar}</td>
                             <td>{preaviso.fecha}</td>
                             <td>{preaviso.descripcion_servicios}</td>
+                            <td>{preaviso.periodo}</td>
                             <td>{preaviso.servicio_pagar}</td>
                             <td>{preaviso.monto}</td>
                             <td>{preaviso.multas.map(multa => parseFloat(multa.monto)).reduce((total, monto) => total + monto, 0)}</td>
@@ -240,6 +242,7 @@ const GestionCobro = () => {
                         <th>Propietario</th>
                         <th>Fecha</th>
                         <th>Servicios</th>
+                        <th>Periodo del Servicio</th>
                         <th>Servicio a Pagar</th>
                         <th>Monto</th>
                         <th>Generar Expensa</th>
@@ -255,6 +258,7 @@ const GestionCobro = () => {
                             <td>{preaviso.propietario_pagar}</td>
                             <td>{preaviso.fecha}</td>
                             <td>{preaviso.descripcion_servicios}</td>
+                            <td>{preaviso.periodo}</td>
                             <td>{preaviso.servicio_pagar}</td>
                             <td>{preaviso.monto}</td>
                             <td style={{ textAlign: 'center', cursor: 'pointer' }}>

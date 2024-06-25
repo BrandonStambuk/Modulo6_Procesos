@@ -40,6 +40,7 @@ const Expensas = () => {
                         <th>Propietario a Pagar</th>
                         <th>Fecha</th>
                         <th>Descripción de Servicios</th>
+                        <th>Periodo del Servicio</th>
                         <th>Servicio a Pagar</th>
                         <th>Pagado</th>
                         <th>Monto</th>
@@ -54,6 +55,7 @@ const Expensas = () => {
                             <td>{expensa.propietario_pagar}</td>
                             <td>{expensa.fecha}</td>
                             <td>{expensa.descripcion_servicios}</td>
+                            <td>{expensa.periodo}</td>
                             <td>{expensa.servicio_pagar}</td>
                             <td>{expensa.pagado ? <FaCheck /> : <FaTimes />}</td>
                             <td>{expensa.monto}</td>

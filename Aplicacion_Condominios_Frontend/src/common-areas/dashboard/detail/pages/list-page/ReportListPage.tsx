@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ReportReadDTO } from "../../interfaces/deatil";
 import { getReports } from "../../services/report.service";
+import { getCommonAreaAvailability } from "../../services/commonArea.service";
 import { FaEnvelope } from "react-icons/fa";
 import ReservationModal from "./ReservationModal";
 import { ToastContainer } from "react-toastify";
@@ -8,14 +9,30 @@ import { ToastContainer } from "react-toastify";
 export default function ReportListPage() {
   const [reports, setReports] = useState<ReportReadDTO[] | null>(null);
   const [modalShow, setModalShow] = useState(false);
-  const [selectedCommonArea, setSelectedCommonArea] = useState<string | null>(null); 
+  const [selectedCommonArea, setSelectedCommonArea] = useState<string | null>(null);
+  const [availability, setAvailability] = useState<{ [key: string]: number }>({});
+
   useEffect(() => {
     getReports().then((data) => {
       setReports(data);
     });
   }, []);
 
-  const handleOpenModal = (commonAreaName: string) => { 
+  useEffect(() => {
+    if (reports) {
+      const fetchAvailability = async () => {
+        const availabilityData: { [key: string]: number } = {};
+        for (const report of reports) {
+          const available = await getCommonAreaAvailability(report.commonAreaName);
+          availabilityData[report.commonAreaName] = available;
+        }
+        setAvailability(availabilityData);
+      };
+      fetchAvailability();
+    }
+  }, [reports]);
+
+  const handleOpenModal = (commonAreaName: string) => {
     setSelectedCommonArea(commonAreaName);
     setModalShow(true);
   };
@@ -26,7 +43,7 @@ export default function ReportListPage() {
 
   return (
     <section>
-      <h2 className="text-center mb-3"> Reportes </h2>
+      <h2 className="text-center mb-3">Reportes</h2>
 
       <table className="table">
         <thead>
@@ -48,6 +65,7 @@ export default function ReportListPage() {
             </tr>
           ) : (
             reports.map((report, index) => {
+              const isAvailable = availability[report.commonAreaName] === 0;
               return (
                 <tr key={index}>
                   <td>{report.residentName}</td>
@@ -58,7 +76,7 @@ export default function ReportListPage() {
                   <td>{report.situation}</td>
                   <td>{report.information}</td>
                   <td>
-                    <FaEnvelope onClick={() => handleOpenModal(report.commonAreaName)} />
+                    {isAvailable && <FaEnvelope onClick={() => handleOpenModal(report.commonAreaName)} />}
                   </td>
                 </tr>
               );
@@ -66,7 +84,7 @@ export default function ReportListPage() {
           )}
         </tbody>
       </table>
-      {modalShow && selectedCommonArea && ( 
+      {modalShow && selectedCommonArea && (
         <ReservationModal show={modalShow} handleClose={handleCloseModal} commonAreaName={selectedCommonArea} />
       )}
       <ToastContainer />

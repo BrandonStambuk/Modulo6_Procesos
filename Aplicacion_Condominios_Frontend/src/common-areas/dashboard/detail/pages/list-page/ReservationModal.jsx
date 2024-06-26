@@ -5,6 +5,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { toast } from 'react-toastify';
 
+
+
 const ReservationModal = ({ show, handleClose, commonAreaName }) => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -167,7 +169,6 @@ const ReservationModal = ({ show, handleClose, commonAreaName }) => {
                   <tr>
                     <th>Fecha Reserva</th>
                     <th>Razon</th>
-                    <th>Titulo</th>
                     <th>Residente</th>
                     <th>Residente Email</th>
                   </tr>
@@ -177,7 +178,6 @@ const ReservationModal = ({ show, handleClose, commonAreaName }) => {
                     <tr key={reservation.id}>
                       <td>{reservation.reserved_date}</td>
                       <td>{reservation.reason}</td>
-                      <td>{reservation.title}</td>
                       <td>{reservation.resident_name}</td>
                       <td>{reservation.resident_email}</td>
                     </tr>

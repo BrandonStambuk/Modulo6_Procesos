@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ReportReadDTO } from "../../interfaces/deatil";
 import { getReports } from "../../services/report.service";
-import { FaEnvelope, FaMoneyBillAlt } from "react-icons/fa"; // Importa el icono de billete
+import { getCommonAreaAvailability } from "../../services/commonArea.service";
+import { FaEnvelope,FaMoneyBillAlt } from "react-icons/fa";
 import ReservationModal from "./ReservationModal";
 import { ToastContainer } from "react-toastify";
 
@@ -9,12 +10,27 @@ export default function ReportListPage() {
   const [reports, setReports] = useState<ReportReadDTO[] | null>(null);
   const [modalShow, setModalShow] = useState(false);
   const [selectedCommonArea, setSelectedCommonArea] = useState<string | null>(null);
+  const [availability, setAvailability] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     getReports().then((data) => {
       setReports(data);
     });
   }, []);
+
+  useEffect(() => {
+    if (reports) {
+      const fetchAvailability = async () => {
+        const availabilityData: { [key: string]: number } = {};
+        for (const report of reports) {
+          const available = await getCommonAreaAvailability(report.commonAreaName);
+          availabilityData[report.commonAreaName] = available;
+        }
+        setAvailability(availabilityData);
+      };
+      fetchAvailability();
+    }
+  }, [reports]);
 
   const handleOpenModal = (commonAreaName: string) => {
     setSelectedCommonArea(commonAreaName);
@@ -51,6 +67,7 @@ export default function ReportListPage() {
             </tr>
           ) : (
             reports.map((report, index) => {
+              const isAvailable = availability[report.commonAreaName] === 0;
               return (
                 <tr key={index}>
                   <td>{report.id}</td>
@@ -63,9 +80,6 @@ export default function ReportListPage() {
                   <td>{report.information}</td>
                   <td>
                     <FaEnvelope onClick={() => handleOpenModal(report.commonAreaName)} />
-                  </td>
-                  <td>
-                    <FaMoneyBillAlt /> {/* Icono de billete */}
                   </td>
                 </tr>
               );

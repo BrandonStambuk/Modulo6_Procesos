@@ -189,7 +189,7 @@ class CrearResidente extends Component {
 
             axios.post(url, data).then((res) => {
                 console.log(res);
-                // window.location.href = "./edificios";
+                window.location.href = "./edificios";
                 
                 /* enviar enlace del canal de telegram al usuario */
                 axios.get(`${endpoint}/telegram/channel/get-url`).then((res) => {

@@ -316,7 +316,7 @@ const PreAviso = () => {
             </FormGroup>
 
             <FormGroup className="mb-4">
-              <Label className="label-custom">Monto</Label>
+              <Label className="label-custom">Monto(Bs)</Label>
               <Input
                 type="number"
                 name="monto"

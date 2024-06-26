@@ -170,7 +170,7 @@ const FormularioPagoArea = () => {
                     <h2 className="text-center mb-5">Pagar Área Común</h2>
                     <Form onSubmit={handleSubmit}>
                         <FormGroup>
-                            <Label for="monto">Monto:</Label>
+                            <Label for="monto">Monto(Bs):</Label>
                             <Input
                                 type="number"
                                 name="monto"

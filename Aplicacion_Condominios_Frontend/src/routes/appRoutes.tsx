@@ -85,7 +85,7 @@ import PreAvisoExpensas from "../cobro_servicios/components/Pre-avisoExpensas.js
 import Pagos from "../cobro_servicios/components/Pagos";
 import ReportListPage from "../common-areas/dashboard/detail/pages/list-page/ReportListPage";
 import Expensas from "../cobro_servicios/components/Expensas";
-
+import PagoMultaAreaComun from "../cobro_servicios/components/PagoMultaAreaComun";
 import Imprimir from "../notificaciones/pages/Imprimir";
 import Multas from "../cobro_servicios/components/Multas";
 import FormularioPagoExpensa from "../cobro_servicios/components/FormularioPagoExpensa";
@@ -315,6 +315,11 @@ const appRoutes: RouteType[] = [
       {
         path: "/cobros/multas-areas-comunes/",
         element: <TablaMultasAreas />,
+        state: "cobros.tabla.multas.areas",
+      },
+      {
+        path: "/cobros/pago-multa-area/:idReport/:idResidente/:idAreaComun/:idReservation",
+        element: <PagoMultaAreaComun/>,
         state: "cobros.tabla.multas.areas",
       },
       {

@@ -263,6 +263,10 @@ Route::controller(EquipamientosController::class)->group(function(){
 
 Route::get('/common-areas/{id}/reservaPagada', [CommonAreaController::class, 'reservaPagada']);
 Route::put('/common-areas/{id}/pagarReserva', [CommonAreaController::class, 'pagarReserva']);
+Route::put('/common-areas/{id}/pagarMultaArea', [CommonAreaController::class, 'pagarMultaArea']);
+Route::delete('/eliminar-reporte/{id}', [CommonAreaController::class, 'eliminarReporte']);
+Route::get('/area-comun/id/{nombre}',[CommonAreaController::class,'getIdByNombre']);
+
 
 Route::controller(PreAvisoController::class)->group(function(){
     Route::get('/obtener-departamentos', [PreAvisoController::class, 'obtenerNombresDepartamentos']);

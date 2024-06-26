@@ -220,6 +220,67 @@ class CommonAreaController extends Controller
         return response()->json(['message' => 'Reserva pagada y área común actualizada exitosamente'], 200);
     }
 
+
+
+    public function eliminarReporte($idReporte)
+{
+    try {
+        $reporte = Reporte::find($idReporte);
+
+        if (!$reporte) {
+            return response()->json(['message' => 'Reporte no encontrado'], 404);
+        }
+
+        $reporte->delete();
+
+        return response()->json(['message' => 'Reporte eliminado con éxito'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al eliminar el reporte', 'error' => $e->getMessage()], 500);
+    }
+}
+
+
+
+
+public function getIdByNombre($nombre)
+{
+    try {
+        $areaComun = CommonArea::where('common_area_name', $nombre)->first();
+
+        if (!$areaComun) {
+            return response()->json(['message' => 'Área común no encontrada'], 404);
+        }
+
+        return response()->json(['id' => $areaComun->id_common_area], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al buscar el área común', 'error' => $e->getMessage()], 500);
+    }
+}
+
+
+
+
+
+
+    public function pagarMultaArea($idReserva) {
+        $reservation = Reservation::find($idReserva);
+    
+        if(!$reservation) {
+            return response()->json(['message' => 'Reserva no encontrada'], 404);
+        }
+
+        $commonArea = CommonArea::find($reservation->id_common_area);
+        if(!$commonArea) {
+            return response()->json(['message' => 'Área común no encontrada'], 404);
+        }
+    
+        $commonArea->available = 1;
+        $commonArea->save();
+    
+        return response()->json(['message' => 'Reserva pagada y área común actualizada exitosamente'], 200);
+
+    }
+
     public function dummyMessage() {
         return response()->json(['message' => 'Hola mundo'], 200);
     }

@@ -74,7 +74,7 @@ class ReservationController extends Controller
                 'id_resident' => $id_resident
             ]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al crear la reservacion.',"errors" => [
+            return response()->json(['message' => 'Error al crear la reservacion.', "errors" => [
                 $e->getMessage()
             ]], 500);
         }
@@ -92,7 +92,7 @@ class ReservationController extends Controller
             ->get();
 
         foreach ($reservationsToCancel as $reservation) {
-            if($reservation->id_common_area === $idCommonArea) {
+            if ($reservation->id_common_area === $idCommonArea) {
                 $reservation->cancelled = true;
                 $reservation->save();
             }
@@ -128,8 +128,6 @@ class ReservationController extends Controller
                 'id' => $reservation->id,
                 'reserved_date' => $reservation->reserved_date,
                 'reason' => $reservation->reason,
-                'title' => $reservation->title,
-                'reserva_pagada' => $reservation->reserva_pagada,
                 'resident_name' => $reservation->resident->nombre_residente,
                 'resident_email' => $reservation->resident->email_residente,
             ];
@@ -138,13 +136,24 @@ class ReservationController extends Controller
         return response()->json($formattedReservations, 200);
     }
 
-    public function disableReasonCommonArea($idCommonArea) {
+    public function disableReasonCommonArea($idCommonArea)
+    {
         $commonArea = CommonArea::find($idCommonArea);
         $disableReasons = $commonArea->disableReasons()->get();
-        $disableReasons = collect($disableReasons)->filter(function($reason) {
+        $disableReasons = collect($disableReasons)->filter(function ($reason) {
             return $reason->active;
         })->values()->toArray();
 
         return response()->json($disableReasons, 200);
+    }
+    public function getCommonAreaAvailability($commonAreaName)
+    {
+        $commonArea = CommonArea::where('common_area_name', $commonAreaName)->first();
+
+        if ($commonArea) {
+            return response()->json(['available' => $commonArea->available], 200);
+        } else {
+            return response()->json(['error' => 'Common area not found'], 404);
+        }
     }
 }

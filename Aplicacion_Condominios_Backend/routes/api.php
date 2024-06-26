@@ -335,4 +335,7 @@ Route::get('/obtener-equipamiento/{id}', [EquipamientosController::class, 'getEq
 
 Route::get('reservations/after-date/{date}/{common_area_name}', [ReservationController::class, 'getReservationsAfterDate']);
 
+Route::get('reservations/getCommonAreaAvailability/{common_area_name}', [ReservationController::class, 'getCommonAreaAvailability']);
+
+
 

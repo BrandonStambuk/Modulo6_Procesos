@@ -14,11 +14,6 @@ const Topbar = () => {
         color: colorConfigs.topbar.color
       }}
     >
-      <Toolbar>
-        <Typography variant="h6">
-          Puede ser una barra para mas opciones
-        </Typography>
-      </Toolbar>
     </AppBar>
   );
 };

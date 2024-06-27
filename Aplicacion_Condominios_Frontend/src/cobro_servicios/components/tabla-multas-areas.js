@@ -50,7 +50,7 @@ const TablaMultasAreas = () => {
 
   return (
     <div className="container">
-      <h2>TablasAreasComunes {idPreaviso}</h2>
+      <h2>Multas Areas Comunes {idPreaviso}</h2>
       <table className="table">
         <thead>
           <tr>

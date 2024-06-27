@@ -57,7 +57,7 @@ export default function ReportListPage() {
             <th>Situación</th>
             <th>Información</th>
             <th>Notificar</th>
-            <th>Pagos</th> {/* Nueva columna para el icono de billete */}
+           
           </tr>
         </thead>
         <tbody>

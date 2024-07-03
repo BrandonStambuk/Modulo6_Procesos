@@ -84,13 +84,7 @@ const FormularioPagoArea = () => {
                     doc.text(`Cambio: ${cambio.toFixed(2)}`, 20, 80);
                 }
             }
-            if (cosToReplace !== null) {
-                doc.text(`Costo a Reponer: ${cosToReplace}`, 20, 90);
-            }
-            if (countToReplace !== null) {
-                doc.text(`Cantidad a Reponer: ${countToReplace}`, 20, 100);
-            }
-
+           
             doc.save("recibo_pago.pdf");
         } catch (error) {
             console.error(error);
@@ -210,40 +204,9 @@ const FormularioPagoArea = () => {
                                 />
                             </FormGroup>
                         )}
-                        {cosToReplace !== null && (
-                            <FormGroup>
-                                <Label for="cosToReplace">Costo a Reponer:</Label>
-                                <Input
-                                    type="number"
-                                    name="cosToReplace"
-                                    id="cosToReplace"
-                                    value={cosToReplace}
-                                    disabled
-                                />
-                            </FormGroup>
-                        )}
-                        {countToReplace !== null && (
-                            <FormGroup>
-                                <Label for="countToReplace">Cantidad a Reponer:</Label>
-                                <Input
-                                    type="number"
-                                    name="countToReplace"
-                                    id="countToReplace"
-                                    value={countToReplace}
-                                    disabled
-                                />
-                            </FormGroup>
-                        )}
-                        <FormGroup>
-                            <Label for="montoTotal">Monto Total:</Label>
-                            <Input
-                                type="number"
-                                name="montoTotal"
-                                id="montoTotal"
-                                value={montoTotal}
-                                disabled
-                            />
-                        </FormGroup>
+                        
+                        
+                       
                         <Button type="submit" color="primary">
                             Pagar
                         </Button>
